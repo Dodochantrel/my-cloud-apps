@@ -3,10 +3,13 @@ import { DefaultContainerComponent } from '../../../../shared/components/default
 import { VideoDetailsService } from '../video-details-service';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TitleComponent } from '../../../../shared/components/title-component/title-component';
+import { SkeletonModule } from 'primeng/skeleton';
+import { ChipModule } from 'primeng/chip';
 
 @Component({
   selector: 'app-video-details-page',
-  imports: [DefaultContainerComponent],
+  imports: [DefaultContainerComponent, TitleComponent, SkeletonModule, ChipModule],
   templateUrl: './video-details-page.html',
   styleUrl: './video-details-page.css',
 })

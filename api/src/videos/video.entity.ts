@@ -29,7 +29,10 @@ export class Video {
   isFavorite: boolean;
 
   @Column({ type: 'float', nullable: true })
-  rating: number | null;
+  userRating: number | null;
+
+  @Column({ type: 'float', nullable: true })
+  globalRating: number | null;
 
   @Column({ type: 'timestamp', nullable: true })
   seenAt: Date | null;
@@ -51,6 +54,7 @@ export class Video {
   createdAt: Date;
 
   fileUrl: string | null;
+  backdropUrl: string | null;
   releaseDate: Date;
   description: string;
   genres: string[];

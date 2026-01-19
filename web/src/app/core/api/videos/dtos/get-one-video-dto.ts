@@ -1,3 +1,4 @@
+import { MovieDetails } from '../../../models/videos/movie-details';
 import { Video } from '../../../models/videos/video';
 
 export interface GetOneVideoDto {
@@ -6,9 +7,11 @@ export interface GetOneVideoDto {
   title: string;
   type: 'movie' | 'serie';
   fileUrl: string;
+  backdropUrl: string | null;
   releaseDate: string;
   description: string;
   genres: string[];
+  globalRating: number;
   movieDetails?: {
     duration: number;
     originalTitle: string;
@@ -29,9 +32,18 @@ export const mapFromGetOneVideoDtoToVideo = (dto: GetOneVideoDto): Video => {
     dto.type,
     new Date(dto.releaseDate),
     dto.description,
+    dto.globalRating,
     dto.genres,
     dto.id ?? null,
-    dto.fileUrl
+    dto.fileUrl,
   );
+  video.movieDetails = dto.movieDetails
+    ? new MovieDetails(
+        dto.movieDetails.duration,
+        dto.movieDetails.originalTitle,
+        dto.movieDetails.tagline,
+      )
+    : null;
+  video.backdropUrl = dto.backdropUrl;
   return video;
 };

@@ -16,4 +16,12 @@ export class VideosRoutes {
   public getOne(externalId: string) {
     return `${this.baseUrl}/${externalId}`;
   }
+
+  public getCastings(externalId: string) {
+    return `${this.baseUrl}/${externalId}/castings`;
+  }
+
+  public getDirector(externalId: string) {
+    return `${this.baseUrl}/${externalId}/director`;
+  }
 }

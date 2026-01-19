@@ -1,5 +1,73 @@
-<app-default-container-component [title]="videoDetailsService.video()?.title ?? ''">
+<app-default-container-component>
+
+        <div class="flex gap-4">
+
+        <img [src]="videoDetailsService.video()?.fileUrl" alt="file"
+            class="w-full max-w-md h-128 object-cover rounded-md mr-4" />
+
+        <div class="flex flex-col gap-4 flex-1">
+
+            @if (videoDetailsService.isLoadingVideo()) {
+            <p-skeleton width="100%" height="2rem" />
+            } @else {
+            <p>{{ videoDetailsService.video()?.movieDetails?.tagline }}</p>
+            }
+
+            @if (videoDetailsService.isLoadingVideo()) {
+            <p-skeleton width="100%" height="4rem" />
+            } @else {
+            <app-title-component styleClass="h1">
+                {{ videoDetailsService.video()?.title }}
+            </app-title-component>
+            }
+
+            @if (videoDetailsService.isLoadingVideo()) {
+            <p-skeleton width="100%" height="2rem" />
+            } @else {
+            <div class="flex gap-4">
+                <div class="flex gap-2">
+                    <span class="material-icons-outlined text-amber-300">star</span>
+                    <span>{{ videoDetailsService.video()?.globalRatingFormatted }} / 10</span>
+                </div>
+                <span class="text-border">•</span>
+                <div class="flex gap-2">
+                    <span class="material-icons-outlined">calendar_today</span>
+                    <span>{{ videoDetailsService.video()?.releaseYear }}</span>
+                </div>
+                <span class="text-border">•</span>
+                <div class="flex gap-2">
+                    <span class="material-icons-outlined">access_time</span>
+                    <span>{{ videoDetailsService.video()?.movieDetails?.durationInHoursAndMinutes }}</span>
+                </div>
+            </div>
+            }
 
 
-    
+            <div class="flex gap-4 w-full">
+                @if (videoDetailsService.isLoadingVideo()) {
+                    <p-skeleton width="100%" height="2rem" />
+                    <p-skeleton width="100%" height="2rem" />
+                    <p-skeleton width="100%" height="2rem" />
+                } @else {
+                    @for (genre of videoDetailsService.video()?.genres; track $index) {
+                        <p-chip [label]="genre" [pt]="{ root: { class: 'py-1 px-2' }}" />
+                    } @empty {
+                        <p>Aucune catégorie annoncée</p>
+                    }
+                }
+            </div>
+
+            @if (videoDetailsService.isLoadingVideo()) {
+            <p-skeleton width="100%" height="8rem" />
+            } @else {
+                <div>
+                    <p>Synopsis</p>
+                    <p>{{ videoDetailsService.video()?.description }}</p>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
 </app-default-container-component>

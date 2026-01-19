@@ -179,11 +179,15 @@ export class TmdbRepositoryRepository {
       fileUrl: tmdbDataResponse.poster_path
         ? `https://image.tmdb.org/t/p/w400${tmdbDataResponse.poster_path}`
         : null,
+      backdropUrl: tmdbDataResponse.backdrop_path
+        ? `https://image.tmdb.org/t/p/w780${tmdbDataResponse.backdrop_path}`
+        : null,
       seenAt: null,
       isSeen: false,
       isToWatch: false,
       isFavorite: false,
-      rating: null,
+      userRating: null,
+      globalRating: tmdbDataResponse.vote_average,
       type: type,
       genres: this.getGenreName(tmdbDataResponse.genre_ids, genres) ? this.getGenreName(tmdbDataResponse.genre_ids, genres)! : [],
     });
@@ -247,8 +251,12 @@ export class TmdbRepositoryRepository {
       fileUrl: tmdbMovieDetailsResponse.poster_path
         ? `https://image.tmdb.org/t/p/w300${tmdbMovieDetailsResponse.poster_path}`
         : null,
+      backdropUrl: tmdbMovieDetailsResponse.backdrop_path
+        ? `https://image.tmdb.org/t/p/w780${tmdbMovieDetailsResponse.backdrop_path}`
+        : null,
       type: type,
       genres: tmdbMovieDetailsResponse.genres.map((g) => g.name),
+      globalRating: tmdbMovieDetailsResponse.vote_average,
       movieDetails:
         type === VideoType.Movie
           ? this.mapFromTmdbMovieDetailsResponseToMovieDetails(

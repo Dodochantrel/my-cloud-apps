@@ -14,7 +14,7 @@ export class TitleComponent {
   get cssClasses(): string {
     switch (this.styleClass()) {
       case 'h1':
-        return 'text-3xl font-bold my-2 flex items-center gap-2';
+        return 'text-6xl font-bold my-2 flex items-center gap-2';
       case 'h2':
         return 'text-2xl font-bold my-2 flex items-center gap-2';
       case 'h3':

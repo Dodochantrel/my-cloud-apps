@@ -18,9 +18,9 @@ import { TmdbRepositoryRepository } from './videos/tmdb/tmdb-repository.reposito
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     DatabaseModule,
     HttpModule,
-    ConfigModule.forRoot(),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
