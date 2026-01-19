@@ -1,0 +1,17 @@
+<div [formGroup]="form()">
+    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+    <p-iconfield>
+        <p-inputicon>
+            <span class="material-icons-outlined text-[18px]!">{{ icon() }}</span>
+        </p-inputicon>
+        <p-select [options]="options()" optionLabel="label" optionValue="value" [formControlName]="controlName()" [name]="controlName()"
+            filterBy="label" [placeholder]="placeholder()" fluid
+            [pt]="{ label: { class: 'pl-[calc((var(--p-form-field-padding-x)*2)+var(--p-icon-size))]' } }" />
+    </p-iconfield>
+    @if(form().get(controlName())?.invalid && form().get(controlName())?.dirty) {
+        @if(form().get(controlName())?.errors?.['required']) {
+            <app-input-error-message-component>Le champs est requis</app-input-error-message-component>
+        }
+    }
+</div>
+

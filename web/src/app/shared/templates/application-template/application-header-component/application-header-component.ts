@@ -1,0 +1,80 @@
+import { Component, model } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NotificationService } from '../../../../core/notification/notification-service';
+import { MenuItem } from 'primeng/api';
+import { filter } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuModule } from 'primeng/menu';
+import { ButtonModule } from 'primeng/button';
+
+@Component({
+  selector: 'app-application-header-component',
+  imports: [CommonModule, BreadcrumbModule, MenuModule, ButtonModule],
+  templateUrl: './application-header-component.html',
+  styleUrl: './application-header-component.css',
+})
+export class ApplicationHeaderComponent {
+  public isOpenNaviation = model.required<boolean>();
+
+  public breadcrumbItems: any[] = [];
+  public home: any;
+
+  public menuItems: MenuItem[] = [
+    {
+      label: 'Se déconnecter',
+      icon: 'pi pi-sign-out',
+      command: ($event) => this.logout(event),
+    },
+  ];
+
+  constructor(
+    private router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly notificationService: NotificationService,
+  ) {}
+
+  ngOnInit() {
+    // écouté les changements de route
+    this.updatePageName();
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.updatePageName();
+      });
+  }
+
+  updatePageName() {
+    let route = this.activatedRoute.firstChild;
+
+    while (route?.firstChild) {
+      route = route.firstChild;
+    }
+
+    this.breadcrumbItems = route?.snapshot.data['breadcrumb'];
+    this.home = { icon: 'pi pi-home', routerLink: '/home' };
+  }
+
+  toggleNavigation() {
+    this.isOpenNaviation.set(!this.isOpenNaviation());
+  }
+
+  openMenu(event: MouseEvent, menu: any) {
+    menu.toggle(event);
+  }
+
+  logout(event: any){
+    this.notificationService.confirm(
+      event,
+      'Confirmation',
+      'Êtes-vous sûr de vouloir vous déconnecter ?',
+      'Se déconnecter',
+      'Annuler',
+      () => {
+        console.log('Déconnexion de l\'utilisateur');
+      },
+      () => {
+      },
+    );
+  }
+}

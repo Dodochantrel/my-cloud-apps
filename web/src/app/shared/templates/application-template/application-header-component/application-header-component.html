@@ -1,0 +1,19 @@
+<div class="flex w-full justify-between">
+
+  <div class="flex gap-2 items-center">
+    <p-button icon="pi pi-align-justify" [rounded]="true" [text]="true" (click)="toggleNavigation()"
+      severity="secondary" />
+      <p-breadcrumb [model]="breadcrumbItems" [home]="home"
+        [pt]="{
+          root: { class: 'p-0 bg-transparent' }
+      }" />
+  </div>
+
+  <div class="flex">
+    <p-button icon="pi pi-cog" [rounded]="true" [text]="true" [style]="{ float: 'left' }" severity="secondary"
+      (onClick)="openMenu($event, menu)" />
+  </div>
+
+</div>
+
+<p-menu #menu [popup]="true" [model]="menuItems" styleClass="custom-menu"></p-menu>

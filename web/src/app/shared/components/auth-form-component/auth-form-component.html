@@ -1,0 +1,18 @@
+<form [formGroup]="form()" (ngSubmit)="validate()"
+    class="bg-(--p-content-background) rounded-md border border-surface h-full p-4 w-[92vw] max-w-md flex gap-2 flex-col">
+
+    <app-title-component [styleClass]="'h3'" [isCentered]="true">
+        {{ header() }}
+    </app-title-component>
+
+    <ng-content></ng-content>
+
+    <div class="flex justify-end gap-4 mt-4">
+
+        <button type="button" pButton label="Annuler" class="p-button-secondary" (click)="onCancel.emit()"></button>
+
+        <button type="submit" pButton label="Valider"></button>
+
+    </div>
+
+</form>

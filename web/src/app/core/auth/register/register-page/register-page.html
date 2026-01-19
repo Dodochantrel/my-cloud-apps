@@ -1,0 +1,13 @@
+<app-auth-form-component [(form)]="form" [header]="'Inscription'" (onValidate)="onSubmit()" (onCancel)="onCancel()">
+
+    <app-input-text-component label="Prénom" icon="person" controlName="firstName" placeholder="Entrez votre prénom" [form]="form"></app-input-text-component>
+
+    <app-input-text-component label="Nom" icon="person" controlName="lastName" placeholder="Entrez votre nom" [form]="form"></app-input-text-component>
+
+    <app-input-text-component label="Email" icon="email" controlName="email" placeholder="Entrez votre email" [form]="form"></app-input-text-component>
+
+    <app-input-password-component label="Mot de passe" icon="lock" controlName="password" placeholder="Entrez votre mot de passe" [form]="form" [needRules]="true"></app-input-password-component>
+
+    <app-input-password-component label="Confirmez le mot de passe" icon="lock" controlName="confirmPassword" placeholder="Confirmez votre mot de passe" [form]="form"></app-input-password-component>
+
+</app-auth-form-component>

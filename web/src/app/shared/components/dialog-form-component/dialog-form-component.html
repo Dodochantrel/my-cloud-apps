@@ -1,0 +1,21 @@
+<p-dialog ngSkipHydration [header]="header()" [modal]="true" [(visible)]="isDisplay" (onHide)="onCancel.emit()">
+
+    <div>
+
+        <form [formGroup]="form()" class="flex gap-2 flex-col" (ngSubmit)="validate()">
+
+            <ng-content></ng-content>
+
+            <div class="flex justify-end gap-4 mt-4">
+
+                <button type="button" pButton label="Annuler" class="p-button-secondary" (click)="onCancel.emit()"></button>
+
+                <button type="submit" pButton label="Valider"></button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</p-dialog>

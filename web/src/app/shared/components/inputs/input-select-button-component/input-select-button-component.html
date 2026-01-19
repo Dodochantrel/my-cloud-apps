@@ -1,0 +1,5 @@
+<div [formGroup]="form()">
+    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+    <p-selectbutton fluid [options]="options()" formControlName="isService" optionLabel="label" [name]="controlName()"
+        optionValue="value" aria-labelledby="basic" />
+</div>

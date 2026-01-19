@@ -1,0 +1,29 @@
+<app-default-container-component title="Liste des films">
+
+    <div class="flex flex-col w-full gap-4">
+
+        <div class="flex w-full gap-4 items-end mt-4">
+            <div class="w-full">
+                <label>Rechercher un film</label>
+                <p-autocomplete placeholder="Seven" [(ngModel)]="videoListService.search" [suggestions]="videoListService.videos()" fluid (onSelect)="redirectToVideoDetails()" >
+                    <ng-template let-video #item>
+                        <div class="flex items-center gap-2">
+                            <img [src]="video.fileUrl" style="width: 18px" />
+                            <div>{{ video.title }}</div>
+                        </div>
+                    </ng-template>
+                </p-autocomplete>
+            </div>
+        </div>
+
+        <app-footer-table-component 
+            [itemCount]="100" 
+            [selectedSize]="undefined"
+            [(page)]="videoListService.page" 
+            [(limit)]="videoListService.limit"
+        />
+
+    </div>
+    
+
+</app-default-container-component>

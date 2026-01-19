@@ -1,0 +1,9 @@
+<div [formGroup]="form()">
+    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+    <div class="flex gap-2 items-center flex-wrap">
+    @for (option of options(); track $index) {
+        <p-radiobutton [value]="option.value" [inputId]="controlName() + '-' + $index" [formControlName]="controlName()" />
+        <label [for]="controlName() + '-' + $index">{{ option.label }}</label>
+    }
+    </div>
+</div>

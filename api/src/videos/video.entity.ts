@@ -1,0 +1,64 @@
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { MovieDetails } from './interfaces/movie-details.interface';
+import { SerieDetails } from './interfaces/serie-details.interface';
+
+export enum VideoType {
+  Series = 'series',
+  Movie = 'movie',
+  Anime = 'anime',
+}
+
+@Entity()
+export class Video {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  externalId: string;
+
+  @Column()
+  title: string;
+
+  @Column({ default: false })
+  isToWatch: boolean;
+
+  @Column({ default: false })
+  isSeen: boolean;
+
+  @Column({ default: false })
+  isFavorite: boolean;
+
+  @Column({ type: 'float', nullable: true })
+  rating: number | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  seenAt: Date | null;
+
+  @Column({ type: 'enum', enum: VideoType })
+  type: VideoType;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
+  updatedAt: Date;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  createdAt: Date;
+
+  fileUrl: string | null;
+  releaseDate: Date;
+  description: string;
+  genres: string[];
+
+  movieDetails: MovieDetails | null;
+  serieDetails: SerieDetails | null;
+
+  constructor(partial: Partial<Video>) {
+    Object.assign(this, partial);
+  }
+}

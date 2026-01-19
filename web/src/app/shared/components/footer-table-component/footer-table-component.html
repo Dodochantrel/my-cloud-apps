@@ -1,0 +1,6 @@
+<div class="container">
+    @if(selectedSize() !== null) {
+        <p-selectbutton [options]="sizes" [(ngModel)]="selectedSize" [multiple]="false" optionLabel="name" optionValue="value" class="" />
+    }
+    <p-paginator [first]="(page() - 1) * limit()" [rows]="limit()" [totalRecords]="itemCount()" [rowsPerPageOptions]="[20, 50, 100]" (onPageChange)="onPaginationChange($event)" />
+</div>

@@ -1,0 +1,7 @@
+<div class="flex">
+    <app-application-navigation-component [(isOpenNaviation)]="isOpenNaviation"></app-application-navigation-component>
+    <div class="p-4 flex flex-col gap-1 flex-auto bg-surface-100">
+        <app-application-header-component [(isOpenNaviation)]="isOpenNaviation"></app-application-header-component>
+        <router-outlet></router-outlet>
+    </div>
+</div>

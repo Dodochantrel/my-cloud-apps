@@ -1,0 +1,14 @@
+<div [formGroup]="form()">
+    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+    <p-iconfield>
+        <p-inputicon>
+            <span class="material-icons-outlined">{{ icon() }}</span>
+        </p-inputicon>
+        <input type="text" pInputText [name]="controlName()" [placeholder]="placeholder()" [formControlName]="controlName()" fluid />
+        @if(form().get(controlName())?.invalid && form().get(controlName())?.dirty) {
+            @if(form().get(controlName())?.errors?.['required']) {
+                <app-input-error-message-component>Le champs est requis</app-input-error-message-component>
+            }
+        }
+    </p-iconfield>
+</div>

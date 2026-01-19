@@ -1,0 +1,9 @@
+<app-auth-form-component [(form)]="form" [header]="'Connexion'" (onValidate)="onSubmit()" (onCancel)="onCancel()">
+
+    <app-input-text-component label="Email" icon="email" controlName="email" placeholder="Entrez votre email" [form]="form" />
+
+    <app-input-password-component label="Mot de passe" icon="lock" controlName="password" placeholder="Entrez votre mot de passe" [form]="form" [needForgetPasswordLink]="true" />
+
+    <app-input-toggle-switch-component label="Se souvenir de moi" controlName="rememberMe" [form]="form" />
+
+</app-auth-form-component>

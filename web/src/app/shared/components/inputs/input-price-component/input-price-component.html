@@ -1,0 +1,18 @@
+<div [formGroup]="form()">
+    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+    <p-iconfield>
+        <p-inputicon>
+            <span class="material-icons-outlined text-[18px]!">{{ icon() }}</span>
+        </p-inputicon>
+        <p-inputnumber [name]="controlName()" [formControlName]="controlName()" mode="currency" currency="EUR" [minFractionDigits]="2" [maxFractionDigits]="2" fluid [placeholder]="placeholder()" />
+    </p-iconfield>
+    @if(form().get(controlName())?.invalid && form().get(controlName())?.dirty) {
+        @if(form().get(controlName())?.errors?.['required']) {
+            <app-input-error-message-component>Le champs est requis</app-input-error-message-component>
+        } @else if (form().get(controlName())?.errors?.['minlength']) {
+            <app-input-error-message-component>Le champs doit contenir au moins {{ form().get(controlName())?.errors?.['minlength'].requiredLength }} caractères</app-input-error-message-component>
+        } @else if (form().get(controlName())?.errors?.['maxlength']) {
+            <app-input-error-message-component>Le champs doit contenir au maximum {{ form().get(controlName())?.errors?.['maxlength'].requiredLength }} caractères</app-input-error-message-component>
+        }
+    }
+</div>
