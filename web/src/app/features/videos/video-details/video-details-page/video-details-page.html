@@ -123,4 +123,32 @@
 
     </div>
 
+    <div class="mt-8">
+
+        <app-title-component styleClass="h2">Détails</app-title-component>
+
+        <div class="flex gap-4 flex-wrap">
+
+            <div class="flex-1">
+
+                <div class="flex-1 flex h-36 p-2 rounded-md border border-surface gap-2">
+
+                    <img [src]="videoDetailsService.video()?.director?.fileUrl" alt="directeur"
+                        class="h-full object-cover rounded-md" />
+
+                    <div class="flex-1">
+                        <p class="font-bold text-muted-color">Réalisateur</p>
+                        <p>{{ videoDetailsService.video()?.director?.name }}</p>
+                    </div>
+                
+                </div>
+                
+            </div>
+
+            <div class="flex-1 rounded-md border border-surface"></div>
+            
+        </div>
+
+    </div>
+
 </app-default-container-component>

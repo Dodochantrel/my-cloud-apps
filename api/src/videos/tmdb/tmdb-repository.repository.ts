@@ -8,6 +8,7 @@ import { VideoProvider } from '../interfaces/provider.interface';
 import { MovieDetails } from '../interfaces/movie-details.interface';
 import { SerieDetails } from '../interfaces/serie-details.interface';
 import { Episode } from '../interfaces/episode.interface';
+import { ProductionCompany } from '../interfaces/production-company.interface';
 
 @Injectable()
 export class TmdbRepositoryRepository {
@@ -243,6 +244,7 @@ export class TmdbRepositoryRepository {
     tmdbMovieDetailsResponse: TmdbMovieDetailsResponse,
     type: VideoType,
   ): Video {
+    console.log(tmdbMovieDetailsResponse);
     return new Video({
       externalId: tmdbMovieDetailsResponse.id.toString(),
       title: tmdbMovieDetailsResponse.title,
@@ -257,6 +259,9 @@ export class TmdbRepositoryRepository {
       type: type,
       genres: tmdbMovieDetailsResponse.genres.map((g) => g.name),
       globalRating: tmdbMovieDetailsResponse.vote_average,
+      productionCompanies: this.mapFromTmdbProductionCompanyResponseToProductionCompanies(
+        tmdbMovieDetailsResponse.production_companies,
+      ),
       movieDetails:
         type === VideoType.Movie
           ? this.mapFromTmdbMovieDetailsResponseToMovieDetails(
@@ -280,6 +285,9 @@ export class TmdbRepositoryRepository {
         : null,
       type: type,
       genres: tmdbSerieDetailsResponse.genres.map((g) => g.name),
+      productionCompanies: this.mapFromTmdbProductionCompanyResponseToProductionCompanies(
+        tmdbSerieDetailsResponse.production_companies,
+      ),
       serieDetails:
         type === VideoType.Series
           ? this.mapFromTmdbMovieDetailsResponseToSerieDetails(
@@ -296,6 +304,9 @@ export class TmdbRepositoryRepository {
       duration: tmdbMovieDetailsResponse.runtime,
       originalTitle: tmdbMovieDetailsResponse.original_title,
       tagline: tmdbMovieDetailsResponse.tagline,
+      budget: tmdbMovieDetailsResponse.budget,
+      revenue: tmdbMovieDetailsResponse.revenue,
+      originalLanguage: tmdbMovieDetailsResponse.original_language,
     };
   }
 
@@ -371,6 +382,17 @@ export class TmdbRepositoryRepository {
     return tmdbEpisodeResponse.map((episode) =>
       this.mapFromTmdbEpisodeResponseToEpisode(episode),
     );
+  }
+
+  private mapFromTmdbProductionCompanyResponseToProductionCompanies(
+    tmdbProductionCompanyResponse: TmdbProductionCompanyResponse[],
+  ): ProductionCompany[] {
+    return tmdbProductionCompanyResponse.map((company) => ({
+      id: company.id,
+      fileUrl: company.logo_path,
+      name: company.name,
+      originCountry: company.origin_country,
+    }));
   }
 }
 
@@ -583,4 +605,11 @@ export interface TmdbSerieDetailsResponse {
   type: string;
   vote_average: number;
   vote_count: number;
+}
+
+export interface TmdbProductionCompanyResponse {
+  id: number;
+  logo_path: string;
+  name: string;
+  origin_country: string;
 }

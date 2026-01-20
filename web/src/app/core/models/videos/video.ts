@@ -1,4 +1,5 @@
 import { MovieDetails } from "./movie-details";
+import { ProductionCompany } from "./production-company";
 import { VideoCasting } from "./video-casting";
 import { VideoDirector } from "./video-director";
 
@@ -16,6 +17,7 @@ export class Video {
   castings: VideoCasting[] = [];
   director: VideoDirector | null = null;
   movieDetails: MovieDetails | null = null;
+  productionCompanies: ProductionCompany[] = [];
 
   constructor(
     externalId: string,

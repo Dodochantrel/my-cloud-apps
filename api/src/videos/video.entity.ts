@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { MovieDetails } from './interfaces/movie-details.interface';
 import { SerieDetails } from './interfaces/serie-details.interface';
+import { ProductionCompany } from './interfaces/production-company.interface';
 
 export enum VideoType {
   Series = 'series',
@@ -58,6 +59,7 @@ export class Video {
   releaseDate: Date;
   description: string;
   genres: string[];
+  productionCompanies: ProductionCompany[];
 
   movieDetails: MovieDetails | null;
   serieDetails: SerieDetails | null;
