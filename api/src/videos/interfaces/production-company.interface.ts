@@ -1,6 +1,6 @@
 export interface ProductionCompany {
   id: number;
-  fileUrl: string;
+  fileUrl: string | null;
   name: string;
   originCountry: string;
 }

@@ -389,7 +389,9 @@ export class TmdbRepositoryRepository {
   ): ProductionCompany[] {
     return tmdbProductionCompanyResponse.map((company) => ({
       id: company.id,
-      fileUrl: company.logo_path,
+      fileUrl: company.logo_path
+        ? `https://image.tmdb.org/t/p/w300${company.logo_path}`
+        : null,
       name: company.name,
       originCountry: company.origin_country,
     }));

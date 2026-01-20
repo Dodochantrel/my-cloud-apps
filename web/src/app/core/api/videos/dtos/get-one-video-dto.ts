@@ -1,4 +1,5 @@
 import { MovieDetails } from '../../../models/videos/movie-details';
+import { ProductionCompany } from '../../../models/videos/production-company';
 import { Video } from '../../../models/videos/video';
 
 export interface GetOneVideoDto {
@@ -16,6 +17,9 @@ export interface GetOneVideoDto {
     duration: number;
     originalTitle: string;
     tagline: string;
+    budget: number;
+    revenue: number;
+    originalLanguage: string;
   };
   serieDetails?: {
     numberOfSeasons: number;
@@ -23,6 +27,24 @@ export interface GetOneVideoDto {
     originalTitle: string;
     tagline: string;
   };
+  productionCompanies: {
+    id: number;
+    fileUrl: string | null;
+    name: string;
+    originCountry: string;
+  }[];
+}
+
+const mapFromProductionCompaniesDtoToProductionCompanies = (dto: GetOneVideoDto['productionCompanies']) => {
+  return dto.map(
+    (company) =>
+      new ProductionCompany(
+        company.id,
+        company.fileUrl,
+        company.name,
+        company.originCountry,
+      ),
+  );
 }
 
 export const mapFromGetOneVideoDtoToVideo = (dto: GetOneVideoDto): Video => {
@@ -42,8 +64,12 @@ export const mapFromGetOneVideoDtoToVideo = (dto: GetOneVideoDto): Video => {
         dto.movieDetails.duration,
         dto.movieDetails.originalTitle,
         dto.movieDetails.tagline,
+        dto.movieDetails.budget,
+        dto.movieDetails.revenue,
+        dto.movieDetails.originalLanguage,
       )
     : null;
   video.backdropUrl = dto.backdropUrl;
+  video.productionCompanies = mapFromProductionCompaniesDtoToProductionCompanies(dto.productionCompanies);
   return video;
 };

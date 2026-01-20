@@ -10,4 +10,8 @@ export class ProductionCompany {
     this.name = name;
     this.originCountry = originCountry;
   }
+
+  get fileUrlOrEmpty(): string {
+    return this.fileUrl ?? '/images/placeholder.svg';
+  }
 }
