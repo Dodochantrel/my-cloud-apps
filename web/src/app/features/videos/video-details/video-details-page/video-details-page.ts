@@ -5,11 +5,13 @@ import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TitleComponent } from '../../../../shared/components/title-component/title-component';
 import { SkeletonModule } from 'primeng/skeleton';
-import { ChipModule } from 'primeng/chip';
+import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-video-details-page',
-  imports: [DefaultContainerComponent, TitleComponent, SkeletonModule, ChipModule],
+  imports: [DefaultContainerComponent, TitleComponent, SkeletonModule, TagModule, ButtonModule, TooltipModule],
   templateUrl: './video-details-page.html',
   styleUrl: './video-details-page.css',
 })

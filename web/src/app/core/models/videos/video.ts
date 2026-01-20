@@ -46,4 +46,8 @@ export class Video {
   get releaseYear(): string {
     return this.releaseDate.getFullYear().toString();
   }
+
+  get fileUrlOrEmpty(): string {
+    return this.fileUrl ?? '/images/placeholder.svg';
+  }
 }

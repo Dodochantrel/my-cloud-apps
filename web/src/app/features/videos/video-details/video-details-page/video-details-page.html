@@ -1,16 +1,16 @@
 <app-default-container-component>
 
-        <div class="flex gap-4">
+    <div class="flex gap-4 flex-wrap">
 
-        <img [src]="videoDetailsService.video()?.fileUrl" alt="file"
+        <img [src]="videoDetailsService.video()?.fileUrlOrEmpty" alt="file"
             class="w-full max-w-md h-128 object-cover rounded-md mr-4" />
 
-        <div class="flex flex-col gap-4 flex-1">
+        <div class="flex flex-col gap-4 flex-1 min-w-96">
 
             @if (videoDetailsService.isLoadingVideo()) {
             <p-skeleton width="100%" height="2rem" />
             } @else {
-            <p>{{ videoDetailsService.video()?.movieDetails?.tagline }}</p>
+            <p class="text-primary font-bold">{{ videoDetailsService.video()?.movieDetails?.tagline }}</p>
             }
 
             @if (videoDetailsService.isLoadingVideo()) {
@@ -50,7 +50,7 @@
                     <p-skeleton width="100%" height="2rem" />
                 } @else {
                     @for (genre of videoDetailsService.video()?.genres; track $index) {
-                        <p-chip [label]="genre" [pt]="{ root: { class: 'py-1 px-2' }}" />
+                        <p-tag [value]="genre" class="text-sm" />
                     } @empty {
                         <p>Aucune catégorie annoncée</p>
                     }
@@ -61,10 +61,63 @@
             <p-skeleton width="100%" height="8rem" />
             } @else {
                 <div>
-                    <p>Synopsis</p>
-                    <p>{{ videoDetailsService.video()?.description }}</p>
+                    <p class="text-primary font-bold">Synopsis</p>
+                    <p class="text-muted-color">{{ videoDetailsService.video()?.description }}</p>
                 </div>
             }
+
+            <div class="flex gap-4">
+
+                <button pButton>
+                    <span class="material-icons-outlined">play_circle</span>
+                    <span pButtonLabel>Voir la bande-annonce</span>
+                </button>
+
+                <button pButton severity="secondary">
+                    <span class="material-icons-outlined">favorite_border</span>
+                    <span pButtonLabel>Ajouter aux favoris</span>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="mt-8">
+
+        <app-title-component styleClass="h2">Acteurs</app-title-component>
+
+        <div class="flex w-full gap-4 overflow-x-auto py-4">
+
+            @if (videoDetailsService.isLoadingCasting()) {
+                <div class="flex flex-col gap-4 shrink-0 w-32">
+                    <p-skeleton width="128px" height="192px" />
+                    <p-skeleton width="100%" height="1.5rem" />
+                    <p-skeleton width="100%" height="1.5rem" />
+                </div>
+                <div class="flex flex-col gap-4 shrink-0 w-32">
+                    <p-skeleton width="128px" height="192px" />
+                    <p-skeleton width="100%" height="1.5rem" />
+                    <p-skeleton width="100%" height="1.5rem" /> 
+                </div>
+                <div class="flex flex-col gap-4 shrink-0 w-32">
+                    <p-skeleton width="128px" height="192px" />
+                    <p-skeleton width="100%" height="1.5rem" />
+                    <p-skeleton width="100%" height="1.5rem" />
+                </div>
+            } @else {
+                @for (item of videoDetailsService.video()?.castings; track $index) {
+                    <div class="flex flex-col gap-4 shrink-0 w-32">
+                        <img [src]="item.fileUrlOrEmpty" alt="actor" class="w-32 h-48 object-cover rounded-md" />
+                        <p class="font-bold text-center h-12 overflow-hidden text-ellipsis line-clamp-4" [pTooltip]="item.name" tooltipPosition="bottom">{{ item.name }}</p>
+                        <p class="text-muted-color text-center h-18 overflow-hidden text-ellipsis line-clamp-4" [pTooltip]="item.character" tooltipPosition="bottom">{{ item.character }}</p>
+                    </div>
+                } @empty {
+                    <p>Aucun acteur annoncé</p>
+                }
+            }
+            
 
         </div>
 

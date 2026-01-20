@@ -58,6 +58,7 @@ export class VideoDetailsService {
   public isLoadingVideo = this.videoResource.isLoading;
   //public isLoadingVideo = signal<boolean>(true);
   public isLoadingCasting = this.videoCastingResource.isLoading;
+  //public isLoadingCasting = signal<boolean>(true);
   public isLoadingDirector = this.videoDirectorResource.isLoading;
 }
 
