@@ -109,6 +109,18 @@ export class TmdbRepositoryRepository {
     const response = await firstValueFrom(this.httpService.get(url));
     return this.mapFromTmdbMovieDetailsResponseToVideo(response.data, VideoType.Movie);
   }
+  
+  async getTrailers(id: number, type: VideoType): Promise<string | null> {
+    const typeString = this.mapFromVideoTypeToType(type);
+    const url = `https://api.themoviedb.org/3/${typeString}/${id}/videos?api_key=${this.apiKey}&language=fr-FR`;
+    const response = await firstValueFrom(
+      this.httpService.get<TmdbVideosResponse>(url),
+    );
+    const trailer = response.data.results.find(
+      (item) => item.type === 'Trailer' && item.site === 'YouTube',
+    );
+    return trailer?.key ?? null;
+  }
 
   private async getMoviesNowPlaying() {
     const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${this.apiKey}&language=fr-FR&page=1`;
@@ -244,7 +256,6 @@ export class TmdbRepositoryRepository {
     tmdbMovieDetailsResponse: TmdbMovieDetailsResponse,
     type: VideoType,
   ): Video {
-    console.log(tmdbMovieDetailsResponse);
     return new Video({
       externalId: tmdbMovieDetailsResponse.id.toString(),
       title: tmdbMovieDetailsResponse.title,
@@ -614,4 +625,22 @@ export interface TmdbProductionCompanyResponse {
   logo_path: string;
   name: string;
   origin_country: string;
+}
+
+export interface TmdbVideosResponse {
+  id: number;
+  results: TmdbTrailerResponse[];
+}
+
+export interface TmdbTrailerResponse {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  key: string;
+  name: string;
+  official: boolean;
+  published_at: string;
+  site: string;
+  size: number;
+  type: string;
 }
