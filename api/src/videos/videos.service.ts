@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { TmdbRepositoryRepository } from './tmdb/tmdb-repository.repository';
 import { Casting } from './interfaces/casting.interface';
 import { Director } from './interfaces/director.interface';
+import { VideoProvider } from './interfaces/provider.interface';
 
 @Injectable()
 export class VideosService {
@@ -40,5 +41,9 @@ export class VideosService {
 
   async getTrailer(externalId: string): Promise<string | null> {
     return this.tmdbRepositoryRepository.getTrailer(Number(externalId), VideoType.Movie);
+  }
+
+  async getProviders(externalId: string): Promise<VideoProvider[]> {
+    return this.tmdbRepositoryRepository.getProviders(Number(externalId), VideoType.Movie);
   }
 }

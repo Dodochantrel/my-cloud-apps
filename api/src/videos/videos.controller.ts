@@ -43,4 +43,11 @@ export class VideosController {
         const url = await this.videosService.getTrailer(id);
         return { url };
     }
+
+    @Get(':id/providers')
+    async getProviders(
+        @Param('id') id: string,
+    ) {
+        return this.videosService.getProviders(id);
+    }
 }
