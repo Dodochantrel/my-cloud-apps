@@ -35,4 +35,12 @@ export class VideosController {
     ) {
         return this.videosService.getDirector(id);
     }
+
+    @Get(':id/trailer')
+    async getTrailer(
+        @Param('id') id: string,
+    ) {
+        const url = await this.videosService.getTrailer(id);
+        return { url };
+    }
 }

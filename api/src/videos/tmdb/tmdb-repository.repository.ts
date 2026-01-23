@@ -110,7 +110,7 @@ export class TmdbRepositoryRepository {
     return this.mapFromTmdbMovieDetailsResponseToVideo(response.data, VideoType.Movie);
   }
   
-  async getTrailers(id: number, type: VideoType): Promise<string | null> {
+  async getTrailer(id: number, type: VideoType): Promise<string | null> {
     const typeString = this.mapFromVideoTypeToType(type);
     const url = `https://api.themoviedb.org/3/${typeString}/${id}/videos?api_key=${this.apiKey}&language=fr-FR`;
     const response = await firstValueFrom(
@@ -119,7 +119,7 @@ export class TmdbRepositoryRepository {
     const trailer = response.data.results.find(
       (item) => item.type === 'Trailer' && item.site === 'YouTube',
     );
-    return trailer?.key ?? null;
+    return trailer?.key ? `https://www.youtube.com/embed/${trailer.key}` : null;
   }
 
   private async getMoviesNowPlaying() {

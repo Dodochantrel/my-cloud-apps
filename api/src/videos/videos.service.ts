@@ -37,4 +37,8 @@ export class VideosService {
   async getDirector(externalId: string): Promise<Director> {
     return this.tmdbRepositoryRepository.getDirector(Number(externalId), VideoType.Movie);
   }
+
+  async getTrailer(externalId: string): Promise<string | null> {
+    return this.tmdbRepositoryRepository.getTrailer(Number(externalId), VideoType.Movie);
+  }
 }

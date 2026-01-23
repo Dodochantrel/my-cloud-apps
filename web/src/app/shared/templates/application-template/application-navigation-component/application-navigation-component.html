@@ -1,7 +1,7 @@
-<div class="border-r border-r-(--p-content-border-color) h-full min-h-screen overflow-hidden transition-[width] duration-300 ease-in-out"
+<div class="border-r border-r-(--p-content-border-color) h-screen overflow-y-auto sticky top-0 left-0 transition-[width] duration-300 ease-in-out"
      [class.w-0]="!isOpenNaviation()" [class.w-[300px]]="isOpenNaviation()">
 
-    <img src="https://lemonlearning.com/hubfs/Imported_Blog_Media/CRM-2-scaled-2.jpg" alt="Application Logo"
+    <img src="/images/logo.png" alt="Application Logo"
          class="w-42 p-4 mx-auto transition-opacity duration-300" [class.opacity-0]="!isOpenNaviation()" />
 
     @for (navigationItem of navigationItems; track $index) {

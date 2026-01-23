@@ -8,10 +8,12 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
+import { SafeUrlPipe } from '../../../../shared/pipes/safe-url.pipe';
 
 @Component({
   selector: 'app-video-details-page',
-  imports: [DefaultContainerComponent, TitleComponent, SkeletonModule, TagModule, ButtonModule, TooltipModule],
+  imports: [DefaultContainerComponent, TitleComponent, SkeletonModule, TagModule, ButtonModule, TooltipModule, DialogModule, SafeUrlPipe],
   templateUrl: './video-details-page.html',
   styleUrl: './video-details-page.css',
 })
@@ -29,5 +31,10 @@ export class VideoDetailsPage {
         this.videoDetailsService.id.set(id);
       }
     });
+  }
+
+  getTrailer() {
+    this.videoDetailsService.isVisibleTrailerDialog.set(true);
+    this.videoDetailsService.getVideoTrailer();
   }
 }

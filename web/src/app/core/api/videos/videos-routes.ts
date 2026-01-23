@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { inject } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { VideoTrailer } from '../../models/videos/video-trailer';
+import { GetTrailerDto, mapFromGetTrailerDtoToVideoTrailer } from './dtos/get-trailer-dto';
 
 export class VideosRoutes {
   private readonly baseUrl = `${environment.apiUrl}videos`;
@@ -23,5 +26,11 @@ export class VideosRoutes {
 
   public getDirector(externalId: string) {
     return `${this.baseUrl}/${externalId}/director`;
+  }
+
+  public getTrailer(externalId: string): Observable<VideoTrailer> {
+    return this.httpClient
+      .get<GetTrailerDto>(`${this.baseUrl}/${externalId}/trailer`)
+      .pipe(map((dto) => mapFromGetTrailerDtoToVideoTrailer(dto)));
   }
 }

@@ -1,15 +1,17 @@
-import { computed, Injectable, linkedSignal, signal } from '@angular/core';
+import { computed, inject, Injectable, linkedSignal, signal } from '@angular/core';
 import { VideosRoutes } from '../../../core/api/videos/videos-routes';
 import { httpResource } from '@angular/common/http';
 import { GetOneVideoDto, mapFromGetOneVideoDtoToVideo } from '../../../core/api/videos/dtos/get-one-video-dto';
 import { GetCastingDto, mapFromListGetCastingDtoToVideoCastingList } from '../../../core/api/videos/dtos/get-casting-dto';
 import { GetDirectorDto, mapFromGetDirectorDtoToVideoDirector } from '../../../core/api/videos/dtos/get-director-dto';
+import { NotificationService } from '../../../core/notification/notification-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VideoDetailsService {
   private readonly videosRoutes = new VideosRoutes();
+  private readonly notificationService = inject(NotificationService);
 
   public id = signal<string | null>(null);
 
@@ -56,9 +58,33 @@ export class VideoDetailsService {
   });
 
   public isLoadingVideo = this.videoResource.isLoading;
-  //public isLoadingVideo = signal<boolean>(true);
   public isLoadingCasting = this.videoCastingResource.isLoading;
-  //public isLoadingCasting = signal<boolean>(true);
   public isLoadingDirector = this.videoDirectorResource.isLoading;
+
+
+  public isVisibleTrailerDialog = signal<boolean>(false);
+  public isLoadingTrailer = signal<boolean>(false);
+
+  getVideoTrailer() {
+    if (this.video()?.trailer) {
+      return;
+    }
+    this.isLoadingTrailer.set(true);
+    return this.videosRoutes.getTrailer(this.externalId()).subscribe({
+      next: (trailer) => {
+        this.isLoadingTrailer.set(false);
+        const currentVideo = this.video();
+        if (!currentVideo) return;
+
+        currentVideo.trailer = trailer;
+        this.video.set(currentVideo);
+        this.isVisibleTrailerDialog.set(true);
+      },
+      error: (err) => {
+        this.isLoadingTrailer.set(false);
+        this.notificationService.error('Impossible de charger la bande-annonce', err);
+      },
+    });
+  }
 }
 
