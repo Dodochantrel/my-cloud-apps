@@ -28,6 +28,10 @@ export class VideosRoutes {
     return `${this.baseUrl}/${externalId}/director`;
   }
 
+  public getProviders(externalId: string) {
+    return `${this.baseUrl}/${externalId}/providers`;
+  }
+
   public getTrailer(externalId: string): Observable<VideoTrailer> {
     return this.httpClient
       .get<GetTrailerDto>(`${this.baseUrl}/${externalId}/trailer`)

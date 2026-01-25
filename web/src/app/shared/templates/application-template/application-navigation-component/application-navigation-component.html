@@ -6,7 +6,8 @@
 
     @for (navigationItem of navigationItems; track $index) {
         <div class="flex flex-col">
-            <div (click)="toggleItem(navigationItem)" class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer select-none">
+            <div (click)="navigationItem.subNavigationItems && navigationItem.subNavigationItems.length > 0 && navigationItem.path! ? toggleItem(navigationItem) : navigate(navigationItem.path!)" 
+                class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer select-none">
                 <span class="material-icons-outlined text-primary">{{ navigationItem.icon }}</span>{{ navigationItem.name }}
                 @if (navigationItem.subNavigationItems && navigationItem.subNavigationItems.length > 0) {
                     <span class="ml-auto material-icons-outlined transition-transform duration-300" [class.rotate-180]="navigationItem.isOpen">keyboard_arrow_down</span>
@@ -23,5 +24,6 @@
             }
         </div>
     }
+
 
 </div>

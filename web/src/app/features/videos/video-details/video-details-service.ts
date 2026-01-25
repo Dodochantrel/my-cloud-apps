@@ -41,6 +41,13 @@ export class VideoDetailsService {
       ) : ''
   );
 
+  public readonly videoProvidersResource = httpResource<any>(
+    () =>
+      this.externalId() ? this.videosRoutes.getProviders(
+        this.externalId()
+      ) : ''
+  );
+
   video = linkedSignal(() => {
     const videoData = this.videoResource.value();
     if (!videoData) return null;
@@ -54,13 +61,17 @@ export class VideoDetailsService {
     if (directorData) {
       mappedVideo.director = mapFromGetDirectorDtoToVideoDirector(directorData);
     }
+    const providersData = this.videoProvidersResource.value();
+    if (providersData) {
+      mappedVideo.providers = providersData;
+    }
     return mappedVideo;
   });
 
   public isLoadingVideo = this.videoResource.isLoading;
   public isLoadingCasting = this.videoCastingResource.isLoading;
   public isLoadingDirector = this.videoDirectorResource.isLoading;
-
+  public isLoadingProviders = this.videoProvidersResource.isLoading;
 
   public isVisibleTrailerDialog = signal<boolean>(false);
   public isLoadingTrailer = signal<boolean>(false);
