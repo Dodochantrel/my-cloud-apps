@@ -102,6 +102,23 @@
 
     <div class="mt-8">
 
+        <app-title-component styleClass="h2">Plateformes</app-title-component>
+
+        <div class="flex gap-4">
+
+            @for (item of videoDetailsService.video()?.providers; track $index) {
+                <div class="flex flex-col gap-2 w-32 rounded-md border border-surface p-2">
+                    <img [src]="item.fileUrl" alt="provider" class="h-12 object-contain rounded-md" />
+                    <p class="text-center">{{ item.name }}</p>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    <div class="mt-8">
+
         <app-title-component styleClass="h2">Acteurs</app-title-component>
 
         <div class="flex w-full gap-4 overflow-x-auto py-4">

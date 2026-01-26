@@ -5,6 +5,7 @@ import { GetOneVideoDto, mapFromGetOneVideoDtoToVideo } from '../../../core/api/
 import { GetCastingDto, mapFromListGetCastingDtoToVideoCastingList } from '../../../core/api/videos/dtos/get-casting-dto';
 import { GetDirectorDto, mapFromGetDirectorDtoToVideoDirector } from '../../../core/api/videos/dtos/get-director-dto';
 import { NotificationService } from '../../../core/notification/notification-service';
+import { mapFromGetProviderDtoArrayToVideoProviderArray } from '../../../core/api/videos/dtos/get-provider-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -63,7 +64,7 @@ export class VideoDetailsService {
     }
     const providersData = this.videoProvidersResource.value();
     if (providersData) {
-      mappedVideo.providers = providersData;
+      mappedVideo.providers = mapFromGetProviderDtoArrayToVideoProviderArray(providersData);
     }
     return mappedVideo;
   });
