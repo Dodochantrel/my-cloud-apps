@@ -4,7 +4,7 @@ import { ApplicationTemplate } from "../shared/templates/application-template/ap
 export const featureRoutes: Routes = [
     {
         path: '',
-        redirectTo: 'videos/list',
+        redirectTo: 'videos/movies',
         pathMatch: 'full',
     },
     {
@@ -12,7 +12,16 @@ export const featureRoutes: Routes = [
         component: ApplicationTemplate,
         children: [
             {
-                path: 'videos/list',
+                path: 'videos/movies',
+                title: 'Vidéos - Liste',
+                loadComponent: () => import('./videos/video-list/video-list-page/video-list-page').then(m => m.VideoListPage),
+                data: {
+                    title: 'Vidéos - Liste',
+                    breadcrumb: [{ label: 'Vidéos' }, { label: 'Liste' }],
+                },
+            },
+            {
+                path: 'videos/series',
                 title: 'Vidéos - Liste',
                 loadComponent: () => import('./videos/video-list/video-list-page/video-list-page').then(m => m.VideoListPage),
                 data: {

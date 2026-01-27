@@ -5,6 +5,16 @@ export const navigationItems: NavigationItem[] = [
     path: null,
     isOpen: false,
     subNavigationItems: [
+      {
+        name: 'Films',
+        icon: 'movie',
+        path: 'videos/movies',
+      },
+      {
+        name: 'Series',
+        icon: 'burst_mode',
+        path: 'videos/series',
+      }
     ],
   },
 ];
