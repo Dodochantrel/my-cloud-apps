@@ -1,6 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { GetAllVideosQueryDto } from './dtos/get-all-videos-query.dto';
+import { GetOneVideoParamDto } from './dtos/get-one-video-param.dto';
+import { GetCastingVideoParamDto } from './dtos/get-casting-video-param.dto';
+import { GetDirectorVideoParamDto } from './dtos/get-director-video-param.dto';
+import { GetTrailerVideoParamDto } from './dtos/get-trailer-video-param.dto';
+import { GetProvidersVideoParamDto } from './dtos/get-providers-video-param.dto';
 
 @Controller('videos')
 export class VideosController {
@@ -18,36 +23,41 @@ export class VideosController {
     @Get(':id')
     async getVideoById(
         @Param('id') id: string,
+        @Query() dto: GetOneVideoParamDto,
     ) {
-        return this.videosService.getByExternalId(id);
+        return await this.videosService.getByExternalId(id, dto.type);
     }
 
     @Get(':id/castings')
     async getCastings(
         @Param('id') id: string,
+        @Query() dto: GetCastingVideoParamDto,
     ) {
-        return this.videosService.getCastings(id);
+        return this.videosService.getCastings(id, dto.type);
     }
 
     @Get(':id/director')
     async getDirector(
         @Param('id') id: string,
+        @Query() dto: GetDirectorVideoParamDto,
     ) {
-        return this.videosService.getDirector(id);
+        return this.videosService.getDirector(id, dto.type);
     }
 
     @Get(':id/trailer')
     async getTrailer(
         @Param('id') id: string,
+        @Query() dto: GetTrailerVideoParamDto,
     ) {
-        const url = await this.videosService.getTrailer(id);
+        const url = await this.videosService.getTrailer(id, dto.type);
         return { url };
     }
 
     @Get(':id/providers')
     async getProviders(
         @Param('id') id: string,
+        @Query() dto: GetProvidersVideoParamDto,
     ) {
-        return this.videosService.getProviders(id);
+        return this.videosService.getProviders(id, dto.type);
     }
 }

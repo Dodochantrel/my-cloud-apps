@@ -12,29 +12,29 @@ export class VideosRoutes {
 
   private readonly httpClient = inject(HttpClient);
 
-  public getAll(search: string, page: number, limit: number): string {
-    return `${this.baseUrl}?search=${search}&page=${page}&limit=${limit}&type=movie`;
+  public getAll(search: string, page: number, limit: number, type: 'movie' | 'series'): string {
+    return `${this.baseUrl}?search=${search}&page=${page}&limit=${limit}&type=${type}`;
   }
 
-  public getOne(externalId: string) {
-    return `${this.baseUrl}/${externalId}`;
+  public getOne(externalId: string, type: 'movie' | 'series') {
+    return `${this.baseUrl}/${externalId}?type=${type}`;
   }
 
-  public getCastings(externalId: string) {
-    return `${this.baseUrl}/${externalId}/castings`;
+  public getCastings(externalId: string, type: 'movie' | 'series') {
+    return `${this.baseUrl}/${externalId}/castings?type=${type}`;
   }
 
-  public getDirector(externalId: string) {
-    return `${this.baseUrl}/${externalId}/director`;
+  public getDirector(externalId: string, type: 'movie' | 'series') {
+    return `${this.baseUrl}/${externalId}/director?type=${type}`;
   }
 
-  public getProviders(externalId: string) {
-    return `${this.baseUrl}/${externalId}/providers`;
+  public getProviders(externalId: string, type: 'movie' | 'series') {
+    return `${this.baseUrl}/${externalId}/providers?type=${type}`;
   }
 
-  public getTrailer(externalId: string): Observable<VideoTrailer> {
+  public getTrailer(externalId: string, type: 'movie' | 'series'): Observable<VideoTrailer> {
     return this.httpClient
-      .get<GetTrailerDto>(`${this.baseUrl}/${externalId}/trailer`)
+      .get<GetTrailerDto>(`${this.baseUrl}/${externalId}/trailer?type=${type}`)
       .pipe(map((dto) => mapFromGetTrailerDtoToVideoTrailer(dto)));
   }
 }

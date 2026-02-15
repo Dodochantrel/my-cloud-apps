@@ -26,24 +26,30 @@ export class VideosService {
     }
   }
 
-  async getByExternalId(externalId: string): Promise<Video | null> {
-    const video = await this.videoRepository.findOneBy({ externalId });
-    return video ? video : this.tmdbRepositoryRepository.getMovie(Number(externalId));
+  async getByExternalId(externalId: string, type: VideoType): Promise<Video | null> {
+    switch (type) {
+      case VideoType.Movie:
+        return this.tmdbRepositoryRepository.getMovie(Number(externalId))
+      case VideoType.Series:
+        return this.tmdbRepositoryRepository.getSerie(Number(externalId))
+      default:
+        return Promise.resolve(null);
+    }
   }
 
-  async getCastings(externalId: string): Promise<Casting[]> {
-    return this.tmdbRepositoryRepository.getCasting(Number(externalId), VideoType.Movie);
+  async getCastings(externalId: string, type: VideoType): Promise<Casting[]> {
+    return this.tmdbRepositoryRepository.getCasting(Number(externalId), type);
   }
 
-  async getDirector(externalId: string): Promise<Director> {
-    return this.tmdbRepositoryRepository.getDirector(Number(externalId), VideoType.Movie);
+  async getDirector(externalId: string, type: VideoType): Promise<Director> {
+    return this.tmdbRepositoryRepository.getDirector(Number(externalId), type);
   }
 
-  async getTrailer(externalId: string): Promise<string | null> {
-    return this.tmdbRepositoryRepository.getTrailer(Number(externalId), VideoType.Movie);
+  async getTrailer(externalId: string, type: VideoType): Promise<string | null> {
+    return this.tmdbRepositoryRepository.getTrailer(Number(externalId), type);
   }
 
-  async getProviders(externalId: string): Promise<VideoProvider[]> {
-    return this.tmdbRepositoryRepository.getProviders(Number(externalId), VideoType.Movie);
+  async getProviders(externalId: string, type: VideoType): Promise<VideoProvider[]> {
+    return this.tmdbRepositoryRepository.getProviders(Number(externalId), type);
   }
 }

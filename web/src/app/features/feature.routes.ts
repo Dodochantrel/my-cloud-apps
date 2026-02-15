@@ -4,7 +4,7 @@ import { ApplicationTemplate } from "../shared/templates/application-template/ap
 export const featureRoutes: Routes = [
     {
         path: '',
-        redirectTo: 'videos/movies',
+        redirectTo: 'movies/list',
         pathMatch: 'full',
     },
     {
@@ -12,30 +12,39 @@ export const featureRoutes: Routes = [
         component: ApplicationTemplate,
         children: [
             {
-                path: 'videos/movies',
-                title: 'Vidéos - Liste',
-                loadComponent: () => import('./videos/video-list/video-list-page/video-list-page').then(m => m.VideoListPage),
+                path: 'movies/list',
+                title: 'Films - Liste',
+                loadComponent: () => import('./videos/movie-list/movie-list-page/movie-list-page').then(m => m.MovieListPage),
                 data: {
-                    title: 'Vidéos - Liste',
-                    breadcrumb: [{ label: 'Vidéos' }, { label: 'Liste' }],
+                    title: 'Films - Liste',
+                    breadcrumb: [{ label: 'Films' }, { label: 'Liste' }],
                 },
             },
             {
-                path: 'videos/series',
-                title: 'Vidéos - Liste',
-                loadComponent: () => import('./videos/video-list/video-list-page/video-list-page').then(m => m.VideoListPage),
+                path: 'series/list',
+                title: 'Séries - Liste',
+                loadComponent: () => import('./videos/serie-list/serie-list-page/serie-list-page').then(m => m.SerieListPage),
                 data: {
-                    title: 'Vidéos - Liste',
-                    breadcrumb: [{ label: 'Vidéos' }, { label: 'Liste' }],
+                    title: 'Séries - Liste',
+                    breadcrumb: [{ label: 'Séries' }, { label: 'Liste' }],
                 },
             },
             {
-                path: 'videos/details/:id',
-                title: 'Vidéos - Détails',
-                loadComponent: () => import('./videos/video-details/video-details-page/video-details-page').then(m => m.VideoDetailsPage),
+                path: 'movies/details/:id',
+                title: 'Films - Détails',
+                loadComponent: () => import('./videos/movie-details/movie-details-page/movie-details-page').then(m => m.MovieDetailsPage),
                 data: {
-                    title: 'Vidéos - Détails',
-                    breadcrumb: [{ label: 'Vidéos' }, { label: 'Détails' }],
+                    title: 'Films - Détails',
+                    breadcrumb: [{ label: 'Films' }, { label: 'Détails' }],
+                },
+            },
+            {
+                path: 'series/details/:id',
+                title: 'Séries - Détails',
+                loadComponent: () => import('./videos/serie-details/serie-details-page/serie-details-page').then(m => m.SerieDetailsPage),
+                data: {
+                    title: 'Séries - Détails',
+                    breadcrumb: [{ label: 'Séries' }, { label: 'Détails' }],
                 },
             },
         ]
