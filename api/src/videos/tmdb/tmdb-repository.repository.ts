@@ -20,7 +20,7 @@ export class TmdbRepositoryRepository {
     switch (type) {
       case VideoType.Movie:
         return VideoType.Movie;
-      case 'series':
+      case VideoType.Serie:
         return 'tv';
       default:
         throw new Error('Invalid video type');
@@ -34,11 +34,18 @@ export class TmdbRepositoryRepository {
   }
 
   async getDirector(id: number, type: VideoType): Promise<Director> {
-    const url = `https://api.themoviedb.org/3/${this.mapFromVideoTypeToType(type)}/${id}/credits?api_key=${this.apiKey}&language=fr-FR`;
-    const response = await firstValueFrom(this.httpService.get(url));
-    const crew = response.data.crew;
-    const director = crew.find((member) => member.job === 'Director');
-    return this.mapFromTmdbDirectorResponseToDirector(director);
+    if (type === VideoType.Serie) {
+      const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${this.apiKey}&language=fr-FR`;
+      const response = await firstValueFrom(this.httpService.get(url));
+      const creator = response.data.created_by?.[0];
+      return this.mapFromTmdbCreatorResponseToDirector(creator);
+    } else {
+      const url = `https://api.themoviedb.org/3/${this.mapFromVideoTypeToType(type)}/${id}/credits?api_key=${this.apiKey}&language=fr-FR`;
+      const response = await firstValueFrom(this.httpService.get(url));
+      const crew = response.data.crew;
+      const director = crew.find((member) => member.job === 'Director');
+      return this.mapFromTmdbDirectorResponseToDirector(director);
+    }
   }
 
   async getProviders(id: number, type: VideoType): Promise<VideoProvider[]> {
@@ -150,14 +157,14 @@ export class TmdbRepositoryRepository {
     } else {
       series = await this.getSeriesWithSearch(search);
     }
-    return this.mapFromTmdbResponseToVideo(series, genres, VideoType.Series);
+    return this.mapFromTmdbResponseToVideo(series, genres, VideoType.Serie);
   }
 
   async getSerie(id: number): Promise<Video> {
     const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${this.apiKey}&language=fr-FR`;
 
     const response = await firstValueFrom(this.httpService.get(url));
-    return this.mapFromTmdbSerieDetailsResponseToVideo(response.data, VideoType.Series);
+    return this.mapFromTmdbSerieDetailsResponseToVideo(response.data, VideoType.Serie);
   }
 
   private async getSeriesNowPlaying() {
@@ -286,6 +293,7 @@ export class TmdbRepositoryRepository {
     tmdbSerieDetailsResponse: TmdbSerieDetailsResponse,
     type: VideoType,
   ): Video {
+    console.log('Mapping TMDB Serie Details Response to Video:', tmdbSerieDetailsResponse);
     return new Video({
       externalId: tmdbSerieDetailsResponse.id.toString(),
       title: tmdbSerieDetailsResponse.name,
@@ -295,12 +303,13 @@ export class TmdbRepositoryRepository {
         ? `https://image.tmdb.org/t/p/w300${tmdbSerieDetailsResponse.poster_path}`
         : null,
       type: type,
+      globalRating: tmdbSerieDetailsResponse.vote_average,
       genres: tmdbSerieDetailsResponse.genres.map((g) => g.name),
       productionCompanies: this.mapFromTmdbProductionCompanyResponseToProductionCompanies(
         tmdbSerieDetailsResponse.production_companies,
       ),
       serieDetails:
-        type === VideoType.Series
+        type === VideoType.Serie
           ? this.mapFromTmdbMovieDetailsResponseToSerieDetails(
               tmdbSerieDetailsResponse,
             )
@@ -327,6 +336,8 @@ export class TmdbRepositoryRepository {
     return {
       numberOfSeasons: tmdbSerieDetailsResponse.number_of_seasons,
       numberOfEpisodes: tmdbSerieDetailsResponse.number_of_episodes,
+      originalLanguage: tmdbSerieDetailsResponse.original_language,
+      tagline: tmdbSerieDetailsResponse.tagline,
       seasons: tmdbSerieDetailsResponse.seasons.map((season) => ({
         seasonNumber: season.season_number,
         episodes: [],
@@ -342,11 +353,37 @@ export class TmdbRepositoryRepository {
   private mapFromTmdbDirectorResponseToDirector(
     tmdbDirectorResponse: TmdbDirectorResponse,
   ): Director {
+    if (!tmdbDirectorResponse) {
+      return {
+        id: 0,
+        name: 'Unknown',
+        fileUrl: null,
+      };
+    }
     return {
       id: tmdbDirectorResponse.id,
       name: tmdbDirectorResponse.name,
       fileUrl: tmdbDirectorResponse.profile_path
         ? `https://image.tmdb.org/t/p/w300${tmdbDirectorResponse.profile_path}`
+        : null,
+    };
+  }
+
+  private mapFromTmdbCreatorResponseToDirector(
+    tmdbCreatorResponse: { id: number; name: string; profile_path: string | null },
+  ): Director {
+    if (!tmdbCreatorResponse) {
+      return {
+        id: 0,
+        name: 'Unknown',
+        fileUrl: null,
+      };
+    }
+    return {
+      id: tmdbCreatorResponse.id,
+      name: tmdbCreatorResponse.name,
+      fileUrl: tmdbCreatorResponse.profile_path
+        ? `https://image.tmdb.org/t/p/w300${tmdbCreatorResponse.profile_path}`
         : null,
     };
   }

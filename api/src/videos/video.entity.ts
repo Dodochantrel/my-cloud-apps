@@ -4,7 +4,7 @@ import { SerieDetails } from './interfaces/serie-details.interface';
 import { ProductionCompany } from './interfaces/production-company.interface';
 
 export enum VideoType {
-  Series = 'series',
+  Serie = 'serie',
   Movie = 'movie',
   Anime = 'anime',
 }

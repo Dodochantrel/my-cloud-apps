@@ -19,7 +19,7 @@ export class VideosService {
     switch (type) {
       case VideoType.Movie:
         return this.tmdbRepositoryRepository.getMovies(search)
-      case VideoType.Series:
+      case VideoType.Serie:
         return this.tmdbRepositoryRepository.getSeries(search)
       default:
         return Promise.resolve([]);
@@ -30,7 +30,7 @@ export class VideosService {
     switch (type) {
       case VideoType.Movie:
         return this.tmdbRepositoryRepository.getMovie(Number(externalId))
-      case VideoType.Series:
+      case VideoType.Serie:
         return this.tmdbRepositoryRepository.getSerie(Number(externalId))
       default:
         return Promise.resolve(null);
