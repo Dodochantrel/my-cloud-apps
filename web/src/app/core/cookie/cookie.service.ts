@@ -8,7 +8,7 @@ export class CookieService {
   constructor(private cookieService: NgxCookieService) {}
 
   public set(key: string, data: string) {
-    this.cookieService.set(key, data);
+    this.cookieService.set(key, data, { path: '/' });
   }
 
   public get(key: string): string {
@@ -16,6 +16,6 @@ export class CookieService {
   }
 
   public delete(key: string) {
-    this.cookieService.delete(key);
+    this.cookieService.delete(key, '/');
   }
 }

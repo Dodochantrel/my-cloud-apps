@@ -1,10 +1,11 @@
 import { Component, input } from '@angular/core';
 import { TitleComponent } from '../../../../shared/components/title-component/title-component';
 import { VideoProvider } from '../../../../core/models/videos/video-provider';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-provider-component',
-  imports: [TitleComponent],
+  imports: [TitleComponent, SkeletonModule],
   templateUrl: './provider-component.html',
   styleUrl: './provider-component.css',
 })

@@ -25,6 +25,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: PrimeNgPreset,
         options: {
+          darkModeSelector: '.my-app-dark',
           cssLayer: {
               name: 'primeng',
               order: 'theme, base, primeng'

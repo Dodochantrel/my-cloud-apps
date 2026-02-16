@@ -7,10 +7,13 @@ import { CommonModule } from '@angular/common';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { FormsModule } from '@angular/forms';
+import { ThemeService } from '../../../../core/theme/theme-service';
 
 @Component({
   selector: 'app-application-header-component',
-  imports: [CommonModule, BreadcrumbModule, MenuModule, ButtonModule],
+  imports: [CommonModule, BreadcrumbModule, MenuModule, ButtonModule, ToggleSwitchModule, FormsModule],
   templateUrl: './application-header-component.html',
   styleUrl: './application-header-component.css',
 })
@@ -32,6 +35,7 @@ export class ApplicationHeaderComponent {
     private router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly notificationService: NotificationService,
+    protected readonly themeService: ThemeService,
   ) {}
 
   ngOnInit() {
