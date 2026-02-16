@@ -1,5 +1,6 @@
-import { MovieDetails } from "./movie-details";
+import { MovieDetails } from './movie-details';
 import { ProductionCompany } from "./production-company";
+import { SerieDetails } from './serie-details';
 import { VideoCasting } from "./video-casting";
 import { VideoDirector } from "./video-director";
 import { VideoProvider } from "./video-provider";
@@ -19,6 +20,7 @@ export class Video {
   castings: VideoCasting[] = [];
   director: VideoDirector | null = null;
   movieDetails: MovieDetails | null = null;
+  serieDetails: SerieDetails | null = null;
   productionCompanies: ProductionCompany[] = [];
   trailer: VideoTrailer | null = null;
   providers: VideoProvider[] = [];

@@ -7,11 +7,14 @@
                 <label>Rechercher un film</label>
                 <p-autocomplete 
                     placeholder="Seven" 
-                    [(ngModel)]="movieListService.search" 
+                    [ngModel]="movieListService.search()" 
+                    (ngModelChange)="onSearchChange($event)"
                     [suggestions]="movieListService.videos()" 
+                    [optionLabel]="'title'"
+                    [forceSelection]="false"
                     fluid 
                     [showEmptyMessage]="true"
-                    (onSelect)="redirectToVideoDetails()"
+                    (onSelect)="redirectToVideoDetails($event)"
                 >
                     <ng-template let-video #item>
                         <div class="flex items-center gap-2">

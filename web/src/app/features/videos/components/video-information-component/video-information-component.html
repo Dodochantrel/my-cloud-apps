@@ -1,10 +1,9 @@
 <div class="flex gap-4 flex-wrap">
 
     @if (isLoading()) {
-        <p-skeleton width="100%" height="128" class="max-w-md mr-4" />
+    <p-skeleton width="100%" height="128" class="max-w-md mr-4" />
     } @else {
-        <img [src]="video()?.fileUrlOrEmpty" alt="file"
-            class="w-full max-w-md h-128 object-cover rounded-md mr-4" />
+    <img [src]="video()?.fileUrlOrEmpty" alt="file" class="w-full max-w-md h-128 object-cover rounded-md mr-4" />
     }
 
     <div class="flex flex-col gap-4 flex-1 min-w-96">
@@ -12,7 +11,11 @@
         @if (isLoading()) {
         <p-skeleton width="100%" height="2rem" />
         } @else {
+        @if( video()?.type === 'movie') {
         <p class="text-primary font-bold">{{ video()?.movieDetails?.tagline }}</p>
+        } @else if (video()?.type === 'serie') {
+        <p class="text-primary font-bold">{{ video()?.serieDetails?.tagline }}</p>
+        }
         }
 
         @if (isLoading()) {
@@ -37,35 +40,42 @@
                 <span>{{ video()?.releaseYear }}</span>
             </div>
             <span class="text-border">•</span>
+            @if (video()?.type === 'movie') {
             <div class="flex gap-2">
                 <span class="material-icons-outlined">access_time</span>
                 <span>{{ video()?.movieDetails?.durationInHoursAndMinutes }}</span>
             </div>
+            } @else if (video()?.type === 'serie') {
+            <div class="flex gap-2">
+                <span class="material-icons-outlined">access_time</span>
+                <span>{{ video()?.serieDetails?.numberOfSeasons }} saisons</span>
+            </div>
+            }
         </div>
         }
 
 
         <div class="flex gap-4 w-full">
             @if (isLoading()) {
-                <p-skeleton width="100%" height="2rem" />
-                <p-skeleton width="100%" height="2rem" />
-                <p-skeleton width="100%" height="2rem" />
+            <p-skeleton width="100%" height="2rem" />
+            <p-skeleton width="100%" height="2rem" />
+            <p-skeleton width="100%" height="2rem" />
             } @else {
-                @for (genre of video()?.genres; track $index) {
-                    <p-tag [value]="genre" class="text-sm" />
-                } @empty {
-                    <p>Aucune catégorie annoncée</p>
-                }
+            @for (genre of video()?.genres; track $index) {
+            <p-tag [value]="genre" class="text-sm" />
+            } @empty {
+            <p>Aucune catégorie annoncée</p>
+            }
             }
         </div>
 
         @if (isLoading()) {
         <p-skeleton width="100%" height="8rem" />
         } @else {
-            <div>
-                <p class="text-primary font-bold">Synopsis</p>
-                <p class="text-muted-color">{{ video()?.description }}</p>
-            </div>
+        <div>
+            <p class="text-primary font-bold">Synopsis</p>
+            <p class="text-muted-color">{{ video()?.description }}</p>
+        </div>
         }
 
         <div class="flex gap-4">
@@ -82,14 +92,10 @@
 
         </div>
 
-        <p-dialog header="Bande-annonce" [modal]="true" [(visible)]="isVisibleTrailerDialog" [style]="{ width: '70vw' }" [closable]="true" [dismissableMask]="true">
-            <iframe 
-                [src]="video()?.trailer?.url | safeUrl"
-                width="100%" 
-                height="400px" 
-                frameborder="0" 
-                allow="autoplay; encrypted-media" 
-                allowfullscreen>
+        <p-dialog header="Bande-annonce" [modal]="true" [(visible)]="isVisibleTrailerDialog" [style]="{ width: '70vw' }"
+            [closable]="true" [dismissableMask]="true">
+            <iframe [src]="video()?.trailer?.url | safeUrl" width="100%" height="400px" frameborder="0"
+                allow="autoplay; encrypted-media" allowfullscreen>
             </iframe>
 
         </p-dialog>

@@ -37,7 +37,7 @@ export class SerieListService {
   private readonly videosResource = httpResource<any>(
     () =>
       this.videosRoutes.getAll(
-        this.search(), this.page(), this.limit(), 'series'
+        this.search(), this.page(), this.limit(), 'serie'
       )
   );
 

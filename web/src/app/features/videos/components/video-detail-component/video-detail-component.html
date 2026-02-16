@@ -8,8 +8,7 @@
 
             <div class="flex h-24 p-4 rounded-md border border-surface gap-2">
 
-                <img [src]="video()?.director?.fileUrl" alt="directeur"
-                    class="h-full object-cover rounded-md w-12" />
+                <img [src]="video()?.director?.fileUrl" alt="directeur" class="h-full object-cover rounded-md w-12" />
 
                 <div class="flex-1">
                     <p class="font-bold text-muted-color">Réalisateur</p>
@@ -26,11 +25,16 @@
 
                 <div class="flex-1">
                     <p class="font-bold text-muted-color">Langue originale</p>
+                    @if (video()?.type === 'movie') {
                     <p>{{ video()?.movieDetails?.originalLanguage }}</p>
+                    } @else if(video()?.type === 'serie') {
+                    <p>{{ video()?.serieDetails?.originalLanguage }}</p>
+                    }
                 </div>
 
             </div>
 
+            @if(video()?.type === 'movie') {
             <div class="flex p-4 rounded-md border border-surface gap-2 h-20">
 
                 <div class="flex justify-center items-center h-full bg-surface-100 w-12 rounded-md">
@@ -43,7 +47,9 @@
                 </div>
 
             </div>
+            }
 
+            @if(video()?.type === 'movie') {
             <div class="flex p-4 rounded-md border border-surface gap-2 h-20">
 
                 <div class="flex justify-center items-center h-full bg-surface-100 w-12 rounded-md">
@@ -56,8 +62,10 @@
                 </div>
 
             </div>
+            }
 
         </div>
+
 
         <div class="flex-1 rounded-md border border-surface p-4 min-w-96">
 

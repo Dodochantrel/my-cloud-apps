@@ -47,10 +47,23 @@ export class MovieListPage implements OnInit {
     });
   }
 
-  redirectToVideoDetails() {
-    const search = this.movieListService.search();
-    if (search?.externalId) {
-      this.router.navigate(['/movies/details', search.externalId]);
+  onSearchChange(value: string | { title?: string }) {
+    if (typeof value === 'string') {
+      this.movieListService.search.set(value);
+      return;
+    }
+
+    if (value?.title) {
+      this.movieListService.search.set(value.title);
+      return;
+    }
+
+    this.movieListService.search.set('');
+  }
+
+  redirectToVideoDetails(event: any) {
+    if (event?.value?.externalId) {
+      this.router.navigate(['/movies/details', event.value.externalId]);
     }
   }
 }

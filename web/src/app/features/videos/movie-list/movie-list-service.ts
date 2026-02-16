@@ -7,7 +7,7 @@ import { NotificationService } from '../../../core/notification/notification-ser
   providedIn: 'root',
 })
 export class MovieListService {
-  public search = signal<any>(null);
+  public search = signal<string>('');
   public page = signal<number>(1);
   public limit = signal<number>(20);
 

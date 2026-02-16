@@ -5,7 +5,17 @@
         <div class="flex w-full gap-4 items-end mt-4">
             <div class="w-full">
                 <label>Rechercher une série</label>
-                <p-autocomplete placeholder="Seven" [(ngModel)]="serieListService.search" [suggestions]="serieListService.videos()" fluid (onSelect)="redirectToVideoDetails()" >
+                <p-autocomplete 
+                    placeholder="Breaking Bad" 
+                    [ngModel]="serieListService.search()" 
+                    (ngModelChange)="onSearchChange($event)"
+                    [suggestions]="serieListService.videos()" 
+                    [optionLabel]="'title'"
+                    [forceSelection]="false"
+                    fluid 
+                    [showEmptyMessage]="true"
+                    (onSelect)="redirectToVideoDetails($event)"
+                >
                     <ng-template let-video #item>
                         <div class="flex items-center gap-2">
                             <img [src]="video.fileUrl" style="width: 18px" />

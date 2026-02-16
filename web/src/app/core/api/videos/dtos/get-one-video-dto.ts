@@ -1,5 +1,6 @@
 import { MovieDetails } from '../../../models/videos/movie-details';
 import { ProductionCompany } from '../../../models/videos/production-company';
+import { SerieDetails } from '../../../models/videos/serie-details';
 import { Video } from '../../../models/videos/video';
 
 export interface GetOneVideoDto {
@@ -24,7 +25,7 @@ export interface GetOneVideoDto {
   serieDetails?: {
     numberOfSeasons: number;
     numberOfEpisodes: number;
-    originalTitle: string;
+    originalLanguage: string;
     tagline: string;
   };
   productionCompanies: {
@@ -42,7 +43,6 @@ const mapFromProductionCompaniesDtoToProductionCompanies = (dto: GetOneVideoDto[
         company.id,
         company.fileUrl,
         company.name,
-        company.originCountry,
       ),
   );
 }
@@ -67,6 +67,14 @@ export const mapFromGetOneVideoDtoToVideo = (dto: GetOneVideoDto): Video => {
         dto.movieDetails.budget,
         dto.movieDetails.revenue,
         dto.movieDetails.originalLanguage,
+      )
+    : null;
+  video.serieDetails = dto.serieDetails
+    ? new SerieDetails(
+        dto.serieDetails.numberOfSeasons,
+        dto.serieDetails.numberOfEpisodes,
+        dto.serieDetails.tagline,
+        dto.serieDetails.originalLanguage,
       )
     : null;
   video.backdropUrl = dto.backdropUrl;

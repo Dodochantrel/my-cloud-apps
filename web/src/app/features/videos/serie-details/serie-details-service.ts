@@ -20,7 +20,7 @@ export class serieDetailsService {
     () =>
       this.id() ? this.videosRoutes.getOne(
         this.id()!,
-        'series'
+        'serie'
       ) : ''
   );
 
@@ -33,7 +33,7 @@ export class serieDetailsService {
     () =>
       this.externalId() ? this.videosRoutes.getCastings(
         this.externalId(),
-        'series'
+        'serie'
       ) : ''
   );
 
@@ -41,7 +41,7 @@ export class serieDetailsService {
     () =>
       this.externalId() ? this.videosRoutes.getDirector(
         this.externalId(),
-        'series'
+        'serie'
       ) : ''
   );
 
@@ -49,7 +49,7 @@ export class serieDetailsService {
     () =>
       this.externalId() ? this.videosRoutes.getProviders(
         this.externalId(),
-        'series'
+        'serie'
       ) : ''
   );
 
@@ -86,7 +86,7 @@ export class serieDetailsService {
       return;
     }
     this.isLoadingTrailer.set(true);
-    return this.videosRoutes.getTrailer(this.externalId(), 'series').subscribe({
+    return this.videosRoutes.getTrailer(this.externalId(), 'serie').subscribe({
       next: (trailer) => {
         this.isLoadingTrailer.set(false);
         const currentVideo = this.video();

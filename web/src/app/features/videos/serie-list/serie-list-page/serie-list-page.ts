@@ -47,7 +47,23 @@ export class SerieListPage {
     });
   }
 
-  redirectToVideoDetails() {
-    this.router.navigate(['/series/details', this.serieListService.search().externalId]);
+  onSearchChange(value: string | { title?: string }) {
+    if (typeof value === 'string') {
+      this.serieListService.search.set(value);
+      return;
+    }
+
+    if (value?.title) {
+      this.serieListService.search.set(value.title);
+      return;
+    }
+
+    this.serieListService.search.set('');
+  }
+
+  redirectToVideoDetails(event: any) {
+    if (event?.value?.externalId) {
+      this.router.navigate(['/series/details', event.value.externalId]);
+    }
   }
 }
