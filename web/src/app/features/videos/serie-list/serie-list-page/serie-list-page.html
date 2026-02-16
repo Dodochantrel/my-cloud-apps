@@ -14,10 +14,10 @@
                     [forceSelection]="false"
                     fluid 
                     [showEmptyMessage]="true"
-                    (onSelect)="redirectToVideoDetails($event)"
+                    (onSelect)="redirectToVideoDetails($event.value)"
                 >
                     <ng-template let-video #item>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2" (click)="redirectToVideoDetails(video)">
                             <img [src]="video.fileUrl" style="width: 18px" />
                             <div>{{ video.title }}</div>
                         </div>

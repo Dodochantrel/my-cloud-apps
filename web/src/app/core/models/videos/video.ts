@@ -4,6 +4,7 @@ import { SerieDetails } from './serie-details';
 import { VideoCasting } from "./video-casting";
 import { VideoDirector } from "./video-director";
 import { VideoProvider } from "./video-provider";
+import { VideoSeason } from './video-season';
 import { VideoTrailer } from "./video-trailer";
 
 export class Video {
@@ -24,6 +25,7 @@ export class Video {
   productionCompanies: ProductionCompany[] = [];
   trailer: VideoTrailer | null = null;
   providers: VideoProvider[] = [];
+  seasons: VideoSeason[] = [];
 
   constructor(
     externalId: string,

@@ -8,10 +8,11 @@ import { VideoInformationComponent } from '../../components/video-information-co
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { serieDetailsService } from '../serie-details-service';
+import { SeasonComponent } from '../../components/season-component/season-component';
 
 @Component({
   selector: 'app-serie-details-page',
-  imports: [DefaultContainerComponent, TooltipModule, VideoInformationComponent, ProviderComponent, CastingComponent, VideoDetailComponent],
+  imports: [DefaultContainerComponent, TooltipModule, VideoInformationComponent, ProviderComponent, CastingComponent, VideoDetailComponent, SeasonComponent],
   templateUrl: './serie-details-page.html',
   styleUrl: './serie-details-page.css',
 })

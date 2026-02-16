@@ -1,0 +1,40 @@
+<div class="mt-8">
+
+    <app-title-component styleClass="h2">Saisons</app-title-component>
+
+    @if (isLoading()) {
+        <div class="flex w-full flex-col gap-4">
+            <p-skeleton class="w-full" height="4rem" />
+            <p-skeleton class="w-full" height="4rem" />
+            <p-skeleton class="w-full" height="4rem" />
+            <p-skeleton class="w-full" height="4rem" />
+            <p-skeleton class="w-full" height="4rem" />
+        </div>
+    } @else {
+
+        <p-accordion value="0">
+        @for (season of video()?.seasons; track $index) {
+        <p-accordion-panel [value]="$index">
+            <p-accordion-header>Saison {{ season.number }}</p-accordion-header>
+            <p-accordion-content>
+                <div class="flex flex-col">
+                    @for (episode of season.episodes; track $index) {
+                    <div class="flex gap-2">
+                        <img [src]="episode.path" alt="provider" class="h-18 object-contain rounded-md" />
+                        <div class="flex flex-col gap-1">
+                            <p class="font-bold text-left">Episode {{ episode.number }} : {{ episode.name }}</p>
+                            <p>{{ episode.overview }}</p>
+                        </div>
+                    </div>
+                    <p-divider />
+                    }
+                </div>
+
+            </p-accordion-content>
+        </p-accordion-panel>
+        }
+    </p-accordion>
+
+    }
+
+</div>

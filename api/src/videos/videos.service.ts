@@ -52,4 +52,8 @@ export class VideosService {
   async getProviders(externalId: string, type: VideoType): Promise<VideoProvider[]> {
     return this.tmdbRepositoryRepository.getProviders(Number(externalId), type);
   }
+
+  async getSeasons(externalId: string): Promise<any[]> {
+    return this.tmdbRepositoryRepository.getSeasons(Number(externalId));
+  }
 }

@@ -37,4 +37,8 @@ export class VideosRoutes {
       .get<GetTrailerDto>(`${this.baseUrl}/${externalId}/trailer?type=${type}`)
       .pipe(map((dto) => mapFromGetTrailerDtoToVideoTrailer(dto)));
   }
+
+  public getSeasons(externalId: string, type: 'movie' | 'serie'): string {
+    return `${this.baseUrl}/${externalId}/seasons?type=${type}`;
+  }
 }

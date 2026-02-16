@@ -60,4 +60,11 @@ export class VideosController {
     ) {
         return this.videosService.getProviders(id, dto.type);
     }
+
+    @Get(':id/seasons')
+    async getSeasons(
+        @Param('id') id: string,
+    ) {
+        return this.videosService.getSeasons(id);
+    }
 }

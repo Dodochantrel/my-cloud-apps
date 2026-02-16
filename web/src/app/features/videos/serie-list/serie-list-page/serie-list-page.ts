@@ -6,6 +6,7 @@ import { DefaultContainerComponent } from '../../../../shared/components/default
 import { FooterTableComponent } from '../../../../shared/components/footer-table-component/footer-table-component';
 import { SerieListService } from '../serie-list-service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Video } from '../../../../core/models/videos/video';
 
 @Component({
   selector: 'app-serie-list-page',
@@ -61,9 +62,9 @@ export class SerieListPage {
     this.serieListService.search.set('');
   }
 
-  redirectToVideoDetails(event: any) {
-    if (event?.value?.externalId) {
-      this.router.navigate(['/series/details', event.value.externalId]);
+  redirectToVideoDetails(video: Video) {
+    if (video?.externalId) {
+      this.router.navigate(['/series/details', video.externalId]);
     }
   }
 }

@@ -7,6 +7,8 @@
     <app-provider-component [isLoading]="serieDetailsService.isLoadingProviders()"
         [providers]="serieDetailsService.video()?.providers!" />
 
+    <app-season-component [video]="serieDetailsService.video()" [isLoading]="serieDetailsService.isLoadingSeasons()" />
+
     <app-casting-component [isLoading]="serieDetailsService.isLoadingCasting()" [castings]="serieDetailsService.video()?.castings!" />
 
     <app-video-detail-component [video]="serieDetailsService.video()" />

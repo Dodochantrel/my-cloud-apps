@@ -6,6 +6,7 @@ import { GetOneVideoDto, mapFromGetOneVideoDtoToVideo } from '../../../core/api/
 import { GetCastingDto, mapFromListGetCastingDtoToVideoCastingList } from '../../../core/api/videos/dtos/get-casting-dto';
 import { GetDirectorDto, mapFromGetDirectorDtoToVideoDirector } from '../../../core/api/videos/dtos/get-director-dto';
 import { mapFromGetProviderDtoArrayToVideoProviderArray } from '../../../core/api/videos/dtos/get-provider-dto';
+import { mapFromGetSeasonDtosToVideoSeasons } from '../../../core/api/videos/dtos/get-season-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -53,6 +54,14 @@ export class serieDetailsService {
       ) : ''
   );
 
+  private readonly videoSeasonsResource = httpResource<any>(
+    () =>
+      this.externalId() ? this.videosRoutes.getSeasons(
+        this.externalId(),
+        'serie'
+      ) : ''
+  );
+
   video = linkedSignal(() => {
     const videoData = this.videoResource.value();
     if (!videoData) return null;
@@ -70,6 +79,10 @@ export class serieDetailsService {
     if (providersData) {
       mappedVideo.providers = mapFromGetProviderDtoArrayToVideoProviderArray(providersData);
     }
+    const seasonsData = this.videoSeasonsResource.value();
+    if (seasonsData) {
+      mappedVideo.seasons = mapFromGetSeasonDtosToVideoSeasons(seasonsData);
+    }
     return mappedVideo;
   });
 
@@ -77,7 +90,7 @@ export class serieDetailsService {
   public isLoadingCasting = this.videoCastingResource.isLoading;
   public isLoadingDirector = this.videoDirectorResource.isLoading;
   public isLoadingProviders = this.videoProvidersResource.isLoading;
-
+  public isLoadingSeasons = this.videoSeasonsResource.isLoading;
   public isVisibleTrailerDialog = signal<boolean>(false);
   public isLoadingTrailer = signal<boolean>(false);
 

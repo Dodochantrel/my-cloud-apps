@@ -9,6 +9,7 @@ import { MovieDetails } from '../interfaces/movie-details.interface';
 import { SerieDetails } from '../interfaces/serie-details.interface';
 import { Episode } from '../interfaces/episode.interface';
 import { ProductionCompany } from '../interfaces/production-company.interface';
+import { Season } from '../interfaces/season.interface';
 
 @Injectable()
 export class TmdbRepositoryRepository {
@@ -58,12 +59,6 @@ export class TmdbRepositoryRepository {
           ),
         )
       : [];
-  }
-
-  async getEpisodes(id: number, seasonNumber: number): Promise<Episode[]> {
-    const url = `https://api.themoviedb.org/3/tv/${id}/season/${seasonNumber}?api_key=${this.apiKey}&language=fr-FR`;
-    const response = await firstValueFrom(this.httpService.get(url));
-    return this.mapFromTmdbEpisodeResponseToEpisodes(response.data.episodes);
   }
 
   async getSimilar(id: number, type: VideoType): Promise<Video[]> {
@@ -127,6 +122,23 @@ export class TmdbRepositoryRepository {
       (item) => item.type === 'Trailer' && item.site === 'YouTube',
     );
     return trailer?.key ? `https://www.youtube.com/embed/${trailer.key}` : null;
+  }
+
+  async getSeasons(id: number): Promise<Season[]> {
+    const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${this.apiKey}&language=fr-FR`;
+    const response = await firstValueFrom(this.httpService.get(url));
+    
+    // Récupérer les détails de chaque saison avec les épisodes (en excluant la saison 0)
+    const seasonsWithEpisodes = await Promise.all(
+      response.data.seasons
+        .filter((season: any) => season.season_number !== 0)
+        .map(async (season: any) => {
+          const seasonUrl = `https://api.themoviedb.org/3/tv/${id}/season/${season.season_number}?api_key=${this.apiKey}&language=fr-FR`;
+          const seasonResponse = await firstValueFrom(this.httpService.get(seasonUrl));
+          return this.mapFromTmdbSeasonDetailsResponseToSeason(seasonResponse.data);
+        }),
+    );
+    return seasonsWithEpisodes.filter((season) => season !== null);
   }
 
   private async getMoviesNowPlaying() {
@@ -293,7 +305,6 @@ export class TmdbRepositoryRepository {
     tmdbSerieDetailsResponse: TmdbSerieDetailsResponse,
     type: VideoType,
   ): Video {
-    console.log('Mapping TMDB Serie Details Response to Video:', tmdbSerieDetailsResponse);
     return new Video({
       externalId: tmdbSerieDetailsResponse.id.toString(),
       title: tmdbSerieDetailsResponse.name,
@@ -408,30 +419,6 @@ export class TmdbRepositoryRepository {
     );
   }
 
-  private mapFromTmdbEpisodeResponseToEpisode(
-    tmdbEpisodeResponse: TmdbEpisodeResponse,
-  ): Episode {
-    return {
-      id: tmdbEpisodeResponse.id,
-      number: tmdbEpisodeResponse.episode_number,
-      name: tmdbEpisodeResponse.name,
-      description: tmdbEpisodeResponse.overview,
-      airDate: new Date(tmdbEpisodeResponse.air_date),
-      duration: tmdbEpisodeResponse.runtime,
-      fileUrl: tmdbEpisodeResponse.still_path
-        ? `https://image.tmdb.org/t/p/w300${tmdbEpisodeResponse.still_path}`
-        : null,
-    };
-  }
-
-  private mapFromTmdbEpisodeResponseToEpisodes(
-    tmdbEpisodeResponse: TmdbEpisodeResponse[],
-  ): Episode[] {
-    return tmdbEpisodeResponse.map((episode) =>
-      this.mapFromTmdbEpisodeResponseToEpisode(episode),
-    );
-  }
-
   private mapFromTmdbProductionCompanyResponseToProductionCompanies(
     tmdbProductionCompanyResponse: TmdbProductionCompanyResponse[],
   ): ProductionCompany[] {
@@ -443,6 +430,31 @@ export class TmdbRepositoryRepository {
       name: company.name,
       originCountry: company.origin_country,
     }));
+  }
+
+  private mapFromTmdbSeasonDetailsResponseToSeason(
+      tmdbSeasonDetailsResponse: TmdbSeasonDetailsResponse,
+  ): Season {
+    return {
+      seasonNumber: tmdbSeasonDetailsResponse.season_number,
+      airDate: tmdbSeasonDetailsResponse.air_date 
+        ? new Date(tmdbSeasonDetailsResponse.air_date) 
+        : null,
+      overview: tmdbSeasonDetailsResponse.overview,
+      episodes: tmdbSeasonDetailsResponse.episodes.map((episode) => ({
+        id: episode.id,
+        number: episode.episode_number,
+        name: episode.name,
+        overview: episode.overview,
+        release: new Date(episode.air_date),
+        duration: episode.runtime,
+        seasonNumber: episode.season_number,
+        path: episode.still_path
+          ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+          : null,
+        globalRating: episode.vote_average,
+      })),
+    };
   }
 }
 
@@ -680,4 +692,42 @@ export interface TmdbTrailerResponse {
   site: string;
   size: number;
   type: string;
+}
+
+export interface TmdbSeasonDetailsResponse {
+  _id: string,
+  air_date: string,
+  episodes: [
+    {
+      air_date: string,
+      episode_number: number,
+      episode_type: string,
+      id: number,
+      name: string,
+      overview: string,
+      production_code: string,
+      runtime: number,
+      season_number: number,
+      show_id: number,
+      still_path: string | null,
+      vote_average: number,
+      vote_count: number,
+      crew: any[],
+      guest_stars: any[]
+    },
+  ],
+  name: string,
+  networks: [
+    {
+      id: number,
+      logo_path: string | null,
+      name: string,
+      origin_country: string
+    }
+  ],
+  overview: string,
+  id: number,
+  poster_path: string | null,
+  season_number: number,
+  vote_average: number
 }

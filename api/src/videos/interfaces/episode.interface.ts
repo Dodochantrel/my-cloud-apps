@@ -1,9 +1,11 @@
 export interface Episode {
-  id: number;
+  release: Date;
   number: number;
+  id: number;
   name: string;
-  description: string;
-  airDate: Date;
+  overview: string;
   duration: number;
-  fileUrl: string | null;
+  seasonNumber: number;
+  path: string | null;
+  globalRating: number;
 }
