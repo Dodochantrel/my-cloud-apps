@@ -1,20 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { AutoComplete } from 'primeng/autocomplete';
+import { Component, effect, OnInit } from '@angular/core';
 import { DefaultContainerComponent } from '../../../../shared/components/default-container-component/default-container-component';
 import { FooterTableComponent } from '../../../../shared/components/footer-table-component/footer-table-component';
 import { SerieListService } from '../serie-list-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Video } from '../../../../core/models/videos/video';
+import { VideoSearchInputComponent } from '../../components/video-search-input-component/video-search-input-component';
 
 @Component({
   selector: 'app-serie-list-page',
-  imports: [DefaultContainerComponent, FooterTableComponent, FooterTableComponent, AutoComplete, CommonModule, FormsModule],
+  imports: [DefaultContainerComponent, FooterTableComponent, VideoSearchInputComponent, CommonModule],
   templateUrl: './serie-list-page.html',
   styleUrl: './serie-list-page.css',
 })
-export class SerieListPage {
+export class SerieListPage implements OnInit {
   constructor(
     protected readonly serieListService: SerieListService,
     private activatedRoute: ActivatedRoute,
@@ -48,18 +47,8 @@ export class SerieListPage {
     });
   }
 
-  onSearchChange(value: string | { title?: string }) {
-    if (typeof value === 'string') {
-      this.serieListService.search.set(value);
-      return;
-    }
-
-    if (value?.title) {
-      this.serieListService.search.set(value.title);
-      return;
-    }
-
-    this.serieListService.search.set('');
+  onSearchChange(value: string) {
+    this.serieListService.search.set(value);
   }
 
   redirectToVideoDetails(video: Video) {

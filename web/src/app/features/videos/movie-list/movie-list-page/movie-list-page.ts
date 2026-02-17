@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DefaultContainerComponent } from '../../../../shared/components/default-container-component/default-container-component';
 import { FooterTableComponent } from "../../../../shared/components/footer-table-component/footer-table-component";
 import { MovieListService } from '../movie-list-service';
-import { AutoComplete } from 'primeng/autocomplete';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { VideoSearchInputComponent } from '../../components/video-search-input-component/video-search-input-component';
+import { Video } from '../../../../core/models/videos/video';
+import { TabsModule } from 'primeng/tabs';
 
 @Component({
   selector: 'app-movie-list-page',
-  imports: [DefaultContainerComponent, FooterTableComponent, FooterTableComponent, AutoComplete, CommonModule, FormsModule],
+  imports: [DefaultContainerComponent, FooterTableComponent, VideoSearchInputComponent, TabsModule],
   templateUrl: './movie-list-page.html',
   styleUrl: './movie-list-page.css',
 })
@@ -47,23 +47,13 @@ export class MovieListPage implements OnInit {
     });
   }
 
-  onSearchChange(value: string | { title?: string }) {
-    if (typeof value === 'string') {
-      this.movieListService.search.set(value);
-      return;
-    }
-
-    if (value?.title) {
-      this.movieListService.search.set(value.title);
-      return;
-    }
-
-    this.movieListService.search.set('');
+  onSearchChange(value: string) {
+    this.movieListService.search.set(value);
   }
 
-  redirectToVideoDetails(event: any) {
-    if (event?.value?.externalId) {
-      this.router.navigate(['/movies/details', event.value.externalId]);
+  redirectToVideoDetails(video: Video) {
+    if (video?.externalId) {
+      this.router.navigate(['/movies/details', video.externalId]);
     }
   }
 }
