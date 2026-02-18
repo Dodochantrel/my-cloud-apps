@@ -7,9 +7,9 @@ import { Director } from '../interfaces/director.interface';
 import { VideoProvider } from '../interfaces/provider.interface';
 import { MovieDetails } from '../interfaces/movie-details.interface';
 import { SerieDetails } from '../interfaces/serie-details.interface';
-import { Episode } from '../interfaces/episode.interface';
 import { ProductionCompany } from '../interfaces/production-company.interface';
 import { Season } from '../interfaces/season.interface';
+import { PageQuery } from 'src/pagination/page-query';
 
 @Injectable()
 export class TmdbRepositoryRepository {
@@ -88,17 +88,21 @@ export class TmdbRepositoryRepository {
 
     // 4. Supprimer les doublons (même id)
     results = results.filter(
-      (movie, index, self) => index === self.findIndex((m) => m.id === movie.id),
+      (movie, index, self) =>
+        index === self.findIndex((m) => m.id === movie.id),
     );
 
     return this.mapFromTmdbResponseToVideo(results, genres, type);
   }
 
-  async getMovies(search: string): Promise<Video[]> {
+  async getMovies(
+    pageQuery: PageQuery | null = null,
+    search: string | null = null,
+  ): Promise<Video[]> {
     const genres = await this.getGenres(true);
     let movies: TmdbDataResultResponse[];
-    if (search === '' || search === undefined) {
-      movies = await this.getMoviesNowPlaying();
+    if (!search || search === '') {
+      movies = await this.getMoviesNowPlaying(pageQuery ?? PageQuery.of());
     } else {
       movies = await this.getMoviesWithSearch(search);
     }
@@ -109,9 +113,12 @@ export class TmdbRepositoryRepository {
     const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${this.apiKey}&language=fr-FR`;
 
     const response = await firstValueFrom(this.httpService.get(url));
-    return this.mapFromTmdbMovieDetailsResponseToVideo(response.data, VideoType.Movie);
+    return this.mapFromTmdbMovieDetailsResponseToVideo(
+      response.data,
+      VideoType.Movie,
+    );
   }
-  
+
   async getTrailer(id: number, type: VideoType): Promise<string | null> {
     const typeString = this.mapFromVideoTypeToType(type);
     const url = `https://api.themoviedb.org/3/${typeString}/${id}/videos?api_key=${this.apiKey}&language=fr-FR`;
@@ -127,22 +134,28 @@ export class TmdbRepositoryRepository {
   async getSeasons(id: number): Promise<Season[]> {
     const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${this.apiKey}&language=fr-FR`;
     const response = await firstValueFrom(this.httpService.get(url));
-    
+
     // Récupérer les détails de chaque saison avec les épisodes (en excluant la saison 0)
     const seasonsWithEpisodes = await Promise.all(
       response.data.seasons
         .filter((season: any) => season.season_number !== 0)
         .map(async (season: any) => {
           const seasonUrl = `https://api.themoviedb.org/3/tv/${id}/season/${season.season_number}?api_key=${this.apiKey}&language=fr-FR`;
-          const seasonResponse = await firstValueFrom(this.httpService.get(seasonUrl));
-          return this.mapFromTmdbSeasonDetailsResponseToSeason(seasonResponse.data);
+          const seasonResponse = await firstValueFrom(
+            this.httpService.get(seasonUrl),
+          );
+          return this.mapFromTmdbSeasonDetailsResponseToSeason(
+            seasonResponse.data,
+          );
         }),
     );
     return seasonsWithEpisodes.filter((season) => season !== null);
   }
 
-  private async getMoviesNowPlaying() {
-    const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${this.apiKey}&language=fr-FR&page=1`;
+  private async getMoviesNowPlaying(
+    pageQuery: PageQuery,
+  ): Promise<TmdbDataResultResponse[]> {
+    const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${this.apiKey}&language=fr-FR&page=${pageQuery.page}`;
     const response = await firstValueFrom(
       this.httpService.get<TmdbDataResponse>(url),
     );
@@ -153,19 +166,22 @@ export class TmdbRepositoryRepository {
     search: string,
   ): Promise<TmdbDataResultResponse[]> {
     const url = `https://api.themoviedb.org/3/search/movie?api_key=${this.apiKey}&language=fr-FR&query=${search}&page=1&include_adult=false`;
-    
+
     const response = await firstValueFrom(
       this.httpService.get<TmdbDataResponse>(url),
     );
-  
+
     return response.data.results.sort((a, b) => b.popularity - a.popularity);
   }
 
-  async getSeries(search: string): Promise<Video[]> {
+  async getSeries(
+    pageQuery: PageQuery | null = null,
+    search: string | null = null,
+  ): Promise<Video[]> {
     const genres = await this.getGenres(false);
     let series: TmdbDataResultResponse[];
-    if (search === '' || search === undefined) {
-      series = await this.getSeriesNowPlaying();
+    if (!search || search === '') {
+      series = await this.getSeriesNowPlaying(pageQuery ?? PageQuery.of());
     } else {
       series = await this.getSeriesWithSearch(search);
     }
@@ -176,19 +192,22 @@ export class TmdbRepositoryRepository {
     const url = `https://api.themoviedb.org/3/tv/${id}?api_key=${this.apiKey}&language=fr-FR`;
 
     const response = await firstValueFrom(this.httpService.get(url));
-    return this.mapFromTmdbSerieDetailsResponseToVideo(response.data, VideoType.Serie);
+    return this.mapFromTmdbSerieDetailsResponseToVideo(
+      response.data,
+      VideoType.Serie,
+    );
   }
 
-  private async getSeriesNowPlaying() {
-    const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${this.apiKey}&language=fr-FR&page=1`;
+  private async getSeriesNowPlaying(pageQuery: PageQuery) {
+    const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${this.apiKey}&language=fr-FR&page=${pageQuery.page}`;
     const response = await firstValueFrom(
       this.httpService.get<TmdbDataResponse>(url),
     );
     return response.data.results;
   }
 
-  private async getSeriesWithSearch(search: string) {
-    const url = `https://api.themoviedb.org/3/search/tv?api_key=${this.apiKey}&language=fr-FR&query=${search}&page=1&include_adult=false`;
+  private async getSeriesWithSearch(search: string, pageQuery: PageQuery) {
+    const url = `https://api.themoviedb.org/3/search/tv?api_key=${this.apiKey}&language=fr-FR&query=${search}&page=${pageQuery.page}&include_adult=false`;
     const response = await firstValueFrom(
       this.httpService.get<TmdbDataResponse>(url),
     );
@@ -202,7 +221,10 @@ export class TmdbRepositoryRepository {
   ): Video {
     return new Video({
       externalId: tmdbDataResponse.id.toString(),
-      title: type === VideoType.Movie ? tmdbDataResponse.title : tmdbDataResponse.name,
+      title:
+        type === VideoType.Movie
+          ? tmdbDataResponse.title
+          : tmdbDataResponse.name,
       releaseDate:
         type === VideoType.Movie
           ? new Date(tmdbDataResponse.release_date)
@@ -221,7 +243,9 @@ export class TmdbRepositoryRepository {
       userRating: null,
       globalRating: tmdbDataResponse.vote_average,
       type: type,
-      genres: this.getGenreName(tmdbDataResponse.genre_ids, genres) ? this.getGenreName(tmdbDataResponse.genre_ids, genres)! : [],
+      genres: this.getGenreName(tmdbDataResponse.genre_ids, genres)
+        ? this.getGenreName(tmdbDataResponse.genre_ids, genres)!
+        : [],
     });
   }
 
@@ -289,9 +313,10 @@ export class TmdbRepositoryRepository {
       type: type,
       genres: tmdbMovieDetailsResponse.genres.map((g) => g.name),
       globalRating: tmdbMovieDetailsResponse.vote_average,
-      productionCompanies: this.mapFromTmdbProductionCompanyResponseToProductionCompanies(
-        tmdbMovieDetailsResponse.production_companies,
-      ),
+      productionCompanies:
+        this.mapFromTmdbProductionCompanyResponseToProductionCompanies(
+          tmdbMovieDetailsResponse.production_companies,
+        ),
       movieDetails:
         type === VideoType.Movie
           ? this.mapFromTmdbMovieDetailsResponseToMovieDetails(
@@ -316,9 +341,10 @@ export class TmdbRepositoryRepository {
       type: type,
       globalRating: tmdbSerieDetailsResponse.vote_average,
       genres: tmdbSerieDetailsResponse.genres.map((g) => g.name),
-      productionCompanies: this.mapFromTmdbProductionCompanyResponseToProductionCompanies(
-        tmdbSerieDetailsResponse.production_companies,
-      ),
+      productionCompanies:
+        this.mapFromTmdbProductionCompanyResponseToProductionCompanies(
+          tmdbSerieDetailsResponse.production_companies,
+        ),
       serieDetails:
         type === VideoType.Serie
           ? this.mapFromTmdbMovieDetailsResponseToSerieDetails(
@@ -380,9 +406,11 @@ export class TmdbRepositoryRepository {
     };
   }
 
-  private mapFromTmdbCreatorResponseToDirector(
-    tmdbCreatorResponse: { id: number; name: string; profile_path: string | null },
-  ): Director {
+  private mapFromTmdbCreatorResponseToDirector(tmdbCreatorResponse: {
+    id: number;
+    name: string;
+    profile_path: string | null;
+  }): Director {
     if (!tmdbCreatorResponse) {
       return {
         id: 0,
@@ -433,12 +461,12 @@ export class TmdbRepositoryRepository {
   }
 
   private mapFromTmdbSeasonDetailsResponseToSeason(
-      tmdbSeasonDetailsResponse: TmdbSeasonDetailsResponse,
+    tmdbSeasonDetailsResponse: TmdbSeasonDetailsResponse,
   ): Season {
     return {
       seasonNumber: tmdbSeasonDetailsResponse.season_number,
-      airDate: tmdbSeasonDetailsResponse.air_date 
-        ? new Date(tmdbSeasonDetailsResponse.air_date) 
+      airDate: tmdbSeasonDetailsResponse.air_date
+        ? new Date(tmdbSeasonDetailsResponse.air_date)
         : null,
       overview: tmdbSeasonDetailsResponse.overview,
       episodes: tmdbSeasonDetailsResponse.episodes.map((episode) => ({
@@ -695,39 +723,39 @@ export interface TmdbTrailerResponse {
 }
 
 export interface TmdbSeasonDetailsResponse {
-  _id: string,
-  air_date: string,
+  _id: string;
+  air_date: string;
   episodes: [
     {
-      air_date: string,
-      episode_number: number,
-      episode_type: string,
-      id: number,
-      name: string,
-      overview: string,
-      production_code: string,
-      runtime: number,
-      season_number: number,
-      show_id: number,
-      still_path: string | null,
-      vote_average: number,
-      vote_count: number,
-      crew: any[],
-      guest_stars: any[]
+      air_date: string;
+      episode_number: number;
+      episode_type: string;
+      id: number;
+      name: string;
+      overview: string;
+      production_code: string;
+      runtime: number;
+      season_number: number;
+      show_id: number;
+      still_path: string | null;
+      vote_average: number;
+      vote_count: number;
+      crew: any[];
+      guest_stars: any[];
     },
-  ],
-  name: string,
+  ];
+  name: string;
   networks: [
     {
-      id: number,
-      logo_path: string | null,
-      name: string,
-      origin_country: string
-    }
-  ],
-  overview: string,
-  id: number,
-  poster_path: string | null,
-  season_number: number,
-  vote_average: number
+      id: number;
+      logo_path: string | null;
+      name: string;
+      origin_country: string;
+    },
+  ];
+  overview: string;
+  id: number;
+  poster_path: string | null;
+  season_number: number;
+  vote_average: number;
 }

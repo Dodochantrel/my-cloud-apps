@@ -6,32 +6,47 @@ import { TmdbRepositoryRepository } from './tmdb/tmdb-repository.repository';
 import { Casting } from './interfaces/casting.interface';
 import { Director } from './interfaces/director.interface';
 import { VideoProvider } from './interfaces/provider.interface';
+import { PageQuery } from 'src/pagination/page-query';
 
 @Injectable()
 export class VideosService {
   constructor(
     @InjectRepository(Video)
     private videoRepository: Repository<Video>,
-    private readonly tmdbRepositoryRepository: TmdbRepositoryRepository
+    private readonly tmdbRepositoryRepository: TmdbRepositoryRepository,
   ) {}
 
   async getAll(type: VideoType, search: string): Promise<Video[]> {
     switch (type) {
       case VideoType.Movie:
-        return this.tmdbRepositoryRepository.getMovies(search)
+        return this.tmdbRepositoryRepository.getMovies(null, search);
       case VideoType.Serie:
-        return this.tmdbRepositoryRepository.getSeries(search)
+        return this.tmdbRepositoryRepository.getSeries(null, search);
       default:
         return Promise.resolve([]);
     }
   }
 
-  async getByExternalId(externalId: string, type: VideoType): Promise<Video | null> {
+  async getCurrent(type: VideoType, pageQuery: PageQuery): Promise<Video[]> {
     switch (type) {
       case VideoType.Movie:
-        return this.tmdbRepositoryRepository.getMovie(Number(externalId))
+        return this.tmdbRepositoryRepository.getMovies(pageQuery);
       case VideoType.Serie:
-        return this.tmdbRepositoryRepository.getSerie(Number(externalId))
+        return this.tmdbRepositoryRepository.getSeries(pageQuery);
+      default:
+        return Promise.resolve([]);
+    }
+  }
+
+  async getByExternalId(
+    externalId: string,
+    type: VideoType,
+  ): Promise<Video | null> {
+    switch (type) {
+      case VideoType.Movie:
+        return this.tmdbRepositoryRepository.getMovie(Number(externalId));
+      case VideoType.Serie:
+        return this.tmdbRepositoryRepository.getSerie(Number(externalId));
       default:
         return Promise.resolve(null);
     }
@@ -45,11 +60,17 @@ export class VideosService {
     return this.tmdbRepositoryRepository.getDirector(Number(externalId), type);
   }
 
-  async getTrailer(externalId: string, type: VideoType): Promise<string | null> {
+  async getTrailer(
+    externalId: string,
+    type: VideoType,
+  ): Promise<string | null> {
     return this.tmdbRepositoryRepository.getTrailer(Number(externalId), type);
   }
 
-  async getProviders(externalId: string, type: VideoType): Promise<VideoProvider[]> {
+  async getProviders(
+    externalId: string,
+    type: VideoType,
+  ): Promise<VideoProvider[]> {
     return this.tmdbRepositoryRepository.getProviders(Number(externalId), type);
   }
 
