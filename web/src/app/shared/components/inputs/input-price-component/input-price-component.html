@@ -2,7 +2,7 @@
     <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
     <p-iconfield>
         <p-inputicon>
-            <span class="material-icons-outlined text-[18px]!">{{ icon() }}</span>
+            <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
         <p-inputnumber [name]="controlName()" [formControlName]="controlName()" mode="currency" currency="EUR" [minFractionDigits]="2" [maxFractionDigits]="2" fluid [placeholder]="placeholder()" />
     </p-iconfield>

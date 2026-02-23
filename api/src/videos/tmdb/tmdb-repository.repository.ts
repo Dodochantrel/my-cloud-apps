@@ -183,7 +183,7 @@ export class TmdbRepositoryRepository {
     if (!search || search === '') {
       series = await this.getSeriesNowPlaying(pageQuery ?? PageQuery.of());
     } else {
-      series = await this.getSeriesWithSearch(search);
+      series = await this.getSeriesWithSearch(pageQuery ?? PageQuery.of());
     }
     return this.mapFromTmdbResponseToVideo(series, genres, VideoType.Serie);
   }
@@ -206,8 +206,8 @@ export class TmdbRepositoryRepository {
     return response.data.results;
   }
 
-  private async getSeriesWithSearch(search: string, pageQuery: PageQuery) {
-    const url = `https://api.themoviedb.org/3/search/tv?api_key=${this.apiKey}&language=fr-FR&query=${search}&page=${pageQuery.page}&include_adult=false`;
+  private async getSeriesWithSearch(pageQuery: PageQuery) {
+    const url = `https://api.themoviedb.org/3/search/tv?api_key=${this.apiKey}&language=fr-FR&page=${pageQuery.page}`;
     const response = await firstValueFrom(
       this.httpService.get<TmdbDataResponse>(url),
     );

@@ -20,7 +20,7 @@
     <div class="flex p-(--p-menu-item-padding) gap-(--p-menu-item-padding)">
       <p-toggleswitch [(ngModel)]="themeService.isDarkMode">
         <ng-template #handle let-checked="checked">
-          <span [ngClass]="['text-xs!', 'material-icons-outlined']">{{ checked ? 'dark_mode' : 'light_mode' }}</span>
+          <span [ngClass]="['text-xs!', 'material-symbols']">{{ checked ? 'dark_mode' : 'light_mode' }}</span>
         </ng-template>
       </p-toggleswitch>
       Thème sombre

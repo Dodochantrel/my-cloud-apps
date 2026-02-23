@@ -4,6 +4,7 @@ import { inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { VideoTrailer } from '../../models/videos/video-trailer';
 import { GetTrailerDto, mapFromGetTrailerDtoToVideoTrailer } from './dtos/get-trailer-dto';
+import { VideoType } from '../../models/videos/video';
 
 export class VideosRoutes {
   private readonly baseUrl = `${environment.apiUrl}videos`;
@@ -12,33 +13,37 @@ export class VideosRoutes {
 
   private readonly httpClient = inject(HttpClient);
 
-  public getAll(search: string, page: number, limit: number, type: 'movie' | 'serie'): string {
-    return `${this.baseUrl}?search=${search}&page=${page}&limit=${limit}&type=${type}`;
+  public getAll(search: string, page: number, limit: number, type: VideoType): string {
+    return `${this.baseUrl}?page=${page}&limit=${limit}&type=${type}`;
   }
 
-  public getOne(externalId: string, type: 'movie' | 'serie') {
+  public getCurrent(page: number, limit: number, type: VideoType): string {
+    return `${this.baseUrl}/current?page=${page}&limit=${limit}&type=${type}`;
+  }
+
+  public getOne(externalId: string, type: VideoType) {
     return `${this.baseUrl}/${externalId}?type=${type}`;
   }
 
-  public getCastings(externalId: string, type: 'movie' | 'serie') {
+  public getCastings(externalId: string, type: VideoType) {
     return `${this.baseUrl}/${externalId}/castings?type=${type}`;
   }
 
-  public getDirector(externalId: string, type: 'movie' | 'serie') {
+  public getDirector(externalId: string, type: VideoType) {
     return `${this.baseUrl}/${externalId}/director?type=${type}`;
   }
 
-  public getProviders(externalId: string, type: 'movie' | 'serie') {
+  public getProviders(externalId: string, type: VideoType) {
     return `${this.baseUrl}/${externalId}/providers?type=${type}`;
   }
 
-  public getTrailer(externalId: string, type: 'movie' | 'serie'): Observable<VideoTrailer> {
+  public getTrailer(externalId: string, type: VideoType): Observable<VideoTrailer> {
     return this.httpClient
       .get<GetTrailerDto>(`${this.baseUrl}/${externalId}/trailer?type=${type}`)
       .pipe(map((dto) => mapFromGetTrailerDtoToVideoTrailer(dto)));
   }
 
-  public getSeasons(externalId: string, type: 'movie' | 'serie'): string {
+  public getSeasons(externalId: string, type: VideoType): string {
     return `${this.baseUrl}/${externalId}/seasons?type=${type}`;
   }
 }

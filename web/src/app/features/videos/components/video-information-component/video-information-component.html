@@ -31,23 +31,23 @@
         } @else {
         <div class="flex gap-4">
             <div class="flex gap-2">
-                <span class="material-icons-outlined text-amber-300">star</span>
+                <span class="material-symbols text-amber-300">star</span>
                 <span>{{ video()?.globalRatingFormatted }} / 10</span>
             </div>
             <span class="text-border">•</span>
             <div class="flex gap-2">
-                <span class="material-icons-outlined">calendar_today</span>
+                <span class="material-symbols">calendar_today</span>
                 <span>{{ video()?.releaseYear }}</span>
             </div>
             <span class="text-border">•</span>
             @if (video()?.type === 'movie') {
             <div class="flex gap-2">
-                <span class="material-icons-outlined">access_time</span>
+                <span class="material-symbols">access_time</span>
                 <span>{{ video()?.movieDetails?.durationInHoursAndMinutes }}</span>
             </div>
             } @else if (video()?.type === 'serie') {
             <div class="flex gap-2">
-                <span class="material-icons-outlined">access_time</span>
+                <span class="material-symbols">access_time</span>
                 <span>{{ video()?.serieDetails?.numberOfSeasons }} saisons</span>
             </div>
             }
@@ -81,12 +81,12 @@
         <div class="flex gap-4">
 
             <button pButton (click)="getTrailer.emit()" [loading]="isLoadingTrailer()">
-                <span class="material-icons-outlined">play_circle</span>
+                <span class="material-symbols">play_circle</span>
                 <span pButtonLabel>Voir la bande-annonce</span>
             </button>
 
             <button pButton severity="secondary">
-                <span class="material-icons-outlined">favorite_border</span>
+                <span class="material-symbols">favorite_border</span>
                 <span pButtonLabel>Ajouter aux favoris</span>
             </button>
 

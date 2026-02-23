@@ -1,1 +1,13 @@
-<p>current-video-component works!</p>
+<div class="flex gap-4 justify-evenly flex-wrap">
+
+    @for (item of currentVideoService.videos(); track $index) {
+
+        <app-video-card-component [video]="item" />
+
+    } @empty {
+
+        <p>Aucune vidéo disponible</p>
+
+    }
+    
+</div>

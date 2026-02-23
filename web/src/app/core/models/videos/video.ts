@@ -11,7 +11,7 @@ export class Video {
   id: string | null;
   externalId: string;
   title: string;
-  type: 'movie' | 'serie';
+  type: VideoType;
   fileUrl: string | null;
   backdropUrl: string | null = null;
   releaseDate: Date;
@@ -30,7 +30,7 @@ export class Video {
   constructor(
     externalId: string,
     title: string,
-    type: 'movie' | 'serie',
+    type: VideoType,
     releaseDate: Date,
     description: string,
     globalRating: number,
@@ -60,4 +60,15 @@ export class Video {
   get fileUrlOrEmpty(): string {
     return this.fileUrl ?? '/images/placeholder.svg';
   }
+
+  get label(): string {
+    switch (this.type) {
+      case 'movie':
+        return 'Film';
+      case 'serie':
+        return 'Série';
+    }
+  }
 }
+
+export type VideoType = 'movie' | 'serie';

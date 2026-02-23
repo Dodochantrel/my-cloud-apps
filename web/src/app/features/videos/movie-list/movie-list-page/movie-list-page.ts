@@ -6,10 +6,11 @@ import { MovieListService } from '../movie-list-service';
 import { VideoSearchInputComponent } from '../../components/video-search-input-component/video-search-input-component';
 import { Video } from '../../../../core/models/videos/video';
 import { TabsModule } from 'primeng/tabs';
+import { CurrentVideoComponent } from '../../components/current-video-component/current-video-component';
 
 @Component({
   selector: 'app-movie-list-page',
-  imports: [DefaultContainerComponent, FooterTableComponent, VideoSearchInputComponent, TabsModule],
+  imports: [DefaultContainerComponent, FooterTableComponent, VideoSearchInputComponent, TabsModule, CurrentVideoComponent],
   templateUrl: './movie-list-page.html',
   styleUrl: './movie-list-page.css',
 })

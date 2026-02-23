@@ -19,19 +19,19 @@
                 <p-tablist>
                     <p-tab value="0">
                         <div class="flex gap-2 items-center h-full">
-                            <span class="material-icons-outlined">movie</span>
+                            <span class="material-symbols">movie</span>
                             À l’affiche <!-- autre noms possible (Sur grand écran / Les sorties du moment)-->
                         </div>
                     </p-tab>
                     <p-tab value="1">
                         <div class="flex gap-2 items-center h-full">
-                            <span class="material-icons-outlined">connected_tv</span>
+                            <span class="material-symbols">connected_tv</span>
                             Prochainement chez moi <!-- autre noms possible (À caser un soir / Dans le viseur)-->
                         </div>
                     </p-tab>
                     <p-tab value="2">
                         <div class="flex gap-2 items-center h-full">
-                            <span class="material-icons-outlined">preview</span>
+                            <span class="material-symbols">preview</span>
                             C’est checké <!-- autre noms possible (Mission terminée)-->
                         </div>
                     </p-tab>
@@ -39,6 +39,7 @@
 
                 <p-tabpanels>
                     <p-tabpanel value="0">
+                        <app-current-video-component [type]="'movie'" />
                     </p-tabpanel>
                     <p-tabpanel value="1">
                     </p-tabpanel>

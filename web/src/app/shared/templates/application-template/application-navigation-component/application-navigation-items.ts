@@ -1,18 +1,18 @@
 export const navigationItems: NavigationItem[] = [
   {
     name: 'Films',
-    icon: 'tv',
+    icon: 'tv_displays',
     path: null,
     isOpen: false,
     subNavigationItems: [
       {
         name: 'Films',
-        icon: 'movie',
+        icon: 'tv_gen',
         path: 'movies/list',
       },
       {
         name: 'Series',
-        icon: 'burst_mode',
+        icon: 'playlist_play',
         path: 'series/list',
       }
     ],

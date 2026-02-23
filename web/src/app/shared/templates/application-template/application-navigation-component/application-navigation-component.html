@@ -8,16 +8,16 @@
         <div class="flex flex-col">
             <div (click)="navigationItem.path === null ? toggleItem(navigationItem) : navigate(navigationItem.path!)" 
                 class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer select-none">
-                <span class="material-icons-outlined text-primary">{{ navigationItem.icon }}</span>{{ navigationItem.name }}
+                <span class="material-symbols text-primary">{{ navigationItem.icon }}</span>{{ navigationItem.name }}
                 @if (navigationItem.subNavigationItems && navigationItem.subNavigationItems.length > 0) {
-                    <span class="ml-auto material-icons-outlined transition-transform duration-300" [class.rotate-180]="navigationItem.isOpen">keyboard_arrow_down</span>
+                    <span class="ml-auto material-symbols transition-transform duration-300" [class.rotate-180]="navigationItem.isOpen">arrow_downward</span>
                 }
             </div>
             @if (navigationItem.subNavigationItems && navigationItem.subNavigationItems.length > 0) {
                 <div class="pl-4 overflow-hidden flex flex-col gap-1 transition-all duration-300 ease-in-out" [class.max-h-0]="!navigationItem.isOpen" [class.opacity-0]="!navigationItem.isOpen" [class.max-h-64]="navigationItem.isOpen" [class.opacity-100]="navigationItem.isOpen">
                     @for (sub of navigationItem.subNavigationItems; track $index) {
                         <div (click)="navigate(sub.path)" class="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
-                            <span class="material-icons-outlined text-primary">{{ sub.icon }}</span>{{ sub.name }}
+                            <span class="material-symbols text-primary">{{ sub.icon }}</span>{{ sub.name }}
                         </div>
                     }
                 </div>
