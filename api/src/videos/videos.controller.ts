@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { GetAllVideoQueryDto } from './dtos/get-all-video.dto';
 import { GetOneVideoParamDto } from './dtos/get-one-video.dto';
@@ -66,5 +66,10 @@ export class VideosController {
   @Get(':id/seasons')
   async getSeasons(@Param('id') id: string) {
     return this.videosService.getSeasons(id);
+  }
+
+  @Patch(':id')
+  updateVideo(@Param('id') id: string, @Query() dto: GetOneVideoParamDto) {
+    return this.videosService.updateVideo(id, dto.type);
   }
 }

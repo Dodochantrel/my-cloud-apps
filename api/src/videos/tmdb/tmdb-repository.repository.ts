@@ -106,6 +106,7 @@ export class TmdbRepositoryRepository {
     } else {
       movies = await this.getMoviesWithSearch(search);
     }
+    movies = movies.sort((a, b) => b.popularity - a.popularity);
     return this.mapFromTmdbResponseToVideo(movies, genres, VideoType.Movie);
   }
 
@@ -185,6 +186,7 @@ export class TmdbRepositoryRepository {
     } else {
       series = await this.getSeriesWithSearch(pageQuery ?? PageQuery.of());
     }
+    series = series.sort((a, b) => b.popularity - a.popularity);
     return this.mapFromTmdbResponseToVideo(series, genres, VideoType.Serie);
   }
 
