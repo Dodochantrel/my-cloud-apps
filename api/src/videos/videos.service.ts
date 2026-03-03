@@ -77,4 +77,6 @@ export class VideosService {
   async getSeasons(externalId: string): Promise<any[]> {
     return this.tmdbRepositoryRepository.getSeasons(Number(externalId));
   }
+
+  async update(id: string): Promise<Video> {}
 }

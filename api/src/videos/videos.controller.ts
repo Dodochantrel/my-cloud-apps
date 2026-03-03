@@ -69,7 +69,7 @@ export class VideosController {
   }
 
   @Patch(':id')
-  updateVideo(@Param('id') id: string, @Query() dto: GetOneVideoParamDto) {
-    return this.videosService.updateVideo(id, dto.type);
+  update(@Param('id') id: string, @Query() dto: GetOneVideoParamDto) {
+    return this.videosService.update(id, dto.type);
   }
 }

@@ -11,11 +11,8 @@ export enum VideoType {
 
 @Entity()
 export class Video {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
   @Column()
-  externalId: string;
+  id: string;
 
   @Column()
   title: string;
