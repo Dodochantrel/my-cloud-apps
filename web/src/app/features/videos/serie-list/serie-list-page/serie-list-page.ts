@@ -52,8 +52,8 @@ export class SerieListPage implements OnInit {
   }
 
   redirectToVideoDetails(video: Video) {
-    if (video?.externalId) {
-      this.router.navigate(['/series/details', video.externalId]);
+    if (video?.id) {
+      this.router.navigate(['/series/details', video.id]);
     }
   }
 }

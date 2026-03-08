@@ -27,7 +27,7 @@ export class VideosController {
     @Param('id') id: string,
     @Query() dto: GetOneVideoParamDto,
   ) {
-    return await this.videosService.getByExternalId(id, dto.type);
+    return await this.videosService.getByid(id, dto.type);
   }
 
   @Get(':id/castings')
@@ -70,6 +70,6 @@ export class VideosController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Query() dto: GetOneVideoParamDto) {
-    return this.videosService.update(id, dto.type);
+    return this.videosService.update(id);
   }
 }

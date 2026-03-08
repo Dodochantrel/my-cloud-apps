@@ -14,36 +14,36 @@ export class VideosRoutes {
   private readonly httpClient = inject(HttpClient);
 
   public getAll(search: string, page: number, limit: number, type: VideoType): string {
-    return `${this.baseUrl}?page=${page}&limit=${limit}&type=${type}`;
+    return `${this.baseUrl}?search=${search}&page=${page}&limit=${limit}&type=${type}`;
   }
 
   public getCurrent(page: number, limit: number, type: VideoType): string {
     return `${this.baseUrl}/current?page=${page}&limit=${limit}&type=${type}`;
   }
 
-  public getOne(externalId: string, type: VideoType) {
-    return `${this.baseUrl}/${externalId}?type=${type}`;
+  public getOne(id: string, type: VideoType) {
+    return `${this.baseUrl}/${id}?type=${type}`;
   }
 
-  public getCastings(externalId: string, type: VideoType) {
-    return `${this.baseUrl}/${externalId}/castings?type=${type}`;
+  public getCastings(id: string, type: VideoType) {
+    return `${this.baseUrl}/${id}/castings?type=${type}`;
   }
 
-  public getDirector(externalId: string, type: VideoType) {
-    return `${this.baseUrl}/${externalId}/director?type=${type}`;
+  public getDirector(id: string, type: VideoType) {
+    return `${this.baseUrl}/${id}/director?type=${type}`;
   }
 
-  public getProviders(externalId: string, type: VideoType) {
-    return `${this.baseUrl}/${externalId}/providers?type=${type}`;
+  public getProviders(id: string, type: VideoType) {
+    return `${this.baseUrl}/${id}/providers?type=${type}`;
   }
 
-  public getTrailer(externalId: string, type: VideoType): Observable<VideoTrailer> {
+  public getTrailer(id: string, type: VideoType): Observable<VideoTrailer> {
     return this.httpClient
-      .get<GetTrailerDto>(`${this.baseUrl}/${externalId}/trailer?type=${type}`)
+      .get<GetTrailerDto>(`${this.baseUrl}/${id}/trailer?type=${type}`)
       .pipe(map((dto) => mapFromGetTrailerDtoToVideoTrailer(dto)));
   }
 
-  public getSeasons(externalId: string, type: VideoType): string {
-    return `${this.baseUrl}/${externalId}/seasons?type=${type}`;
+  public getSeasons(id: string, type: VideoType): string {
+    return `${this.baseUrl}/${id}/seasons?type=${type}`;
   }
 }

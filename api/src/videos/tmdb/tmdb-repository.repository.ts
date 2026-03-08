@@ -222,7 +222,7 @@ export class TmdbRepositoryRepository {
     type: VideoType,
   ): Video {
     return new Video({
-      externalId: tmdbDataResponse.id.toString(),
+      id: tmdbDataResponse.id.toString(),
       title:
         type === VideoType.Movie
           ? tmdbDataResponse.title
@@ -302,7 +302,7 @@ export class TmdbRepositoryRepository {
     type: VideoType,
   ): Video {
     return new Video({
-      externalId: tmdbMovieDetailsResponse.id.toString(),
+      id: tmdbMovieDetailsResponse.id.toString(),
       title: tmdbMovieDetailsResponse.title,
       releaseDate: new Date(tmdbMovieDetailsResponse.release_date),
       description: tmdbMovieDetailsResponse.overview,
@@ -333,7 +333,7 @@ export class TmdbRepositoryRepository {
     type: VideoType,
   ): Video {
     return new Video({
-      externalId: tmdbSerieDetailsResponse.id.toString(),
+      id: tmdbSerieDetailsResponse.id.toString(),
       title: tmdbSerieDetailsResponse.name,
       releaseDate: new Date(tmdbSerieDetailsResponse.first_air_date),
       description: tmdbSerieDetailsResponse.overview,

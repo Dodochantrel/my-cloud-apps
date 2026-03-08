@@ -24,31 +24,26 @@ export class MovieDetailsService {
       ) : ''
   );
 
-  private externalId = computed(() => {
-    const videoData = this.videoResource.value();
-    return videoData ? videoData.externalId : '';
-  });
-
   private readonly videoCastingResource = httpResource<GetCastingDto[]>(
     () =>
-      this.externalId() ? this.videosRoutes.getCastings(
-        this.externalId(),
+      this.id() ? this.videosRoutes.getCastings(
+        this.id()!,
         'movie'
       ) : ''
   );
 
   private readonly videoDirectorResource = httpResource<GetDirectorDto>(
     () =>
-      this.externalId() ? this.videosRoutes.getDirector(
-        this.externalId(),
+      this.id() ? this.videosRoutes.getDirector(
+        this.id()!,
         'movie'
       ) : ''
   );
 
   public readonly videoProvidersResource = httpResource<any>(
     () =>
-      this.externalId() ? this.videosRoutes.getProviders(
-        this.externalId(),
+      this.id() ? this.videosRoutes.getProviders(
+        this.id()!,
         'movie'
       ) : ''
   );
@@ -86,7 +81,7 @@ export class MovieDetailsService {
       return;
     }
     this.isLoadingTrailer.set(true);
-    return this.videosRoutes.getTrailer(this.externalId(), 'movie').subscribe({
+    return this.videosRoutes.getTrailer(this.id()!, 'movie').subscribe({
       next: (trailer) => {
         this.isLoadingTrailer.set(false);
         const currentVideo = this.video();

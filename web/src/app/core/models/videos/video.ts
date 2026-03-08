@@ -8,8 +8,7 @@ import { VideoSeason } from './video-season';
 import { VideoTrailer } from "./video-trailer";
 
 export class Video {
-  id: string | null;
-  externalId: string;
+  id: string;
   title: string;
   type: VideoType;
   fileUrl: string | null;
@@ -28,18 +27,17 @@ export class Video {
   seasons: VideoSeason[] = [];
 
   constructor(
-    externalId: string,
+    id: string,
     title: string,
     type: VideoType,
     releaseDate: Date,
     description: string,
     globalRating: number,
     genres: string[],
-    id: string | null,
     fileUrl: string | null,
   ) {
     this.id = id;
-    this.externalId = externalId;
+    this.id = id;
     this.title = title;
     this.type = type;
     this.releaseDate = releaseDate;

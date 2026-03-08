@@ -53,8 +53,8 @@ export class MovieListPage implements OnInit {
   }
 
   redirectToVideoDetails(video: Video) {
-    if (video?.externalId) {
-      this.router.navigate(['/movies/details', video.externalId]);
+    if (video?.id) {
+      this.router.navigate(['/movies/details', video.id]);
     }
   }
 }

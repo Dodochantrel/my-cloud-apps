@@ -2,6 +2,7 @@ import { HttpErrorResponse, httpResource } from '@angular/common/http';
 import { effect, Injectable, linkedSignal, signal } from '@angular/core';
 import { VideosRoutes } from '../../../core/api/videos/videos-routes';
 import { NotificationService } from '../../../core/notification/notification-service';
+import { mapFromGetAllVideoDtosToVideos } from '../../../core/api/videos/dtos/get-all-video-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +44,7 @@ export class SerieListService {
 
   videos = linkedSignal(() => {
     const resource = this.videosResource.value();
-    return resource ? resource : [];
+    return resource ? mapFromGetAllVideoDtosToVideos(resource) : [];
   });
   public isLoadingVideos = this.videosResource.isLoading;
 }

@@ -1,6 +1,6 @@
 import { Video } from '../../../models/videos/video';
 
-export interface GetCurrentVideoDto {
+export interface GetAllVideoDto {
     id: string;
     title: string;
     isToWatch: boolean;
@@ -17,7 +17,7 @@ export interface GetCurrentVideoDto {
     genres: string[];
 }
 
-export const mapFromGetCurrentVideoDtoToVideo = (dto: GetCurrentVideoDto): Video => {
+export const mapFromGetAllVideoDtoToVideo = (dto: GetAllVideoDto): Video => {
     const video = new Video(
         dto.id,
         dto.title,
@@ -32,6 +32,6 @@ export const mapFromGetCurrentVideoDtoToVideo = (dto: GetCurrentVideoDto): Video
     return video;
 };
 
-export const mapFromGetCurrentVideoDtosToVideos = (dtos: GetCurrentVideoDto[]): Video[] => {
-    return dtos.map((dto) => mapFromGetCurrentVideoDtoToVideo(dto));
+export const mapFromGetAllVideoDtosToVideos = (dtos: GetAllVideoDto[]): Video[] => {
+    return dtos.map((dto) => mapFromGetAllVideoDtoToVideo(dto));
 };

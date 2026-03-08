@@ -38,45 +38,47 @@ export class VideosService {
     }
   }
 
-  async getByExternalId(
-    externalId: string,
+  async getByid(
+    id: string,
     type: VideoType,
   ): Promise<Video | null> {
     switch (type) {
       case VideoType.Movie:
-        return this.tmdbRepositoryRepository.getMovie(Number(externalId));
+        return this.tmdbRepositoryRepository.getMovie(Number(id));
       case VideoType.Serie:
-        return this.tmdbRepositoryRepository.getSerie(Number(externalId));
+        return this.tmdbRepositoryRepository.getSerie(Number(id));
       default:
         return Promise.resolve(null);
     }
   }
 
-  async getCastings(externalId: string, type: VideoType): Promise<Casting[]> {
-    return this.tmdbRepositoryRepository.getCasting(Number(externalId), type);
+  async getCastings(id: string, type: VideoType): Promise<Casting[]> {
+    return this.tmdbRepositoryRepository.getCasting(Number(id), type);
   }
 
-  async getDirector(externalId: string, type: VideoType): Promise<Director> {
-    return this.tmdbRepositoryRepository.getDirector(Number(externalId), type);
+  async getDirector(id: string, type: VideoType): Promise<Director> {
+    return this.tmdbRepositoryRepository.getDirector(Number(id), type);
   }
 
   async getTrailer(
-    externalId: string,
+    id: string,
     type: VideoType,
   ): Promise<string | null> {
-    return this.tmdbRepositoryRepository.getTrailer(Number(externalId), type);
+    return this.tmdbRepositoryRepository.getTrailer(Number(id), type);
   }
 
   async getProviders(
-    externalId: string,
+    id: string,
     type: VideoType,
   ): Promise<VideoProvider[]> {
-    return this.tmdbRepositoryRepository.getProviders(Number(externalId), type);
+    return this.tmdbRepositoryRepository.getProviders(Number(id), type);
   }
 
-  async getSeasons(externalId: string): Promise<any[]> {
-    return this.tmdbRepositoryRepository.getSeasons(Number(externalId));
+  async getSeasons(id: string): Promise<any[]> {
+    return this.tmdbRepositoryRepository.getSeasons(Number(id));
   }
 
-  async update(id: string): Promise<Video> {}
+  async update(id: string): Promise<Video> {
+    return this.videoRepository.findOneByOrFail({ id: id });
+  }
 }

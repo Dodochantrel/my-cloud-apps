@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { MovieDetails } from './interfaces/movie-details.interface';
 import { SerieDetails } from './interfaces/serie-details.interface';
 import { ProductionCompany } from './interfaces/production-company.interface';
@@ -11,7 +11,7 @@ export enum VideoType {
 
 @Entity()
 export class Video {
-  @Column()
+  @PrimaryColumn()
   id: string;
 
   @Column()
