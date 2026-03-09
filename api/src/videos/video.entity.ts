@@ -1,7 +1,16 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import type { Relation } from 'typeorm';
 import { MovieDetails } from './interfaces/movie-details.interface';
 import { SerieDetails } from './interfaces/serie-details.interface';
 import { ProductionCompany } from './interfaces/production-company.interface';
+import { VideoReview } from './video-review.entity';
 
 export enum VideoType {
   Serie = 'serie',
@@ -17,23 +26,11 @@ export class Video {
   @Column()
   title: string;
 
-  @Column({ default: false })
-  isToWatch: boolean;
-
-  @Column({ default: false })
-  isSeen: boolean;
-
-  @Column({ default: false })
-  isFavorite: boolean;
-
   @Column({ type: 'float', nullable: true })
   userRating: number | null;
 
   @Column({ type: 'float', nullable: true })
   globalRating: number | null;
-
-  @Column({ type: 'timestamp', nullable: true })
-  seenAt: Date | null;
 
   @Column({ type: 'enum', enum: VideoType })
   type: VideoType;
@@ -60,6 +57,9 @@ export class Video {
 
   movieDetails: MovieDetails | null;
   serieDetails: SerieDetails | null;
+
+  @OneToMany(() => VideoReview, (review) => review.id)
+  reviews: Relation<VideoReview[]>;
 
   constructor(partial: Partial<Video>) {
     Object.assign(this, partial);

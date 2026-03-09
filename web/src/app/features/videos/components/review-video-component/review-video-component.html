@@ -1,0 +1,6 @@
+<app-dialog-form-component [(isDisplay)]="videoDetailsService.isOpenReview" [header]="'Review'" [form]="form"
+    (onCancel)="videoDetailsService.isOpenReview.set(false)" (onValidate)="validate()">
+
+    <app-input-star-rating-component label="Jeux d'acteur" controlName="actingRating" [form]="form" />
+
+</app-dialog-form-component>

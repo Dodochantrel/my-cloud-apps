@@ -1,0 +1,30 @@
+<app-default-container-component>
+
+    <app-video-information-component
+        (getTrailer)="getTrailer()"
+        [isLoading]="videoDetailsService.isLoadingVideo()"
+        [isLoadingTrailer]="videoDetailsService.isLoadingTrailer()"
+        [video]="videoDetailsService.video()"
+        [(isVisibleTrailerDialog)]="videoDetailsService.isVisibleTrailerDialog"
+    />
+
+    <app-provider-component
+        [isLoading]="videoDetailsService.isLoadingProviders()"
+        [providers]="videoDetailsService.video()?.providers!"
+    />
+
+    @if(isSerie) {
+        <app-season-component
+            [video]="videoDetailsService.video()"
+            [isLoading]="videoDetailsService.isLoadingSeasons()"
+        />
+    }
+
+    <app-casting-component
+        [isLoading]="videoDetailsService.isLoadingCasting()"
+        [castings]="videoDetailsService.video()?.castings!"
+    />
+
+    <app-video-detail-component [video]="videoDetailsService.video()" />
+
+</app-default-container-component>

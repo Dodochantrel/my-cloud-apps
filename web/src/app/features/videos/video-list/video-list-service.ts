@@ -1,22 +1,24 @@
-import { effect, Injectable, linkedSignal, signal } from '@angular/core';
-import { VideosRoutes } from '../../../core/api/videos/videos-routes';
 import { HttpErrorResponse, httpResource } from '@angular/common/http';
+import { effect, inject, Injectable, linkedSignal, signal } from '@angular/core';
+import { VideosRoutes } from '../../../core/api/videos/videos-routes';
 import { NotificationService } from '../../../core/notification/notification-service';
 import { mapFromGetAllVideoDtosToVideos } from '../../../core/api/videos/dtos/get-all-video-dto';
+import { Video, VideoType } from '../../../core/models/videos/video';
+import { VideoStore } from '../stores/video-store';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MovieListService {
+export class VideoListService {
   public search = signal<string>('');
   public page = signal<number>(1);
   public limit = signal<number>(20);
+  public type = signal<VideoType>('movie');
 
   private readonly videosRoutes = new VideosRoutes();
+  public readonly videoStore = inject(VideoStore);
 
-  constructor(
-    private readonly notificationService: NotificationService
-  ) {
+  constructor(private readonly notificationService: NotificationService) {
     // Quand search change, passer à la page 1
     effect(() => {
       this.search();
@@ -33,18 +35,22 @@ export class MovieListService {
         );
       }
     });
+    
+    effect(() => {
+      const resource = this.videosResource.value();
+      const videos = resource ? mapFromGetAllVideoDtosToVideos(resource) : [];
+      this.videoStore.setData(videos);
+    });
   }
 
   private readonly videosResource = httpResource<any>(
     () =>
       this.videosRoutes.getAll(
-        this.search(), this.page(), this.limit(), 'movie'
+        this.search(),
+        this.page(),
+        this.limit(),
+        this.type()
       )
   );
-
-  videos = linkedSignal(() => {
-    const resource = this.videosResource.value();
-    return resource ? mapFromGetAllVideoDtosToVideos(resource) : [];
-  });
   public isLoadingVideos = this.videosResource.isLoading;
 }

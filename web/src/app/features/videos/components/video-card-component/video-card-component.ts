@@ -12,4 +12,8 @@ import { RouterLink } from '@angular/router';
 })
 export class VideoCardComponent {
   public video = input.required<Video>();
+
+  redirectToVideoDetails(id: string) {
+    return ['/videos/details', id];
+  }
 }

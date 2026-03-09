@@ -1,51 +1,57 @@
-import { computed, inject, Injectable, linkedSignal, signal } from '@angular/core';
+import { inject, Injectable, linkedSignal, signal } from '@angular/core';
 import { VideosRoutes } from '../../../core/api/videos/videos-routes';
+import { NotificationService } from '../../../core/notification/notification-service';
 import { httpResource } from '@angular/common/http';
 import { GetOneVideoDto, mapFromGetOneVideoDtoToVideo } from '../../../core/api/videos/dtos/get-one-video-dto';
 import { GetCastingDto, mapFromListGetCastingDtoToVideoCastingList } from '../../../core/api/videos/dtos/get-casting-dto';
 import { GetDirectorDto, mapFromGetDirectorDtoToVideoDirector } from '../../../core/api/videos/dtos/get-director-dto';
-import { NotificationService } from '../../../core/notification/notification-service';
 import { mapFromGetProviderDtoArrayToVideoProviderArray } from '../../../core/api/videos/dtos/get-provider-dto';
+import { mapFromGetSeasonDtosToVideoSeasons } from '../../../core/api/videos/dtos/get-season-dto';
+import { VideoType } from '../../../core/models/videos/video';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MovieDetailsService {
+export class VideoDetailsService {
   private readonly videosRoutes = new VideosRoutes();
   private readonly notificationService = inject(NotificationService);
 
   public id = signal<string | null>(null);
+  public type = signal<VideoType>('movie');
 
   private readonly videoResource = httpResource<GetOneVideoDto>(
     () =>
-      this.id() ? this.videosRoutes.getOne(
-        this.id()!,
-        'movie'
-      ) : ''
+      this.id()
+        ? this.videosRoutes.getOne(this.id()!, this.type())
+        : ''
   );
 
   private readonly videoCastingResource = httpResource<GetCastingDto[]>(
     () =>
-      this.id() ? this.videosRoutes.getCastings(
-        this.id()!,
-        'movie'
-      ) : ''
+      this.id()
+        ? this.videosRoutes.getCastings(this.id()!, this.type())
+        : ''
   );
 
   private readonly videoDirectorResource = httpResource<GetDirectorDto>(
     () =>
-      this.id() ? this.videosRoutes.getDirector(
-        this.id()!,
-        'movie'
-      ) : ''
+      this.id()
+        ? this.videosRoutes.getDirector(this.id()!, this.type())
+        : ''
   );
 
   public readonly videoProvidersResource = httpResource<any>(
     () =>
-      this.id() ? this.videosRoutes.getProviders(
-        this.id()!,
-        'movie'
-      ) : ''
+      this.id()
+        ? this.videosRoutes.getProviders(this.id()!, this.type())
+        : ''
+  );
+
+  private readonly videoSeasonsResource = httpResource<any>(
+    () =>
+      this.id() && this.type() === 'serie'
+        ? this.videosRoutes.getSeasons(this.id()!, this.type())
+        : ''
   );
 
   video = linkedSignal(() => {
@@ -65,6 +71,12 @@ export class MovieDetailsService {
     if (providersData) {
       mappedVideo.providers = mapFromGetProviderDtoArrayToVideoProviderArray(providersData);
     }
+    if (this.type() === 'serie') {
+      const seasonsData = this.videoSeasonsResource.value();
+      if (seasonsData) {
+        mappedVideo.seasons = mapFromGetSeasonDtosToVideoSeasons(seasonsData);
+      }
+    }
     return mappedVideo;
   });
 
@@ -72,6 +84,7 @@ export class MovieDetailsService {
   public isLoadingCasting = this.videoCastingResource.isLoading;
   public isLoadingDirector = this.videoDirectorResource.isLoading;
   public isLoadingProviders = this.videoProvidersResource.isLoading;
+  public isLoadingSeasons = this.videoSeasonsResource.isLoading;
 
   public isVisibleTrailerDialog = signal<boolean>(false);
   public isLoadingTrailer = signal<boolean>(false);
@@ -81,7 +94,7 @@ export class MovieDetailsService {
       return;
     }
     this.isLoadingTrailer.set(true);
-    return this.videosRoutes.getTrailer(this.id()!, 'movie').subscribe({
+    return this.videosRoutes.getTrailer(this.id()!, this.type()).subscribe({
       next: (trailer) => {
         this.isLoadingTrailer.set(false);
         const currentVideo = this.video();
@@ -97,5 +110,6 @@ export class MovieDetailsService {
       },
     });
   }
-}
 
+  public isOpenReview = signal<boolean>(false);
+}

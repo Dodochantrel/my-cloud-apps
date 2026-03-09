@@ -15,6 +15,7 @@ import { VideosController } from './videos/videos.controller';
 import { VideosService } from './videos/videos.service';
 import { HttpModule } from '@nestjs/axios/dist/http.module';
 import { TmdbRepositoryRepository } from './videos/tmdb/tmdb-repository.repository';
+import { VideoReview } from './videos/video-review.entity';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { TmdbRepositoryRepository } from './videos/tmdb/tmdb-repository.reposito
         },
       }),
     }),
-    TypeOrmModule.forFeature([User, Video]),
+    TypeOrmModule.forFeature([User, Video, VideoReview]),
   ],
   controllers: [
     AuthenticationsController,

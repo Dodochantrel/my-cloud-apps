@@ -38,10 +38,7 @@ export class VideosService {
     }
   }
 
-  async getByid(
-    id: string,
-    type: VideoType,
-  ): Promise<Video | null> {
+  async getByid(id: string, type: VideoType): Promise<Video | null> {
     switch (type) {
       case VideoType.Movie:
         return this.tmdbRepositoryRepository.getMovie(Number(id));
@@ -60,17 +57,11 @@ export class VideosService {
     return this.tmdbRepositoryRepository.getDirector(Number(id), type);
   }
 
-  async getTrailer(
-    id: string,
-    type: VideoType,
-  ): Promise<string | null> {
+  async getTrailer(id: string, type: VideoType): Promise<string | null> {
     return this.tmdbRepositoryRepository.getTrailer(Number(id), type);
   }
 
-  async getProviders(
-    id: string,
-    type: VideoType,
-  ): Promise<VideoProvider[]> {
+  async getProviders(id: string, type: VideoType): Promise<VideoProvider[]> {
     return this.tmdbRepositoryRepository.getProviders(Number(id), type);
   }
 

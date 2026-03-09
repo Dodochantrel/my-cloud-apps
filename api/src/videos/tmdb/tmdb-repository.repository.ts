@@ -238,10 +238,6 @@ export class TmdbRepositoryRepository {
       backdropUrl: tmdbDataResponse.backdrop_path
         ? `https://image.tmdb.org/t/p/w780${tmdbDataResponse.backdrop_path}`
         : null,
-      seenAt: null,
-      isSeen: false,
-      isToWatch: false,
-      isFavorite: false,
       userRating: null,
       globalRating: tmdbDataResponse.vote_average,
       type: type,

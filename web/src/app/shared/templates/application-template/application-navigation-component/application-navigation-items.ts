@@ -8,12 +8,12 @@ export const navigationItems: NavigationItem[] = [
       {
         name: 'Films',
         icon: 'tv_gen',
-        path: 'movies/list',
+        path: 'videos/list?type=movie',
       },
       {
         name: 'Series',
         icon: 'playlist_play',
-        path: 'series/list',
+        path: 'videos/list?type=serie',
       }
     ],
   },

@@ -68,8 +68,8 @@ export class VideosController {
     return this.videosService.getSeasons(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Query() dto: GetOneVideoParamDto) {
+  @Patch(':id/review')
+  update(@Param('id') id: string) {
     return this.videosService.update(id);
   }
 }

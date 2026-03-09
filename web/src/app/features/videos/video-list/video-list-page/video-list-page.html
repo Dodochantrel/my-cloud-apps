@@ -1,0 +1,56 @@
+<app-default-container-component [title]="title">
+
+    <div class="flex flex-col w-full gap-4">
+
+        <div class="flex w-full gap-4 items-end mt-4">
+            <app-video-search-input-component class="w-full" [label]="searchLabel" [placeholder]="searchPlaceholder"
+                [search]="videoListService.search()" [videos]="videoListService.videoStore.data()"
+                (searchChange)="onSearchChange($event)" (videoSelected)="redirectToVideoDetails($event)" />
+        </div>
+
+
+        <p-tabs value="0">
+
+            <p-tablist>
+                <p-tab value="0">
+                    <div class="flex gap-2 items-center h-full">
+                        <span class="material-symbols">movie</span>
+                        À l’affiche
+                    </div>
+                </p-tab>
+                <p-tab value="1">
+                    <div class="flex gap-2 items-center h-full">
+                        <span class="material-symbols">connected_tv</span>
+                        Prochainement chez moi
+                    </div>
+                </p-tab>
+                <p-tab value="2">
+                    <div class="flex gap-2 items-center h-full">
+                        <span class="material-symbols">preview</span>
+                        C’est checké
+                    </div>
+                </p-tab>
+            </p-tablist>
+
+            <p-tabpanels>
+                <p-tabpanel value="0">
+                    <app-current-video-component [type]="videoListService.type()" />
+                </p-tabpanel>
+                <p-tabpanel value="1">
+                </p-tabpanel>
+                <p-tabpanel value="2">
+                    <app-footer-table-component [itemCount]="100" [selectedSize]="null" [(page)]="videoListService.page"
+                        [(limit)]="videoListService.limit" />
+                </p-tabpanel>
+            </p-tabpanels>
+
+        </p-tabs>
+
+        <ng-template #serieList>
+            <app-footer-table-component [itemCount]="100" [selectedSize]="null" [(page)]="videoListService.page"
+                [(limit)]="videoListService.limit" />
+        </ng-template>
+
+    </div>
+
+</app-default-container-component>

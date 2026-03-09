@@ -1,11 +1,14 @@
 import { Role } from 'src/roles/role.enum';
+import { VideoReview } from 'src/videos/video-review.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
 
 @Entity()
 export class User {
@@ -51,16 +54,18 @@ export class User {
   })
   createdAt: Date;
 
+  @OneToMany(() => VideoReview, (review) => review.user)
+  videoReviews: Relation<VideoReview[]>;
+
   constructor(partial: Partial<User> = {}) {
     Object.assign(this, partial);
   }
 
   prepareEmailRandomCode() {
-    var result = '';
-    var characters =
-      '0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < 4; i++) {
+    let result = '';
+    const characters = '0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < 4; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     this.emailValidKey = result;
