@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { VideoDetailsService } from '../../video-details/video-details-service';
 import { DialogFormComponent } from '../../../../shared/components/dialog-form-component/dialog-form-component';
