@@ -17,6 +17,7 @@ import { InputErrorMessageComponent } from '../input-error-message-component/inp
 })
 export class InputStarRatingComponent {
   label = input.required<string>();
+  icon = input<string | null>(null);
   controlName = input.required<string>();
   form = input.required<FormGroup>();
 }

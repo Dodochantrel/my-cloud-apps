@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { VideoDetailsService } from '../../video-details/video-details-service';
 import { DialogFormComponent } from '../../../../shared/components/dialog-form-component/dialog-form-component';
 import { FormControl, FormGroup } from '@angular/forms';
 import { InputStarRatingComponent } from '../../../../shared/components/inputs/input-star-rating-component/input-star-rating-component';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-review-video-component',
-  imports: [DialogModule, CommonModule, DialogFormComponent, InputStarRatingComponent],
+  imports: [DialogModule, CommonModule, DialogFormComponent, InputStarRatingComponent, DividerModule],
   templateUrl: './review-video-component.html',
   styleUrl: './review-video-component.css',
 })
@@ -20,6 +21,7 @@ export class ReviewVideoComponent {
     actingRating: new FormControl(0, { nonNullable: true }),
     scenarioRating: new FormControl(0, { nonNullable: true }),
     musicRating: new FormControl(0, { nonNullable: true }),
+    effectsRating: new FormControl(0, { nonNullable: true }),
     generalRating: new FormControl(0, { nonNullable: true }),
   });
 

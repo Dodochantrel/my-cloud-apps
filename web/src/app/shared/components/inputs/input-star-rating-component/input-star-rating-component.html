@@ -1,8 +1,13 @@
 <div [formGroup]="form()">
 
-    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' :
-        '' }}</label>
-        <br>
+    <label [for]="controlName()" class="label">
+        @if(icon()) {
+            <span class="material-symbols text-primary text-base!">{{ icon() }}</span>
+        }
+        {{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}
+    </label>
+
+    <br>
 
     <p-rating [name]="controlName()" [formControlName]="controlName()" [stars]="5" />
 
