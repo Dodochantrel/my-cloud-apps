@@ -1,8 +1,9 @@
 import { Component, input } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { RatingModule } from 'primeng/rating';
 import { InputErrorMessageComponent } from '../input-error-message-component/input-error-message-component';
+import { Field, FieldState } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-input-star-rating-component',
@@ -11,6 +12,7 @@ import { InputErrorMessageComponent } from '../input-error-message-component/inp
     AutoFocusModule,
     ReactiveFormsModule,
     InputErrorMessageComponent,
+    Field,
   ],
   templateUrl: './input-star-rating-component.html',
   styleUrl: './input-star-rating-component.css',
@@ -18,6 +20,5 @@ import { InputErrorMessageComponent } from '../input-error-message-component/inp
 export class InputStarRatingComponent {
   label = input.required<string>();
   icon = input<string | null>(null);
-  controlName = input.required<string>();
-  form = input.required<FormGroup>();
+  field = input.required<FieldState<number, string>>();
 }
