@@ -85,7 +85,7 @@
                 <span pButtonLabel>Voir la bande-annonce</span>
             </button>
 
-            <button pButton severity="secondary" (click)="videoDetailsService.isOpenReview.set(true)">
+            <button pButton severity="secondary" (click)="videoDetailsService.isOpenReview.set(true)" [loading]="isLoadingReview()">
                 <span class="material-symbols">rate_review</span>
                 <span pButtonLabel>Effectuer ma review</span>
             </button>
@@ -104,4 +104,6 @@
 
 </p-dialog>
 
-<app-review-video-component />
+@if (videoDetailsService.video()) {
+<app-review-video-component [(isOpen)]="videoDetailsService.isOpenReview" [video]="videoDetailsService.video()!" />
+}

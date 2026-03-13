@@ -1,11 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import type { Relation } from 'typeorm';
-import { Video } from './video.entity';
 import { User } from '../users/user.entity';
+import { VideoType } from './video';
 
 @Entity()
 export class VideoReview {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ default: false })
@@ -17,9 +17,6 @@ export class VideoReview {
   @Column({ nullable: true })
   comment: string;
 
-  @Column({ nullable: true })
-  rating: number;
-
   @Column({ default: false })
   isFavorite: boolean;
 
@@ -27,7 +24,7 @@ export class VideoReview {
   actingRating: number;
 
   @Column({ nullable: true })
-  storyRating: number;
+  scenarioRating: number;
 
   @Column({ nullable: true })
   visualsRating: number;
@@ -35,8 +32,14 @@ export class VideoReview {
   @Column({ nullable: true })
   musicRating: number;
 
-  @ManyToOne(() => Video, (video) => video.reviews)
-  video: Relation<Video>;
+  @Column()
+  videoId: string;
+
+  @Column({
+    type: 'enum',
+    enum: VideoType,
+  })
+  videoType: VideoType;
 
   @ManyToOne(() => User, (user) => user.videoReviews)
   user: Relation<User>;

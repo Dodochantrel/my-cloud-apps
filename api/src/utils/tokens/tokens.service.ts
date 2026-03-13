@@ -36,6 +36,14 @@ export class TokensService {
       expiresIn: parseInt(lifetime as string),
     });
   }
+
+  decodeAccessToken(token: string): AccessTokenPayload {
+    return TokensService.decodeAccessToken(token);
+  }
+
+  static decodeAccessToken(token: string): AccessTokenPayload {
+    return jwtDecode<AccessTokenPayload>(token);
+  }
 }
 
 export interface AccessTokenPayload {
@@ -62,10 +70,11 @@ export const TokenPayload = createParamDecorator(
 export const RefreshTokenPayload = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<Request>();
-    if (!request.cookies || !request.cookies.refreshToken) {
+    const cookies = request.cookies as Record<string, string> | undefined;
+    if (!cookies?.['refreshToken']) {
       return null;
     }
-    const refreshToken = request.cookies.refreshToken;
+    const refreshToken = cookies['refreshToken'];
     return jwtDecode<RefreshTokenPayload>(refreshToken);
   },
 );

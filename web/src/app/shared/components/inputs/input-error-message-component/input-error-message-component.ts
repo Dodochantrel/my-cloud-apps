@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-input-error-message-component',
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './input-error-message-component.css',
 })
 export class InputErrorMessageComponent {
+  controlName = input.required<string>();
+  form = input.required<FormGroup>();
 
 }

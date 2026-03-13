@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { Video, VideoType } from '../video.entity';
+import { Video, VideoType } from '../video';
 import { Casting } from '../interfaces/casting.interface';
 import { Director } from '../interfaces/director.interface';
 import { VideoProvider } from '../interfaces/provider.interface';

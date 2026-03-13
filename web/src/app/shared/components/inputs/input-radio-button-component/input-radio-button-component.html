@@ -6,4 +6,5 @@
         <label [for]="controlName() + '-' + $index">{{ option.label }}</label>
     }
     </div>
+    <app-input-error-message-component [controlName]="controlName()" [form]="form()" />
 </div>

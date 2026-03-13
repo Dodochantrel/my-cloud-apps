@@ -3,7 +3,7 @@ import { effect, inject, Injectable, linkedSignal, signal } from '@angular/core'
 import { VideosRoutes } from '../../../core/api/videos/videos-routes';
 import { NotificationService } from '../../../core/notification/notification-service';
 import { mapFromGetAllVideoDtosToVideos } from '../../../core/api/videos/dtos/get-all-video-dto';
-import { Video, VideoType } from '../../../core/models/videos/video';
+import { VideoType } from '../../../core/models/videos/video';
 import { VideoStore } from '../stores/video-store';
 
 @Injectable({

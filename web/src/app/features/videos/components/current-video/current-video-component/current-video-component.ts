@@ -1,7 +1,7 @@
 import { Component, effect, input } from '@angular/core';
-import { VideoType } from '../../../../core/models/videos/video';
-import { CurrentVideoService } from './current-video-service';
-import { VideoCardComponent } from "../video-card-component/video-card-component";
+import { VideoType } from '../../../../../core/models/videos/video';
+import { VideoCardComponent } from '../../video-card-component/video-card-component';
+import { CurrentVideoService } from '../current-video-service';
 
 @Component({
   selector: 'app-current-video-component',
@@ -12,7 +12,9 @@ import { VideoCardComponent } from "../video-card-component/video-card-component
 export class CurrentVideoComponent {
   public type = input.required<VideoType>();
 
-  constructor(protected readonly currentVideoService: CurrentVideoService) {
+  constructor(
+    protected readonly currentVideoService: CurrentVideoService,
+  ) {
     effect(() => {
       this.currentVideoService.type.set(this.type());
     });

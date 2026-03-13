@@ -1,13 +1,13 @@
 import { VideoProvider } from "../../../models/videos/video-provider";
 
-export interface getProviderDto {
+export interface GetProviderDto {
   id: number;
   fileUrl: string;
   name: string;
 }
 
 export const mapFromGetProviderDtoToVideoProvider = (
-  dto: getProviderDto,
+  dto: GetProviderDto,
 ): VideoProvider => {
   return new VideoProvider(
     dto.id,
@@ -17,7 +17,7 @@ export const mapFromGetProviderDtoToVideoProvider = (
 };
 
 export const mapFromGetProviderDtoArrayToVideoProviderArray = (
-  dtos: getProviderDto[],
+  dtos: GetProviderDto[],
 ): VideoProvider[] => {
   return dtos.map(mapFromGetProviderDtoToVideoProvider);
 };

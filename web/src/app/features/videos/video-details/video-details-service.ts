@@ -1,12 +1,13 @@
-import { inject, Injectable, linkedSignal, signal } from '@angular/core';
+import { inject, Injectable, linkedSignal, signal, effect } from '@angular/core';
 import { VideosRoutes } from '../../../core/api/videos/videos-routes';
 import { NotificationService } from '../../../core/notification/notification-service';
-import { httpResource } from '@angular/common/http';
+import { HttpErrorResponse, httpResource } from '@angular/common/http';
 import { GetOneVideoDto, mapFromGetOneVideoDtoToVideo } from '../../../core/api/videos/dtos/get-one-video-dto';
 import { GetCastingDto, mapFromListGetCastingDtoToVideoCastingList } from '../../../core/api/videos/dtos/get-casting-dto';
 import { GetDirectorDto, mapFromGetDirectorDtoToVideoDirector } from '../../../core/api/videos/dtos/get-director-dto';
-import { mapFromGetProviderDtoArrayToVideoProviderArray } from '../../../core/api/videos/dtos/get-provider-dto';
-import { mapFromGetSeasonDtosToVideoSeasons } from '../../../core/api/videos/dtos/get-season-dto';
+import { GetProviderDto, mapFromGetProviderDtoArrayToVideoProviderArray } from '../../../core/api/videos/dtos/get-provider-dto';
+import { GetSeasonDto, mapFromGetSeasonDtosToVideoSeasons } from '../../../core/api/videos/dtos/get-season-dto';
+import { GetVideoReviewResponseDto, mapFromGetVideoReviewResponseDtoToVideoReview } from '../../../core/api/videos/dtos/get-video-review-dto';
 import { VideoType } from '../../../core/models/videos/video';
 
 @Injectable({
@@ -15,6 +16,9 @@ import { VideoType } from '../../../core/models/videos/video';
 export class VideoDetailsService {
   private readonly videosRoutes = new VideosRoutes();
   private readonly notificationService = inject(NotificationService);
+
+  constructor() {
+  }
 
   public id = signal<string | null>(null);
   public type = signal<VideoType>('movie');
@@ -40,42 +44,54 @@ export class VideoDetailsService {
         : ''
   );
 
-  public readonly videoProvidersResource = httpResource<any>(
+  public readonly videoProvidersResource = httpResource<GetProviderDto[]>(
     () =>
       this.id()
         ? this.videosRoutes.getProviders(this.id()!, this.type())
         : ''
   );
 
-  private readonly videoSeasonsResource = httpResource<any>(
+  private readonly videoSeasonsResource = httpResource<GetSeasonDto[]>(
     () =>
       this.id() && this.type() === 'serie'
         ? this.videosRoutes.getSeasons(this.id()!, this.type())
         : ''
   );
+  
+  private readonly videoReviewResource = httpResource<GetVideoReviewResponseDto>(
+    () =>
+      this.id()
+        ? this.videosRoutes.getReview(this.id()!, this.type())
+        : ''
+  );
 
   video = linkedSignal(() => {
-    const videoData = this.videoResource.value();
+    const videoData = this.videoResource.error() ? null : this.videoResource.value();
     if (!videoData) return null;
 
     const mappedVideo = mapFromGetOneVideoDtoToVideo(videoData);
-    const castingData = this.videoCastingResource.value();
+    const castingData = this.videoCastingResource.error() ? null : this.videoCastingResource.value();
     if (castingData) {
       mappedVideo.castings = mapFromListGetCastingDtoToVideoCastingList(castingData);
     }
-    const directorData = this.videoDirectorResource.value();
+    const directorData = this.videoDirectorResource.error() ? null : this.videoDirectorResource.value();
     if (directorData) {
       mappedVideo.director = mapFromGetDirectorDtoToVideoDirector(directorData);
     }
-    const providersData = this.videoProvidersResource.value();
+    const providersData = this.videoProvidersResource.error() ? null : this.videoProvidersResource.value();
     if (providersData) {
       mappedVideo.providers = mapFromGetProviderDtoArrayToVideoProviderArray(providersData);
     }
     if (this.type() === 'serie') {
-      const seasonsData = this.videoSeasonsResource.value();
+      const seasonsData = this.videoSeasonsResource.error() ? null : this.videoSeasonsResource.value();
       if (seasonsData) {
         mappedVideo.seasons = mapFromGetSeasonDtosToVideoSeasons(seasonsData);
       }
+    }
+
+    const reviewData = this.videoReviewResource.error() ? null : this.videoReviewResource.value(); 
+    if (reviewData) {
+      mappedVideo.review = mapFromGetVideoReviewResponseDtoToVideoReview(reviewData);
     }
     return mappedVideo;
   });
@@ -85,6 +101,7 @@ export class VideoDetailsService {
   public isLoadingDirector = this.videoDirectorResource.isLoading;
   public isLoadingProviders = this.videoProvidersResource.isLoading;
   public isLoadingSeasons = this.videoSeasonsResource.isLoading;
+  public isLoadingReview = this.videoReviewResource.isLoading;
 
   public isVisibleTrailerDialog = signal<boolean>(false);
   public isLoadingTrailer = signal<boolean>(false);
@@ -112,4 +129,6 @@ export class VideoDetailsService {
   }
 
   public isOpenReview = signal<boolean>(false);
+
+  patchVideoReview() {}
 }

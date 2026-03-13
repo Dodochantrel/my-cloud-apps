@@ -1,7 +1,6 @@
 import { Component, model, output } from '@angular/core';
 import { NotificationService } from '../../../core/notification/notification-service';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { updateFailedInputs } from '../../utils/update-failed-inputs';
 import { ButtonModule } from 'primeng/button';
 import { TitleComponent } from '../title-component/title-component';
 
@@ -23,7 +22,8 @@ export class AuthFormComponent {
     if(this.form().valid) {
       this.onValidate.emit();
     } else {
-      updateFailedInputs(this.form());
+      this.form().markAllAsTouched();
+      this.form().markAllAsDirty();
       this.notificationService.invalidForm();
     }
   }

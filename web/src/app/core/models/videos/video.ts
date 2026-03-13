@@ -4,6 +4,7 @@ import { SerieDetails } from './serie-details';
 import { VideoCasting } from "./video-casting";
 import { VideoDirector } from "./video-director";
 import { VideoProvider } from "./video-provider";
+import { VideoReview } from './video-review';
 import { VideoSeason } from './video-season';
 import { VideoTrailer } from "./video-trailer";
 
@@ -25,6 +26,7 @@ export class Video {
   trailer: VideoTrailer | null = null;
   providers: VideoProvider[] = [];
   seasons: VideoSeason[] = [];
+  review: VideoReview | null = null;
 
   constructor(
     id: string,
@@ -36,7 +38,6 @@ export class Video {
     genres: string[],
     fileUrl: string | null,
   ) {
-    this.id = id;
     this.id = id;
     this.title = title;
     this.type = type;

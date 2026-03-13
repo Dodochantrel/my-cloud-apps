@@ -1,4 +1,4 @@
-import { Video } from './video.entity';
+import { Video } from './video';
 
 describe('Video', () => {
   it('should be defined', () => {

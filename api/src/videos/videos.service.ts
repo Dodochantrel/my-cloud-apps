@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Video, VideoType } from './video.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Video, VideoType } from './video';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TmdbRepositoryRepository } from './tmdb/tmdb-repository.repository';
@@ -7,13 +7,16 @@ import { Casting } from './interfaces/casting.interface';
 import { Director } from './interfaces/director.interface';
 import { VideoProvider } from './interfaces/provider.interface';
 import { PageQuery } from 'src/pagination/page-query';
+import { VideoReview } from './video-review.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class VideosService {
   constructor(
-    @InjectRepository(Video)
-    private videoRepository: Repository<Video>,
+    @InjectRepository(VideoReview)
+    private videoReviewRepository: Repository<VideoReview>,
     private readonly tmdbRepositoryRepository: TmdbRepositoryRepository,
+    private readonly usersService: UsersService,
   ) {}
 
   async getAll(type: VideoType, search: string): Promise<Video[]> {
@@ -69,7 +72,49 @@ export class VideosService {
     return this.tmdbRepositoryRepository.getSeasons(Number(id));
   }
 
-  async update(id: string): Promise<Video> {
-    return this.videoRepository.findOneByOrFail({ id: id });
+  async getReview(
+    videoId: string,
+    userId: string,
+    videoType: VideoType,
+  ): Promise<VideoReview> {
+    return this.videoReviewRepository
+      .findOne({
+        where: { videoId, user: { id: userId }, videoType },
+      })
+      .then((review) => {
+        if (!review) {
+          throw new NotFoundException('Review not found');
+        }
+        return review;
+      });
+  }
+
+  async update(
+    id: string,
+    userId: string,
+    videoReview: VideoReview,
+  ): Promise<VideoReview> {
+    const existingReview = await this.videoReviewRepository.findOne({
+      where: { videoId: id, user: { id: userId } },
+      relations: ['user'],
+    });
+    let reviewToSave: VideoReview;
+    if (existingReview) {
+      reviewToSave = existingReview;
+      reviewToSave.comment = videoReview.comment;
+      reviewToSave.isFavorite = videoReview.isFavorite;
+      reviewToSave.isToWatch = videoReview.isToWatch;
+      reviewToSave.isWatched = videoReview.isWatched;
+      reviewToSave.actingRating = videoReview.actingRating;
+      reviewToSave.scenarioRating = videoReview.scenarioRating;
+      reviewToSave.visualsRating = videoReview.visualsRating;
+      reviewToSave.musicRating = videoReview.musicRating;
+    } else {
+      reviewToSave = videoReview;
+      reviewToSave.videoId = id;
+      reviewToSave.user = await this.usersService.findOneById(userId);
+    }
+    console.log('Review to save:', reviewToSave);
+    return this.videoReviewRepository.save(reviewToSave);
   }
 }

@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { VideoReview } from '../video-review.entity';
+import { VideoType } from '../video';
 
 export class PatchVideoReviewRequestDto {
   @ApiProperty({
@@ -29,14 +31,6 @@ export class PatchVideoReviewRequestDto {
   comment: string | null;
 
   @ApiProperty({
-    description: 'Indicates the rating of the video',
-    example: 5,
-    nullable: true,
-  })
-  @IsNumber()
-  rating: number | null;
-
-  @ApiProperty({
     description: 'Indicates if the video is a favorite',
     example: true,
     nullable: true,
@@ -58,7 +52,7 @@ export class PatchVideoReviewRequestDto {
     nullable: true,
   })
   @IsNumber()
-  storyRating: number | null;
+  scenarioRating: number | null;
 
   @ApiProperty({
     description: 'Indicates the visuals rating of the video',
@@ -75,7 +69,29 @@ export class PatchVideoReviewRequestDto {
   })
   @IsNumber()
   musicRating: number | null;
+
+  @ApiProperty({
+    description: 'The type of the video',
+  })
+  @IsNotEmpty()
+  videoType: VideoType;
 }
+
+export const mapFromPatchVideoReviewRequestDtoToVideoReview = (
+  dto: PatchVideoReviewRequestDto,
+): VideoReview => {
+  return new VideoReview({
+    videoType: dto.videoType,
+    isWatched: dto.isWatched,
+    isToWatch: dto.isToWatch,
+    comment: dto.comment || undefined,
+    isFavorite: dto.isFavorite,
+    actingRating: dto.actingRating || undefined,
+    scenarioRating: dto.scenarioRating || undefined,
+    visualsRating: dto.visualsRating || undefined,
+    musicRating: dto.musicRating || undefined,
+  });
+};
 
 export class PatchVideoReviewResponseDto {
   @ApiProperty({
@@ -106,13 +122,6 @@ export class PatchVideoReviewResponseDto {
   comment: string | null;
 
   @ApiProperty({
-    description: 'Indicates the rating of the video',
-    example: 5,
-    nullable: true,
-  })
-  rating: number | null;
-
-  @ApiProperty({
     description: 'Indicates if the video is a favorite',
     example: true,
     nullable: true,
@@ -131,7 +140,7 @@ export class PatchVideoReviewResponseDto {
     example: 4,
     nullable: true,
   })
-  storyRating: number | null;
+  scenarioRating: number | null;
 
   @ApiProperty({
     description: 'Indicates the visuals rating of the video',
@@ -146,4 +155,22 @@ export class PatchVideoReviewResponseDto {
     nullable: true,
   })
   musicRating: number | null;
+
+  @ApiProperty({
+    description: 'The type of the video',
+  })
+  videoType: VideoType;
+
+  constructor(videoReview: VideoReview) {
+    this.id = videoReview.id;
+    this.videoType = videoReview.videoType;
+    this.isWatched = videoReview.isWatched;
+    this.isToWatch = videoReview.isToWatch;
+    this.comment = videoReview.comment || null;
+    this.isFavorite = videoReview.isFavorite;
+    this.actingRating = videoReview.actingRating || null;
+    this.scenarioRating = videoReview.scenarioRating || null;
+    this.visualsRating = videoReview.visualsRating || null;
+    this.musicRating = videoReview.musicRating || null;
+  }
 }

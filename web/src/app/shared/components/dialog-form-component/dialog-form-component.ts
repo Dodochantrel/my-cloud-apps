@@ -7,7 +7,7 @@ import { NotificationService } from '../../../core/notification/notification-ser
 
 @Component({
   selector: 'app-dialog-form-component',
-  imports: [DialogModule, ReactiveFormsModule, ButtonModule],
+  imports: [DialogModule, ReactiveFormsModule, ButtonModule, ReactiveFormsModule],
   templateUrl: './dialog-form-component.html',
   styleUrl: './dialog-form-component.css',
 })

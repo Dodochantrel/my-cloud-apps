@@ -7,7 +7,7 @@ import { VideoSearchInputComponent } from '../../components/video-search-input-c
 import { VideoListService } from '../video-list-service';
 import { Video, VideoType } from '../../../../core/models/videos/video';
 import { TabsModule } from 'primeng/tabs';
-import { CurrentVideoComponent } from '../../components/current-video-component/current-video-component';
+import { CurrentVideoComponent } from '../../components/current-video/current-video-component/current-video-component';
 
 @Component({
   selector: 'app-video-list-page',

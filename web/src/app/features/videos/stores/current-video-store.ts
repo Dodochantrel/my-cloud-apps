@@ -24,9 +24,14 @@ export class CurrentVideoStore {
     this.data.set([]);
   }
 
-  public editOne(video: Video) {
+  public getOne(id: string): Video | undefined {
     const currentData = this.data();
-    const index = currentData.findIndex((v) => v.id === video.id);
+    return currentData.find((v) => v.id === id);
+  }
+
+  public editOne(id: string, video: Video) {
+    const currentData = this.data();
+    const index = currentData.findIndex((v) => v.id === id);
     if (index !== -1) {
       currentData[index] = video;
       this.data.set([...currentData]);

@@ -1,13 +1,5 @@
 <div [formGroup]="form()">
     <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label><br>
     <textarea rows="5" cols="30" pTextarea [formControlName]="controlName()" [placeholder]="placeholder()" fluid></textarea>
-    @if(form().get(controlName())?.invalid && form().get(controlName())?.dirty) {
-        @if(form().get(controlName())?.errors?.['required']) {
-            <app-input-error-message-component>Le champs est requis</app-input-error-message-component>
-        } @else if (form().get(controlName())?.errors?.['minlength']) {
-            <app-input-error-message-component>Le champs doit contenir au moins {{ form().get(controlName())?.errors?.['minlength'].requiredLength }} caractères</app-input-error-message-component>
-        } @else if (form().get(controlName())?.errors?.['maxlength']) {
-            <app-input-error-message-component>Le champs doit contenir au maximum {{ form().get(controlName())?.errors?.['maxlength'].requiredLength }} caractères</app-input-error-message-component>
-        }
-    }
+    <app-input-error-message-component [controlName]="controlName()" [form]="form()" />
 </div>

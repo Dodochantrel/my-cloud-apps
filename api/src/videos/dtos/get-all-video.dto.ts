@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { VideoType } from '../video.entity';
+import { VideoType } from '../video';
 
 export class GetAllVideoQueryDto {
     @ApiProperty({

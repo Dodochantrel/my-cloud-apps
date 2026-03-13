@@ -2,7 +2,7 @@
 
     <div>
 
-        <form class="flex gap-2 flex-col w-screen max-w-xl" (ngSubmit)="validate()">
+        <form class="flex gap-2 flex-col w-screen max-w-xl" (ngSubmit)="validate()" [formGroup]="form()">
 
             <ng-content></ng-content>
 

@@ -7,7 +7,7 @@ import { SafeUrlPipe } from '../../../../shared/pipes/safe-url.pipe';
 import { TitleComponent } from '../../../../shared/components/title-component/title-component';
 import { Video } from '../../../../core/models/videos/video';
 import { VideoDetailsService } from '../../video-details/video-details-service';
-import { ReviewVideoComponent } from '../review-video-component/review-video-component';
+import { ReviewVideoComponent } from '../review-video/review-video-component/review-video-component';
 
 @Component({
   selector: 'app-video-information-component',
@@ -18,6 +18,7 @@ import { ReviewVideoComponent } from '../review-video-component/review-video-com
 export class VideoInformationComponent {
   public isLoading = input.required<boolean>();
   public isLoadingTrailer = input.required<boolean>();
+  public isLoadingReview = input.required<boolean>();
   public isVisibleTrailerDialog = model.required<boolean>();
   public video = input.required<Video | null>();
   public getTrailer = output<void>();

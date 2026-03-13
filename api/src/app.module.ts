@@ -10,7 +10,6 @@ import { EmailsService } from './utils/emails/emails.service';
 import { UsersService } from './users/users.service';
 import { AuthenticationsService } from './authentications/authentications.service';
 import { AuthenticationsController } from './authentications/authentications.controller';
-import { Video } from './videos/video.entity';
 import { VideosController } from './videos/videos.controller';
 import { VideosService } from './videos/videos.service';
 import { HttpModule } from '@nestjs/axios/dist/http.module';
@@ -35,12 +34,9 @@ import { VideoReview } from './videos/video-review.entity';
         },
       }),
     }),
-    TypeOrmModule.forFeature([User, Video, VideoReview]),
+    TypeOrmModule.forFeature([User, VideoReview]),
   ],
-  controllers: [
-    AuthenticationsController,
-    VideosController,
-  ],
+  controllers: [AuthenticationsController, VideosController],
   providers: [
     TokensService,
     HashsService,

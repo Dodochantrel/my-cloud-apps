@@ -4,7 +4,10 @@ import { inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { VideoTrailer } from '../../models/videos/video-trailer';
 import { GetTrailerDto, mapFromGetTrailerDtoToVideoTrailer } from './dtos/get-trailer-dto';
-import { VideoType } from '../../models/videos/video';
+import { Video, VideoType } from '../../models/videos/video';
+import { mapFromPatchVideoReviewRequestDtoToVideoReview, PatchVideoReviewRequestDto, PatchVideoReviewResponseDto } from './dtos/patch-video-review-dto';
+import { VideoReview } from '../../models/videos/video-review';
+import { GetVideoReviewResponseDto, mapFromGetVideoReviewResponseDtoToVideoReview } from './dtos/get-video-review-dto';
 
 export class VideosRoutes {
   private readonly baseUrl = `${environment.apiUrl}videos`;
@@ -45,5 +48,17 @@ export class VideosRoutes {
 
   public getSeasons(id: string, type: VideoType): string {
     return `${this.baseUrl}/${id}/seasons?type=${type}`;
+  }
+
+  public patchReview(body: PatchVideoReviewRequestDto): Observable<VideoReview> {
+    return this.httpClient.patch<PatchVideoReviewResponseDto>(`${this.baseUrl}/${body.id}/reviews`, body).pipe(
+      map((response) => {
+        return mapFromPatchVideoReviewRequestDtoToVideoReview(response);
+      })
+    )
+  }
+
+  public getReview(id: string, type: VideoType): string {
+    return `${this.baseUrl}/${id}/reviews?type=${type}`;
   }
 }

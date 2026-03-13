@@ -1,10 +1,11 @@
 import { Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SelectButton } from 'primeng/selectbutton';
+import { InputErrorMessageComponent } from '../input-error-message-component/input-error-message-component';
 
 @Component({
   selector: 'app-input-select-button-component',
-  imports: [SelectButton, ReactiveFormsModule],
+  imports: [SelectButton, ReactiveFormsModule, InputErrorMessageComponent],
   templateUrl: './input-select-button-component.html',
   styleUrl: './input-select-button-component.css',
 })

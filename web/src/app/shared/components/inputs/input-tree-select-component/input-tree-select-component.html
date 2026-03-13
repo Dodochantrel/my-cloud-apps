@@ -16,9 +16,5 @@
             [pt]="{ label: { class: 'pl-[calc((var(--p-form-field-padding-x)*2)+var(--p-icon-size))]' } }"
         />
     </p-iconfield>
-    @if(form().get(controlName())?.invalid && form().get(controlName())?.dirty) {
-        @if(form().get(controlName())?.errors?.['required']) {
-            <app-input-error-message-component>Le champs est requis</app-input-error-message-component>
-        }
-    }
+    <app-input-error-message-component [controlName]="controlName()" [form]="form()" />
 </div>

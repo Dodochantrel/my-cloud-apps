@@ -1,18 +1,18 @@
-<div>
+<div [formGroup]="form()">
 
-    <label [for]="label()" class="label">
+    <label [for]="controlName()" class="label">
         @if(icon()) {
             <span class="material-symbols text-primary text-base!">{{ icon() }}</span>
         }
-        {{ label() }} @if (field().required() === true) { <span>*</span> }
+        {{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}
     </label>
 
     <br>
 
-    <p-rating [name]="label()" [field]="field" [stars]="5" />
+    <p-rating [name]="controlName()" [formControlName]="controlName()" [stars]="starCount()" />
 
-    @if (field().invalid() && field().dirty()) {
-        <app-input-error-message-component>{{ field().errors()[0].message }}</app-input-error-message-component>
-    }
-
+    <app-input-error-message-component
+        [controlName]="controlName()"
+        [form]="form()"
+    />
 </div>

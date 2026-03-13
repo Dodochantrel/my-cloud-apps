@@ -1,1 +1,17 @@
-<p class="error-message text-sm" style="color: var(--p-button-text-danger-color);"><ng-content /></p>
+@if(form().get(controlName())?.invalid && form().get(controlName())?.dirty) {
+@if(form().get(controlName())?.errors?.['required']) {
+<p class="error-message text-sm" style="color: var(--p-button-text-danger-color);">Le champs est requis</p>
+} @else if (form().get(controlName())?.errors?.['minlength']) {
+<p class="error-message text-sm" style="color: var(--p-button-text-danger-color);">Le champs doit contenir au moins {{
+    form().get(controlName())?.errors?.['minlength'].requiredLength }} caractères</p>
+} @else if (form().get(controlName())?.errors?.['maxlength']) {
+<p class="error-message text-sm" style="color: var(--p-button-text-danger-color);">Le champs doit contenir au maximum {{
+    form().get(controlName())?.errors?.['maxlength'].requiredLength }} caractères</p>
+} @else if (form().get(controlName())?.errors?.['email']) {
+<p class="error-message text-sm" style="color: var(--p-button-text-danger-color);">Le champs doit être une adresse email
+    valide</p>
+} @else if (form().get(controlName())?.errors?.['pattern']) {
+<p class="error-message text-sm" style="color: var(--p-button-text-danger-color);">Le champs ne correspond pas au format
+    attendu</p>
+}
+}
