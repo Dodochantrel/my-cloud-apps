@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 import { jwtDecode } from 'jwt-decode';
+import type { StringValue } from 'ms';
 
 @Injectable()
 export class TokensService {
@@ -20,20 +21,18 @@ export class TokensService {
     const payload: AccessTokenPayload = { id, email, roles };
     return this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-      expiresIn: parseInt(
-        this.configService.get<string>('JWT_ACCESS_LIFETIME') as string,
-      ),
+      expiresIn: this.configService.get<StringValue>('JWT_ACCESS_LIFETIME'),
     });
   }
 
   generateRefreshToken(id: string, rememberMe: boolean): Promise<string> {
     const payload: RefreshTokenPayload = { id };
     const lifetime = rememberMe
-      ? this.configService.get<string>('JWT_REFRESH_LIFETIME_REMEMBER')
-      : this.configService.get<string>('JWT_REFRESH_LIFETIME');
+      ? this.configService.get<StringValue>('JWT_REFRESH_LIFETIME_REMEMBER')
+      : this.configService.get<StringValue>('JWT_REFRESH_LIFETIME');
     return this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      expiresIn: parseInt(lifetime as string),
+      expiresIn: lifetime,
     });
   }
 
