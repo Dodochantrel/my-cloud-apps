@@ -1,7 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import type { Relation } from 'typeorm';
 import { User } from '../users/user.entity';
-import { VideoType } from './video';
+import { Video } from './video.entity';
 
 @Entity()
 export class VideoReview {
@@ -32,17 +39,24 @@ export class VideoReview {
   @Column({ nullable: true })
   musicRating: number;
 
-  @Column()
-  videoId: string;
-
-  @Column({
-    type: 'enum',
-    enum: VideoType,
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
-  videoType: VideoType;
+  updatedAt: Date;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  createdAt: Date;
 
   @ManyToOne(() => User, (user) => user.videoReviews)
   user: Relation<User>;
+
+  @ManyToOne(() => Video, (video) => video.reviews)
+  video: Relation<Video>;
 
   constructor(partial: Partial<VideoReview>) {
     Object.assign(this, partial);

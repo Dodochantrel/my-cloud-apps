@@ -112,6 +112,7 @@ export class VideosController {
         videoId,
         user.id,
         mapFromPatchVideoReviewRequestDtoToVideoReview(dto),
+        dto.videoType,
       ),
     );
   }

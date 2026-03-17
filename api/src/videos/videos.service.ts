@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Video, VideoType } from './video';
+import { Video, VideoType } from './video.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TmdbRepositoryRepository } from './tmdb/tmdb-repository.repository';
@@ -15,6 +15,8 @@ export class VideosService {
   constructor(
     @InjectRepository(VideoReview)
     private videoReviewRepository: Repository<VideoReview>,
+    @InjectRepository(Video)
+    private videoRepository: Repository<Video>,
     private readonly tmdbRepositoryRepository: TmdbRepositoryRepository,
     private readonly usersService: UsersService,
   ) {}
@@ -79,7 +81,11 @@ export class VideosService {
   ): Promise<VideoReview> {
     return this.videoReviewRepository
       .findOne({
-        where: { videoId, user: { id: userId }, videoType },
+        where: {
+          video: { externalId: videoId, type: videoType },
+          user: { id: userId },
+        },
+        relations: ['video', 'user'],
       })
       .then((review) => {
         if (!review) {
@@ -93,10 +99,14 @@ export class VideosService {
     id: string,
     userId: string,
     videoReview: VideoReview,
+    videoType: VideoType,
   ): Promise<VideoReview> {
     const existingReview = await this.videoReviewRepository.findOne({
-      where: { videoId: id, user: { id: userId } },
-      relations: ['user'],
+      where: {
+        video: { externalId: id, type: videoType },
+        user: { id: userId },
+      },
+      relations: ['user', 'video'],
     });
     let reviewToSave: VideoReview;
     if (existingReview) {
@@ -110,11 +120,14 @@ export class VideosService {
       reviewToSave.visualsRating = videoReview.visualsRating;
       reviewToSave.musicRating = videoReview.musicRating;
     } else {
+      const tmdb = await this.getByid(id, videoType);
+      if (!tmdb) {
+        throw new NotFoundException('Video not found');
+      }
       reviewToSave = videoReview;
-      reviewToSave.videoId = id;
+      reviewToSave.video = await this.videoRepository.save(tmdb);
       reviewToSave.user = await this.usersService.findOneById(userId);
     }
-    console.log('Review to save:', reviewToSave);
     return this.videoReviewRepository.save(reviewToSave);
   }
 }

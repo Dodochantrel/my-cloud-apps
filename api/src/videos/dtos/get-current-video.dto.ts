@@ -1,5 +1,5 @@
 import { PageQuery } from 'src/pagination/page-query';
-import { VideoType } from '../video';
+import { VideoType } from '../video.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';

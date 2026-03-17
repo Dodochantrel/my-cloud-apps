@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { Video, VideoType } from '../video';
+import { Video, VideoType } from '../video.entity';
 import { Casting } from '../interfaces/casting.interface';
 import { Director } from '../interfaces/director.interface';
 import { VideoProvider } from '../interfaces/provider.interface';
@@ -234,11 +234,10 @@ export class TmdbRepositoryRepository {
       description: tmdbDataResponse.overview,
       fileUrl: tmdbDataResponse.poster_path
         ? `https://image.tmdb.org/t/p/w400${tmdbDataResponse.poster_path}`
-        : null,
+        : undefined,
       backdropUrl: tmdbDataResponse.backdrop_path
         ? `https://image.tmdb.org/t/p/w780${tmdbDataResponse.backdrop_path}`
-        : null,
-      userRating: null,
+        : undefined,
       globalRating: tmdbDataResponse.vote_average,
       type: type,
       genres: this.getGenreName(tmdbDataResponse.genre_ids, genres)
@@ -298,16 +297,16 @@ export class TmdbRepositoryRepository {
     type: VideoType,
   ): Video {
     return new Video({
-      id: tmdbMovieDetailsResponse.id.toString(),
+      externalId: tmdbMovieDetailsResponse.id.toString(),
       title: tmdbMovieDetailsResponse.title,
       releaseDate: new Date(tmdbMovieDetailsResponse.release_date),
       description: tmdbMovieDetailsResponse.overview,
       fileUrl: tmdbMovieDetailsResponse.poster_path
         ? `https://image.tmdb.org/t/p/w300${tmdbMovieDetailsResponse.poster_path}`
-        : null,
+        : undefined,
       backdropUrl: tmdbMovieDetailsResponse.backdrop_path
         ? `https://image.tmdb.org/t/p/w780${tmdbMovieDetailsResponse.backdrop_path}`
-        : null,
+        : undefined,
       type: type,
       genres: tmdbMovieDetailsResponse.genres.map((g) => g.name),
       globalRating: tmdbMovieDetailsResponse.vote_average,
@@ -329,13 +328,13 @@ export class TmdbRepositoryRepository {
     type: VideoType,
   ): Video {
     return new Video({
-      id: tmdbSerieDetailsResponse.id.toString(),
+      externalId: tmdbSerieDetailsResponse.id.toString(),
       title: tmdbSerieDetailsResponse.name,
       releaseDate: new Date(tmdbSerieDetailsResponse.first_air_date),
       description: tmdbSerieDetailsResponse.overview,
       fileUrl: tmdbSerieDetailsResponse.poster_path
         ? `https://image.tmdb.org/t/p/w300${tmdbSerieDetailsResponse.poster_path}`
-        : null,
+        : undefined,
       type: type,
       globalRating: tmdbSerieDetailsResponse.vote_average,
       genres: tmdbSerieDetailsResponse.genres.map((g) => g.name),

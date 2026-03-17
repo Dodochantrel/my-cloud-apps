@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { VideoReview } from '../video-review.entity';
-import { VideoType } from '../video';
+import { VideoType } from '../video.entity';
 
 export class PatchVideoReviewRequestDto {
   @ApiProperty({
@@ -81,7 +81,6 @@ export const mapFromPatchVideoReviewRequestDtoToVideoReview = (
   dto: PatchVideoReviewRequestDto,
 ): VideoReview => {
   return new VideoReview({
-    videoType: dto.videoType,
     isWatched: dto.isWatched,
     isToWatch: dto.isToWatch,
     comment: dto.comment || undefined,
@@ -156,14 +155,8 @@ export class PatchVideoReviewResponseDto {
   })
   musicRating: number | null;
 
-  @ApiProperty({
-    description: 'The type of the video',
-  })
-  videoType: VideoType;
-
   constructor(videoReview: VideoReview) {
     this.id = videoReview.id;
-    this.videoType = videoReview.videoType;
     this.isWatched = videoReview.isWatched;
     this.isToWatch = videoReview.isToWatch;
     this.comment = videoReview.comment || null;
