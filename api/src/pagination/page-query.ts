@@ -28,15 +28,8 @@ export class PageQuery {
   )
   public limit: number = PageQuery.DEFAULT_LIMIT;
 
-  @ApiPropertyOptional({
-    description: 'Cursor id from previous page last item',
-    type: String,
-  })
-  @IsString()
-  public lastId?: string;
-
-  public static of(page: number, limit: number, lastId: string): PageQuery {
-    const dto = new PageQuery(page, limit, lastId);
+  public static of(page: number, limit: number): PageQuery {
+    const dto = new PageQuery(page, limit);
     return dto;
   }
 
@@ -44,10 +37,9 @@ export class PageQuery {
     return (this.page - 1) * this.limit;
   }
 
-  constructor(page: number, limit: number, lastId: string) {
+  constructor(page: number, limit: number) {
     this.page = Number(page);
     this.limit = Number(limit);
-    this.lastId = lastId;
   }
 }
 
