@@ -1,3 +1,4 @@
+import { PageQuery } from './../pagination/page-query';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Video, VideoType } from './video.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,7 +7,6 @@ import { TmdbRepositoryRepository } from './tmdb/tmdb-repository.repository';
 import { Casting } from './interfaces/casting.interface';
 import { Director } from './interfaces/director.interface';
 import { VideoProvider } from './interfaces/provider.interface';
-import { PageQuery } from 'src/pagination/page-query';
 import { VideoReview } from './video-review.entity';
 import { UsersService } from 'src/users/users.service';
 
@@ -129,5 +129,41 @@ export class VideosService {
       reviewToSave.user = await this.usersService.findOneById(userId);
     }
     return this.videoReviewRepository.save(reviewToSave);
+  }
+
+  async getWatchedVideos(
+    userId: string,
+    videoType: VideoType,
+    pageQuery: PageQuery,
+  ): Promise<{ items: VideoReview[]; total: number }> {
+    const [items, total] = await this.videoReviewRepository.findAndCount({
+      where: {
+        user: { id: userId },
+        video: { type: videoType },
+        isWatched: true,
+      },
+      take: pageQuery.limit,
+      skip: pageQuery.offset,
+      relations: ['video'],
+    });
+    return { items, total };
+  }
+
+  async getToWatchVideos(
+    userId: string,
+    videoType: VideoType,
+    pageQuery: PageQuery,
+  ): Promise<{ items: VideoReview[]; total: number }> {
+    const [items, total] = await this.videoReviewRepository.findAndCount({
+      where: {
+        user: { id: userId },
+        video: { type: videoType },
+        isToWatch: true,
+      },
+      take: pageQuery.limit,
+      skip: pageQuery.offset,
+      relations: ['video'],
+    });
+    return { items, total };
   }
 }

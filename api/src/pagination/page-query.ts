@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { IsString } from 'class-validator';
 
 export class PageQuery {
   public static readonly DEFAULT_LIMIT = 100;
@@ -13,7 +14,7 @@ export class PageQuery {
   })
   @IsNumber()
   @Transform(({ value }) =>
-    toNumber(value, { default: PageQuery.DEFAULT_PAGE, min: 1 }),
+    toNumber(value as string, { default: PageQuery.DEFAULT_PAGE, min: 1 }),
   )
   public page: number = PageQuery.DEFAULT_PAGE;
 
@@ -23,14 +24,19 @@ export class PageQuery {
     type: Number,
   })
   @Transform(({ value }) =>
-    toNumber(value, { default: PageQuery.DEFAULT_LIMIT, min: 1 }),
+    toNumber(value as string, { default: PageQuery.DEFAULT_LIMIT, min: 1 }),
   )
   public limit: number = PageQuery.DEFAULT_LIMIT;
 
-  public static of(page?: number, limit?: number): PageQuery {
-    const dto = new PageQuery();
-    dto.page = page ?? PageQuery.DEFAULT_PAGE;
-    dto.limit = limit ?? PageQuery.DEFAULT_LIMIT;
+  @ApiPropertyOptional({
+    description: 'Cursor id from previous page last item',
+    type: String,
+  })
+  @IsString()
+  public lastId?: string;
+
+  public static of(page: number, limit: number, lastId: string): PageQuery {
+    const dto = new PageQuery(page, limit, lastId);
     return dto;
   }
 
@@ -38,9 +44,10 @@ export class PageQuery {
     return (this.page - 1) * this.limit;
   }
 
-  constructor(page?: number, limit?: number) {
-    this.page = Number(page) ?? PageQuery.DEFAULT_PAGE;
-    this.limit = Number(limit) ?? PageQuery.DEFAULT_LIMIT;
+  constructor(page: number, limit: number, lastId: string) {
+    this.page = Number(page);
+    this.limit = Number(limit);
+    this.lastId = lastId;
   }
 }
 

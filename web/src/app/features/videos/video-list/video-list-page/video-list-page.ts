@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DefaultContainerComponent } from '../../../../shared/components/default-container-component/default-container-component';
-import { FooterTableComponent } from '../../../../shared/components/footer-table-component/footer-table-component';
 import { VideoSearchInputComponent } from '../../components/video-search-input-component/video-search-input-component';
 import { VideoListService } from '../video-list-service';
 import { Video, VideoType } from '../../../../core/models/videos/video';
@@ -13,7 +12,6 @@ import { CurrentVideoComponent } from '../../components/current-video/current-vi
   selector: 'app-video-list-page',
   imports: [
     DefaultContainerComponent,
-    FooterTableComponent,
     VideoSearchInputComponent,
     CommonModule,
     TabsModule,

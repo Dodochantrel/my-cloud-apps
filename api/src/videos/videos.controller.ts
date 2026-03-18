@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { GetAllVideoQueryDto } from './dtos/get-all-video.dto';
-import { GetOneVideoParamDto } from './dtos/get-one-video.dto';
+import { GetVideoQueryDto } from './dtos/get-video-query.dto';
 import { GetCastingVideoParamDto } from './dtos/get-casting-video.dto';
 import { GetDirectorVideoParamDto } from './dtos/get-director-video.dto';
 import { GetTrailerVideoParamDto } from './dtos/get-trailer-video.dto';
@@ -16,6 +16,16 @@ import {
 import { UserData } from 'src/users/user-data.decorator';
 import type { AccessTokenPayload } from 'src/utils/tokens/tokens.service';
 import { GetVideoReviewResponseDto } from './dtos/get-video-review.dto';
+import { PaginatedResponse } from 'src/pagination/paginated-response';
+import { PageQuery } from 'src/pagination/page-query';
+import {
+  GetToWatchVideoResponseDto,
+  toGetToWatchVideoResponseDtoList,
+} from './dtos/get-to-watch-video.dto';
+import {
+  GetWatchedVideoResponseDto,
+  toGetWatchedVideoResponseDtoList,
+} from './dtos/get-watched-video.dto';
 
 @Controller('videos')
 export class VideosController {
@@ -34,7 +44,7 @@ export class VideosController {
   @Get(':id')
   async getVideoById(
     @Param('id') id: string,
-    @Query() query: GetOneVideoParamDto,
+    @Query() query: GetVideoQueryDto,
   ) {
     return await this.videosService.getByid(id, query.type);
   }
@@ -85,7 +95,7 @@ export class VideosController {
   })
   async getReviews(
     @Param('videoId') videoId: string,
-    @Query() query: GetOneVideoParamDto,
+    @Query() query: GetVideoQueryDto,
     @UserData() user: AccessTokenPayload,
   ): Promise<GetVideoReviewResponseDto> {
     return new GetVideoReviewResponseDto(
@@ -114,6 +124,42 @@ export class VideosController {
         mapFromPatchVideoReviewRequestDtoToVideoReview(dto),
         dto.videoType,
       ),
+    );
+  }
+
+  @Get('watched')
+  async getWatchedVideos(
+    @UserData() user: AccessTokenPayload,
+    @Query() query: GetVideoQueryDto,
+    @Query() pageQuery: PageQuery,
+  ): Promise<PaginatedResponse<GetWatchedVideoResponseDto>> {
+    const { items, total } = await this.videosService.getWatchedVideos(
+      user.id,
+      query.type,
+      pageQuery,
+    );
+    return new PaginatedResponse(
+      toGetWatchedVideoResponseDtoList(items),
+      pageQuery,
+      total,
+    );
+  }
+
+  @Get('to-watch')
+  async getToWatchVideos(
+    @UserData() user: AccessTokenPayload,
+    @Query() query: GetVideoQueryDto,
+    @Query() pageQuery: PageQuery,
+  ): Promise<PaginatedResponse<GetToWatchVideoResponseDto>> {
+    const { items, total } = await this.videosService.getToWatchVideos(
+      user.id,
+      query.type,
+      pageQuery,
+    );
+    return new PaginatedResponse(
+      toGetToWatchVideoResponseDtoList(items),
+      pageQuery,
+      total,
     );
   }
 }

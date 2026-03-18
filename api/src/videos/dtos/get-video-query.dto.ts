@@ -3,7 +3,7 @@ import { IsNotEmpty, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { VideoType } from '../video.entity';
 
-export class GetOneVideoParamDto {
+export class GetVideoQueryDto {
   @ApiProperty({
     description: 'Type de vidéo à rechercher',
     enum: VideoType,
