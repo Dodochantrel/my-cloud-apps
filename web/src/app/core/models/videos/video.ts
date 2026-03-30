@@ -68,6 +68,42 @@ export class Video {
         return 'Série';
     }
   }
+
+  get videoWatched(): boolean {
+    return this.review?.isWatched ?? false;
+  }
+
+  get videoToWatch(): boolean {
+    return this.review?.isToWatch ?? false;
+  }
+
+  get videoFavorite(): boolean {
+    return this.review?.isFavorite ?? false;
+  }
+
+  set videoWatched(isWatched: boolean) {
+    if (!this.review) {
+      this.review = new VideoReview('', isWatched, false, false);
+    } else {
+      this.review.isWatched = isWatched;
+    }
+  }
+
+  set videoToWatch(isToWatch: boolean) {
+    if (!this.review) {
+      this.review = new VideoReview('', false, isToWatch, false);
+    } else {
+      this.review.isToWatch = isToWatch;
+    }
+  }
+
+  set videoFavorite(isFavorite: boolean) {
+    if (!this.review) {
+      this.review = new VideoReview('', false, false, isFavorite);
+    } else {
+      this.review.isFavorite = isFavorite;
+    }
+  }
 }
 
 export type VideoType = 'movie' | 'serie';

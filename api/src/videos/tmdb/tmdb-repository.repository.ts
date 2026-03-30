@@ -102,7 +102,10 @@ export class TmdbRepositoryRepository {
     const genres = await this.getGenres(true);
     let movies: TmdbDataResultResponse[];
     if (!search || search === '') {
-      movies = await this.getMoviesNowPlaying(pageQuery ?? PageQuery.of());
+      const safePageQuery =
+        pageQuery ??
+        PageQuery.of(PageQuery.DEFAULT_PAGE, PageQuery.DEFAULT_LIMIT);
+      movies = await this.getMoviesNowPlaying(safePageQuery);
     } else {
       movies = await this.getMoviesWithSearch(search);
     }
@@ -182,9 +185,12 @@ export class TmdbRepositoryRepository {
     const genres = await this.getGenres(false);
     let series: TmdbDataResultResponse[];
     if (!search || search === '') {
-      series = await this.getSeriesNowPlaying(pageQuery ?? PageQuery.of());
+      const safePageQuery =
+        pageQuery ??
+        PageQuery.of(PageQuery.DEFAULT_PAGE, PageQuery.DEFAULT_LIMIT);
+      series = await this.getSeriesNowPlaying(safePageQuery);
     } else {
-      series = await this.getSeriesWithSearch(pageQuery ?? PageQuery.of());
+      series = await this.getSeriesWithSearch(search);
     }
     series = series.sort((a, b) => b.popularity - a.popularity);
     return this.mapFromTmdbResponseToVideo(series, genres, VideoType.Serie);
@@ -208,8 +214,8 @@ export class TmdbRepositoryRepository {
     return response.data.results;
   }
 
-  private async getSeriesWithSearch(pageQuery: PageQuery) {
-    const url = `https://api.themoviedb.org/3/search/tv?api_key=${this.apiKey}&language=fr-FR&page=${pageQuery.page}`;
+  private async getSeriesWithSearch(search: string) {
+    const url = `https://api.themoviedb.org/3/search/tv?api_key=${this.apiKey}&language=fr-FR&query=${search}&page=1&include_adult=false`;
     const response = await firstValueFrom(
       this.httpService.get<TmdbDataResponse>(url),
     );
@@ -222,7 +228,7 @@ export class TmdbRepositoryRepository {
     type: VideoType,
   ): Video {
     return new Video({
-      id: tmdbDataResponse.id.toString(),
+      externalId: tmdbDataResponse.id.toString(),
       title:
         type === VideoType.Movie
           ? tmdbDataResponse.title

@@ -28,7 +28,7 @@ export class ReviewVideoService {
           const video = this.currentVideoStore.getOne(form.get('id')?.value!);
           if (video) {
             video.review = videoReview;
-            this.currentVideoStore.editOne(video.id, video);
+            this.currentVideoStore.editOne(video);
           }
           onSuccess?.();
         },

@@ -7,6 +7,8 @@ import { VideoListService } from '../video-list-service';
 import { Video, VideoType } from '../../../../core/models/videos/video';
 import { TabsModule } from 'primeng/tabs';
 import { CurrentVideoComponent } from '../../components/current-video/current-video-component/current-video-component';
+import { WatchedVideoComponent } from "../../components/watched-video/watched-video-component/watched-video-component";
+import { ToWatchVideoComponent } from '../../components/to-watch-video/to-watch-video-component/to-watch-video-component';
 
 @Component({
   selector: 'app-video-list-page',
@@ -16,7 +18,9 @@ import { CurrentVideoComponent } from '../../components/current-video/current-vi
     CommonModule,
     TabsModule,
     CurrentVideoComponent,
-  ],
+    WatchedVideoComponent,
+    ToWatchVideoComponent,
+],
   templateUrl: './video-list-page.html',
   styleUrl: './video-list-page.css',
 })

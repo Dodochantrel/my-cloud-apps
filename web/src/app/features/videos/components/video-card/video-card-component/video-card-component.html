@@ -13,8 +13,9 @@
             class="self-end text-primary underline cursor-pointer"
         >détails</a>
     </div>
-    <div class="absolute top-2 right-2 flex z-10">
-        <p-button icon="pi pi-bookmark" [rounded]="true" [text]="true" severity="secondary" />
-        <p-button icon="pi pi-heart" [rounded]="true" [text]="true" severity="danger" />
+    <div class="absolute top-2 right-2 flex z-10 gap-2">
+        <p-button icon="pi pi-bookmark" [rounded]="true" [text]="!video().review?.isToWatch" severity="secondary" (onClick)="videoCardService.addOneToWatch(video())" />
+        <p-button icon="pi pi-eye" [rounded]="true" [text]="!video().review?.isWatched" severity="info" (onClick)="videoCardService.addOneWatched(video())" />
+        <p-button icon="pi pi-heart" [rounded]="true" [text]="!video().review?.isFavorite" severity="danger" (onClick)="videoCardService.addOneFavorite(video())" />
     </div>
 </div>

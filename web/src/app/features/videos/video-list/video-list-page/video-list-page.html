@@ -37,8 +37,10 @@
                     <app-current-video-component [type]="videoListService.type()" />
                 </p-tabpanel>
                 <p-tabpanel value="1">
+                    <app-to-watch-video-component [type]="videoListService.type()" />
                 </p-tabpanel>
                 <p-tabpanel value="2">
+                    <app-watched-video-component [type]="videoListService.type()" />
                 </p-tabpanel>
             </p-tabpanels>
 

@@ -1,8 +1,9 @@
 import { ButtonModule } from 'primeng/button';
 import { Component, input } from '@angular/core';
-import { Video } from '../../../../core/models/videos/video';
+import { Video } from '../../../../../core/models/videos/video';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { VideoCardService } from '../video-card-service';
 
 @Component({
   selector: 'app-video-card-component',
@@ -12,6 +13,10 @@ import { RouterLink } from '@angular/router';
 })
 export class VideoCardComponent {
   public video = input.required<Video>();
+
+  constructor(
+    protected readonly videoCardService: VideoCardService,
+  ) {}
 
   redirectToVideoDetails(id: string) {
     return ['/videos/details', id];

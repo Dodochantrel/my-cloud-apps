@@ -1,0 +1,13 @@
+<div class="flex gap-4 justify-evenly flex-wrap">
+
+    @for (item of watchedVideoService.watchedVideoStore.data(); track $index) {
+
+        <app-video-card-component [video]="item" />
+
+    } @empty {
+
+        <p>Aucune vidéo disponible</p>
+
+    }
+    
+</div>

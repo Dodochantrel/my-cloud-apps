@@ -32,26 +32,46 @@ export class VideosService {
     }
   }
 
-  async getCurrent(type: VideoType, pageQuery: PageQuery): Promise<Video[]> {
+  async getCurrent(type: VideoType, pageQuery: PageQuery, userId: string): Promise<Video[]> {
+    let current;
     switch (type) {
       case VideoType.Movie:
-        return this.tmdbRepositoryRepository.getMovies(pageQuery);
+        current = await this.tmdbRepositoryRepository.getMovies(pageQuery);
+        break;
       case VideoType.Serie:
-        return this.tmdbRepositoryRepository.getSeries(pageQuery);
+        current = await this.tmdbRepositoryRepository.getSeries(pageQuery);
+        break;
       default:
         return Promise.resolve([]);
     }
+    // Récupérer les reviews pour les vidéos courantes
+    for (const video of current) {
+      video.review = await this.videoReviewRepository.findOne({
+        where: {
+          video: { externalId: video.externalId, type: video.type },
+          user: { id: userId },
+        },
+      });
+    }
+    return current;
   }
 
-  async getByid(id: string, type: VideoType): Promise<Video | null> {
+  async getByid(id: string, type: VideoType): Promise<Video> {
+    let video: Video | null = null;
     switch (type) {
       case VideoType.Movie:
-        return this.tmdbRepositoryRepository.getMovie(Number(id));
+        video = await this.tmdbRepositoryRepository.getMovie(Number(id));
+        break;
       case VideoType.Serie:
-        return this.tmdbRepositoryRepository.getSerie(Number(id));
+        video = await this.tmdbRepositoryRepository.getSerie(Number(id));
+        break;
       default:
-        return Promise.resolve(null);
+        throw new NotFoundException('Video not found');
     }
+    if (!video) {
+      throw new NotFoundException('Video not found');
+    }
+    return video;
   }
 
   async getCastings(id: string, type: VideoType): Promise<Casting[]> {
@@ -101,13 +121,7 @@ export class VideosService {
     videoReview: VideoReview,
     videoType: VideoType,
   ): Promise<VideoReview> {
-    const existingReview = await this.videoReviewRepository.findOne({
-      where: {
-        video: { externalId: id, type: videoType },
-        user: { id: userId },
-      },
-      relations: ['user', 'video'],
-    });
+    const existingReview = await this.findOneReview(id, videoType, userId);
     let reviewToSave: VideoReview;
     if (existingReview) {
       reviewToSave = existingReview;
@@ -120,12 +134,8 @@ export class VideosService {
       reviewToSave.visualsRating = videoReview.visualsRating;
       reviewToSave.musicRating = videoReview.musicRating;
     } else {
-      const tmdb = await this.getByid(id, videoType);
-      if (!tmdb) {
-        throw new NotFoundException('Video not found');
-      }
       reviewToSave = videoReview;
-      reviewToSave.video = await this.videoRepository.save(tmdb);
+      reviewToSave.video = await this.getOneVideo(id, videoType);
       reviewToSave.user = await this.usersService.findOneById(userId);
     }
     return this.videoReviewRepository.save(reviewToSave);
@@ -165,5 +175,66 @@ export class VideosService {
       relations: ['video'],
     });
     return { items, total };
+  }
+
+  findOneReview(videoId: string, videoType: VideoType, userId: string): Promise<VideoReview | null> {
+    return this.videoReviewRepository.findOne({
+      where: {
+        video: { externalId: videoId, type: videoType },
+        user: { id: userId },
+      },
+      relations: ['user', 'video'],
+    });
+  }
+
+  async addOneWatched(videoId: string, videoType: VideoType, userId: string): Promise<VideoReview> {
+    let videoReview = await this.findOneReview(videoId, videoType, userId);
+    if (videoReview) {
+      videoReview.isWatched = !videoReview.isWatched;
+    } else {
+      videoReview = new VideoReview({
+        isWatched: true,
+      });
+      videoReview.video = await this.getOneVideo(videoId, videoType);
+      videoReview.user = await this.usersService.findOneById(userId);
+    }
+    return this.videoReviewRepository.save(videoReview);
+  }
+
+  async addOneFavorite(videoId: string, videoType: VideoType, userId: string): Promise<VideoReview> {
+    let videoReview = await this.findOneReview(videoId, videoType, userId);
+    if (videoReview) {
+      videoReview.isFavorite = !videoReview.isFavorite;
+    } else {
+      videoReview = new VideoReview({
+        isFavorite: true,
+      });
+      videoReview.video = await this.getOneVideo(videoId, videoType);
+      videoReview.user = await this.usersService.findOneById(userId);
+    }
+    return this.videoReviewRepository.save(videoReview);
+  }
+
+  async addOneToWatch(videoId: string, videoType: VideoType, userId: string): Promise<VideoReview> {
+    let videoReview = await this.findOneReview(videoId, videoType, userId);
+    if (videoReview) {
+      videoReview.isToWatch = !videoReview.isToWatch;
+    } else {
+      videoReview = new VideoReview({
+        isToWatch: true,
+      });
+      videoReview.video = await this.getOneVideo(videoId, videoType);
+      videoReview.user = await this.usersService.findOneById(userId);
+    }
+    return this.videoReviewRepository.save(videoReview);
+  }
+
+  async getOneVideo(id: string, videoType: VideoType) {
+    const tmdb = await this.getByid(id, videoType);
+    return this.videoRepository
+        .upsert(tmdb, ['externalId', 'type'])
+        .then((result) =>
+          this.videoRepository.findOneOrFail({ where: { id: result.identifiers[0].id } }),
+        );
   }
 }

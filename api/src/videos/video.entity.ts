@@ -8,6 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  Unique,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { VideoReview } from './video-review.entity';
@@ -19,6 +20,7 @@ export enum VideoType {
 }
 
 @Entity()
+@Unique(['externalId', 'type'])
 export class Video {
   @PrimaryGeneratedColumn('uuid')
   id: string;

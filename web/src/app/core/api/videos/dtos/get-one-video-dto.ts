@@ -4,7 +4,7 @@ import { SerieDetails } from '../../../models/videos/serie-details';
 import { Video } from '../../../models/videos/video';
 
 export interface GetOneVideoDto {
-  id: string;
+  externalId: string;
   title: string;
   type: 'movie' | 'serie';
   fileUrl: string;
@@ -48,7 +48,7 @@ const mapFromProductionCompaniesDtoToProductionCompanies = (dto: GetOneVideoDto[
 
 export const mapFromGetOneVideoDtoToVideo = (dto: GetOneVideoDto): Video => {
   const video = new Video(
-    dto.id,
+    dto.externalId,
     dto.title,
     dto.type,
     new Date(dto.releaseDate),

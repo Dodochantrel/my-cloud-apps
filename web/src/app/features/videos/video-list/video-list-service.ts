@@ -47,8 +47,6 @@ export class VideoListService {
     () =>
       this.videosRoutes.getAll(
         this.search(),
-        this.page(),
-        this.limit(),
         this.type()
       )
   );

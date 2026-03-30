@@ -1,7 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { IsString } from 'class-validator';
 
 export class PageQuery {
   public static readonly DEFAULT_LIMIT = 100;

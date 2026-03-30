@@ -1,22 +1,22 @@
 import { Component, effect, input } from '@angular/core';
 import { VideoType } from '../../../../../core/models/videos/video';
 import { VideoCardComponent } from '../../video-card/video-card-component/video-card-component';
-import { CurrentVideoService } from '../current-video-service';
+import { WatchedVideoService } from '../watched-video-service';
 
 @Component({
-  selector: 'app-current-video-component',
+  selector: 'app-watched-video-component',
   imports: [VideoCardComponent],
-  templateUrl: './current-video-component.html',
-  styleUrl: './current-video-component.css',
+  templateUrl: './watched-video-component.html',
+  styleUrl: './watched-video-component.css',
 })
-export class CurrentVideoComponent {
+export class WatchedVideoComponent {
   public type = input.required<VideoType>();
 
   constructor(
-    protected readonly currentVideoService: CurrentVideoService,
+    protected readonly watchedVideoService: WatchedVideoService,
   ) {
     effect(() => {
-      this.currentVideoService.type.set(this.type());
+      this.watchedVideoService.type.set(this.type());
     });
   }
 }

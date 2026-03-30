@@ -26,6 +26,7 @@ import {
   GetWatchedVideoResponseDto,
   toGetWatchedVideoResponseDtoList,
 } from './dtos/get-watched-video.dto';
+import { PatchVideoBooleanRequestDto } from './dtos/patch-video-boolean.dto';
 
 @Controller('videos')
 export class VideosController {
@@ -37,8 +38,47 @@ export class VideosController {
   }
 
   @Get('current')
-  async getCurrentVideo(@Query() query: GetCurrentVideoQueryDto) {
-    return this.videosService.getCurrent(query.type, query);
+  async getCurrentVideo(
+    @Query() query: GetCurrentVideoQueryDto,
+    @UserData() user: AccessTokenPayload,
+  ) {
+    return this.videosService.getCurrent(query.type, query, user.id);
+  }
+
+  @Get('watched')
+  async getWatchedVideos(
+    @UserData() user: AccessTokenPayload,
+    @Query() query: GetVideoQueryDto,
+    @Query() pageQuery: PageQuery,
+  ): Promise<PaginatedResponse<GetWatchedVideoResponseDto>> {
+    const { items, total } = await this.videosService.getWatchedVideos(
+      user.id,
+      query.type,
+      pageQuery,
+    );
+    return new PaginatedResponse(
+      toGetWatchedVideoResponseDtoList(items),
+      pageQuery,
+      total,
+    );
+  }
+
+  @Get('to-watch')
+  async getToWatchVideos(
+    @UserData() user: AccessTokenPayload,
+    @Query() query: GetVideoQueryDto,
+    @Query() pageQuery: PageQuery,
+  ): Promise<PaginatedResponse<GetToWatchVideoResponseDto>> {
+    const { items, total } = await this.videosService.getToWatchVideos(
+      user.id,
+      query.type,
+      pageQuery,
+    );
+    return new PaginatedResponse(
+      toGetToWatchVideoResponseDtoList(items),
+      pageQuery,
+      total,
+    );
   }
 
   @Get(':id')
@@ -127,39 +167,51 @@ export class VideosController {
     );
   }
 
-  @Get('watched')
-  async getWatchedVideos(
+  @Patch(':videoId/watched')
+  @ApiResponse({
+    status: 200,
+    description: 'The video has been successfully marked as watched.',
+  })
+  @ApiBody({
+    type: PatchVideoBooleanRequestDto,
+  })
+  async addOneWatched(
+    @Param('videoId') videoId: string,
     @UserData() user: AccessTokenPayload,
-    @Query() query: GetVideoQueryDto,
-    @Query() pageQuery: PageQuery,
-  ): Promise<PaginatedResponse<GetWatchedVideoResponseDto>> {
-    const { items, total } = await this.videosService.getWatchedVideos(
-      user.id,
-      query.type,
-      pageQuery,
-    );
-    return new PaginatedResponse(
-      toGetWatchedVideoResponseDtoList(items),
-      pageQuery,
-      total,
-    );
+    @Body() dto: PatchVideoBooleanRequestDto,
+  ) {
+    return this.videosService.addOneWatched(videoId, dto.type, user.id);
   }
 
-  @Get('to-watch')
-  async getToWatchVideos(
+  @Patch(':videoId/favorite')
+  @ApiResponse({
+    status: 200,
+    description: 'The video has been successfully marked as favorite.',
+  })
+  @ApiBody({
+    type: PatchVideoBooleanRequestDto,
+  })
+  async addOneFavorite(
+    @Param('videoId') videoId: string,
     @UserData() user: AccessTokenPayload,
-    @Query() query: GetVideoQueryDto,
-    @Query() pageQuery: PageQuery,
-  ): Promise<PaginatedResponse<GetToWatchVideoResponseDto>> {
-    const { items, total } = await this.videosService.getToWatchVideos(
-      user.id,
-      query.type,
-      pageQuery,
-    );
-    return new PaginatedResponse(
-      toGetToWatchVideoResponseDtoList(items),
-      pageQuery,
-      total,
-    );
+    @Body() dto: PatchVideoBooleanRequestDto,
+  ) {
+    return this.videosService.addOneFavorite(videoId, dto.type, user.id);
+  }
+
+  @Patch(':videoId/to-watch')
+  @ApiResponse({
+    status: 200,
+    description: 'The video has been successfully marked as to-watch.',
+  })
+  @ApiBody({
+    type: PatchVideoBooleanRequestDto,
+  })
+  async addOneToWatch(
+    @Param('videoId') videoId: string,
+    @UserData() user: AccessTokenPayload,
+    @Body() dto: PatchVideoBooleanRequestDto,
+  ) {
+    return this.videosService.addOneToWatch(videoId, dto.type, user.id);
   }
 }

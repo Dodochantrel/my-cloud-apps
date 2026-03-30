@@ -46,4 +46,18 @@ export class WatchedVideoStore {
       this.data.set([...currentData]);
     }
   }
+
+  public createOrEdit(video: Video) {
+    const currentData = this.data();
+    const index = currentData.findIndex((v) => v.id === video.id);
+    if (index !== -1) {
+      currentData[index] = video;
+    } else {
+      if (currentData.length >= 10) {
+        currentData.pop();
+      }
+      currentData.unshift(video);
+    }
+    this.data.set([...currentData]);
+  }
 }

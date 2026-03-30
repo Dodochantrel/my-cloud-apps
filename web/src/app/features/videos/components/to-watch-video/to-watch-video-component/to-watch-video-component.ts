@@ -1,22 +1,22 @@
 import { Component, effect, input } from '@angular/core';
+import { ToWatchVideoService } from '../to-watch-video-service';
 import { VideoType } from '../../../../../core/models/videos/video';
 import { VideoCardComponent } from '../../video-card/video-card-component/video-card-component';
-import { CurrentVideoService } from '../current-video-service';
 
 @Component({
-  selector: 'app-current-video-component',
+  selector: 'app-to-watch-video-component',
   imports: [VideoCardComponent],
-  templateUrl: './current-video-component.html',
-  styleUrl: './current-video-component.css',
+  templateUrl: './to-watch-video-component.html',
+  styleUrl: './to-watch-video-component.css',
 })
-export class CurrentVideoComponent {
+export class ToWatchVideoComponent {
   public type = input.required<VideoType>();
 
   constructor(
-    protected readonly currentVideoService: CurrentVideoService,
+    protected readonly toWatchVideoService: ToWatchVideoService,
   ) {
     effect(() => {
-      this.currentVideoService.type.set(this.type());
+      this.toWatchVideoService.type.set(this.type());
     });
   }
 }

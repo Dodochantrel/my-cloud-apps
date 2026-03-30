@@ -16,8 +16,8 @@ export class VideosRoutes {
 
   private readonly httpClient = inject(HttpClient);
 
-  public getAll(search: string, page: number, limit: number, type: VideoType): string {
-    return `${this.baseUrl}?search=${search}&page=${page}&limit=${limit}&type=${type}`;
+  public getAll(search: string, type: VideoType): string {
+    return `${this.baseUrl}?search=${search}&type=${type}`;
   }
 
   public getCurrent(page: number, limit: number, type: VideoType): string {
@@ -60,5 +60,38 @@ export class VideosRoutes {
 
   public getReview(id: string, type: VideoType): string {
     return `${this.baseUrl}/${id}/reviews?type=${type}`;
+  }
+
+  public getWatched(page: number, limit: number, type: VideoType): string {
+    return `${this.baseUrl}/watched?page=${page}&limit=${limit}&type=${type}`;
+  }
+
+  public getToWatch(page: number, limit: number, type: VideoType): string {
+    return `${this.baseUrl}/to-watch?page=${page}&limit=${limit}&type=${type}`;
+  }
+
+  public getFavorite(page: number, limit: number, type: VideoType): string {
+    return `${this.baseUrl}/favorite?page=${page}&limit=${limit}&type=${type}`;
+  }
+
+  public patchOneWatched(id: string, type: VideoType) {
+    return this.httpClient.patch(`${this.baseUrl}/${id}/watched`, {
+      type: type,
+      id: id,
+    })
+  }
+
+  public patchOneToWatch(id: string, type: VideoType) {
+    return this.httpClient.patch(`${this.baseUrl}/${id}/to-watch`, {
+      type: type,
+      id: id,
+    })
+  }
+
+  public patchOneFavorite(id: string, type: VideoType) {
+    return this.httpClient.patch(`${this.baseUrl}/${id}/favorite`, {
+      type: type,
+      id: id,
+    })
   }
 }
