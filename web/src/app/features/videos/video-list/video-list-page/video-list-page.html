@@ -34,7 +34,7 @@
 
             <p-tabpanels>
                 <p-tabpanel value="0">
-                    <app-current-video-component [type]="videoListService.type()" />
+                    <app-current-video-component [type]="videoListService.type()" [isLoading]="true" />
                 </p-tabpanel>
                 <p-tabpanel value="1">
                     <app-to-watch-video-component [type]="videoListService.type()" />

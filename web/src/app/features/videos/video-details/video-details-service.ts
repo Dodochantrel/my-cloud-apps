@@ -129,6 +129,4 @@ export class VideoDetailsService {
   }
 
   public isOpenReview = signal<boolean>(false);
-
-  patchVideoReview() {}
 }

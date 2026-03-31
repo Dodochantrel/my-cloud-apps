@@ -6,6 +6,9 @@ import { ReviewVideoFormModel } from '../../forms/review-video-form';
 import { CurrentVideoStore } from '../../stores/current-video-store';
 import { mapFromFormToPatchVideoReviewRequestDto } from '../../../../core/api/videos/dtos/patch-video-review-dto';
 import { VideoReview } from '../../../../core/models/videos/video-review';
+import { Video } from '../../../../core/models/videos/video';
+import { ToWatchVideoStore } from '../../stores/to-watch-video-store';
+import { WatchedVideoStore } from '../../stores/watched-video-store';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +19,11 @@ export class ReviewVideoService {
 
   // Stores
   private readonly currentVideoStore = inject(CurrentVideoStore);
+  private readonly toWatchVideoStore = inject(ToWatchVideoStore);
+  private readonly watchedVideoStore = inject(WatchedVideoStore);
 
   public isLoadingSave: boolean = false;
+
   save(form: FormGroup<ReviewVideoFormModel>, onSuccess?: () => void) {
     this.isLoadingSave = true;
     this.videosRoutes
@@ -28,7 +34,7 @@ export class ReviewVideoService {
           const video = this.currentVideoStore.getOne(form.get('id')?.value!);
           if (video) {
             video.review = videoReview;
-            this.currentVideoStore.editOne(video);
+            this.updateOneInStores(video);
           }
           onSuccess?.();
         },
@@ -39,5 +45,21 @@ export class ReviewVideoService {
       .add(() => {
         this.isLoadingSave = false;
       });
+  }
+
+  private updateOneInStores(video: Video) {
+    this.currentVideoStore.editOne(video);
+
+    if (video.videoWatched) {
+      this.watchedVideoStore.createOrEdit(video);
+    } else {
+      this.watchedVideoStore.deleteOne(video.id);
+    }
+
+    if (video.videoToWatch) {
+      this.toWatchVideoStore.createOrEdit(video);
+    } else {
+      this.toWatchVideoStore.deleteOne(video.id);
+    }
   }
 }
