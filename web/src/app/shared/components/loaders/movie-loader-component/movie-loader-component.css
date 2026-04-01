@@ -9,6 +9,7 @@
 }
 
 .vader {
+  margin-top: 200px;
   display: inline-block;
   -webkit-transform: translate(-50%,-50%);
 }

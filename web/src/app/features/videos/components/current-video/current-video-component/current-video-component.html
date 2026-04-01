@@ -1,8 +1,15 @@
 <div class="flex gap-4 justify-evenly flex-wrap">
 
-    @if (isLoading()) {
+    @if (currentVideoService.isLoadingVideos()) {
 
-        <app-movie-loader-component />
+        @switch (type()) {
+            @case ('movie') {
+                <app-movie-loader-component />
+            }
+            @case ('serie') {
+                <app-serie-loader-component />
+            }
+        }
 
     } @else {
 

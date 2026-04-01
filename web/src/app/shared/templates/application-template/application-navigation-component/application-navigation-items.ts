@@ -17,6 +17,13 @@ export const navigationItems: NavigationItem[] = [
       }
     ],
   },
+  {
+    name: 'Événements',
+    icon: 'event',
+    path: 'events/list',
+    isOpen: false,
+    subNavigationItems: undefined,
+  },
 ];
 
 export interface NavigationItem {
