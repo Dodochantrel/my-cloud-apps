@@ -1,11 +1,15 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { AuthenticationsService } from './authentications.service';
 import { mapFromRegisterRequestDtoToUser, RegisterRequestDto } from './dtos/register-request.dto';
 import { LoginRequestDto } from './dtos/login-request.dto';
 import type { Response } from 'express';
 import { RefreshGuard } from './guards/refresh.guard';
+import { GetMeResponseDto } from './dtos/get-me.dto';
+import { AuthGuard } from './guards/auth.guard';
+import { UserData } from 'src/users/user-data.decorator';
 import { RefreshTokenPayload } from 'src/utils/tokens/tokens.service';
+import type { AccessTokenPayload } from 'src/utils/tokens/tokens.service';
 
 @Controller('authentications')
 export class AuthenticationsController {
@@ -60,6 +64,19 @@ export class AuthenticationsController {
       .status(200).send({
         message: 'Tokens refreshed successfully',
       });
+  }
+
+  @Get('me')
+  @ApiResponse({
+    status: 200,
+    description: 'Get current user information',
+    type: GetMeResponseDto,
+  })
+  @UseGuards(AuthGuard)
+  async me(
+    @UserData() user: AccessTokenPayload,
+  ) {
+    return new GetMeResponseDto(await this.authenticationsService.getMe(user.id));
   }
 
   private prepareAccessTokenCookie(

@@ -45,6 +45,14 @@ export class AuthenticationsService {
     };
   }
 
+  async getMe(userId: string): Promise<User> {
+    const user = await this.usersService.findOneById(userId);
+    if (!user) {
+      throw new NotFoundException('Utilisateur non trouvé');
+    }
+    return user;
+  }
+
   private async checkLoginCredentials(user: User | null, password: string) {
     if (!user || !(await this.hashsService.compare(password, user.password))) {
       throw new ForbiddenException('Crédentials invalides');

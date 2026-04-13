@@ -1,5 +1,14 @@
 <app-default-container-component [title]="'Gestion des groupes'">
 
+    <app-header-search-component
+        [label]="'Rechercher un groupe'"
+        [icon]="'search'"
+        [placeholder]="'Entrez le nom du groupe...'"
+        [(input)]="groupListService.search"
+    />
+
+    <p-divider />
+
     <div class="flex gap-4 flex-wrap">
         @for (group of groupStore.data(); track $index) {
         <app-group-card-component [group]="group" class="flex-1" />

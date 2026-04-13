@@ -1,0 +1,7 @@
+<label class="label">{{ label() }}</label>
+<p-iconfield>
+    <p-inputicon>
+        <span class="material-symbols text-[18px]!">{{ icon() }}</span>
+    </p-inputicon>
+    <input type="text" pInputText [placeholder]="placeholder()" [(ngModel)]="input" fluid />
+</p-iconfield>

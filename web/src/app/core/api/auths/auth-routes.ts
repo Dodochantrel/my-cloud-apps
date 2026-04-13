@@ -31,4 +31,8 @@ export class AuthRoutes {
       }
     );
   }
+
+  getMe(): string {
+    return `${environment.apiUrl}authentications/me`;
+  }
 }
