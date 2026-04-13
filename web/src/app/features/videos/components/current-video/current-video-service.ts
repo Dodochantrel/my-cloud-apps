@@ -7,6 +7,7 @@ import {
   GetCurrentVideoDto,
   mapFromGetCurrentVideoDtosToVideos,
 } from '../../../../core/api/videos/dtos/get-current-video-dto';
+import { StoreUtils } from '../../../../shared/utils/store-utils';
 import { CurrentVideoStore } from '../../stores/current-video-store';
 
 @Injectable({

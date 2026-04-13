@@ -3,10 +3,11 @@ import { NotificationService } from '../../../../core/notification/notification-
 import { VideosRoutes } from '../../../../core/api/videos/videos-routes';
 import { FormGroup } from '@angular/forms';
 import { ReviewVideoFormModel } from '../../forms/review-video-form';
-import { CurrentVideoStore } from '../../stores/current-video-store';
 import { mapFromFormToPatchVideoReviewRequestDto } from '../../../../core/api/videos/dtos/patch-video-review-dto';
 import { VideoReview } from '../../../../core/models/videos/video-review';
 import { Video } from '../../../../core/models/videos/video';
+import { StoreUtils } from '../../../../shared/utils/store-utils';
+import { CurrentVideoStore } from '../../stores/current-video-store';
 import { ToWatchVideoStore } from '../../stores/to-watch-video-store';
 import { WatchedVideoStore } from '../../stores/watched-video-store';
 
@@ -31,7 +32,7 @@ export class ReviewVideoService {
       .subscribe({
         next: (videoReview: VideoReview) => {
           this.notificationService.success('Critique enregistrée', 'Votre critique a été enregistrée avec succès');
-          const video = this.currentVideoStore.getOne(form.get('id')?.value!);
+          const video = this.currentVideoStore.findOne(form.get('id')?.value!);
           if (video) {
             video.review = videoReview;
             this.updateOneInStores(video);
@@ -48,16 +49,16 @@ export class ReviewVideoService {
   }
 
   private updateOneInStores(video: Video) {
-    this.currentVideoStore.editOne(video);
+    this.currentVideoStore.editOne(video.id, video);
 
     if (video.videoWatched) {
-      this.watchedVideoStore.createOrEdit(video);
+      this.watchedVideoStore.addOrEditOne(video.id, video);
     } else {
       this.watchedVideoStore.deleteOne(video.id);
     }
 
     if (video.videoToWatch) {
-      this.toWatchVideoStore.createOrEdit(video);
+      this.toWatchVideoStore.addOrEditOne(video.id, video);
     } else {
       this.toWatchVideoStore.deleteOne(video.id);
     }

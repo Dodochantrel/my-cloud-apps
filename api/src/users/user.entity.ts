@@ -1,11 +1,13 @@
 import { Role } from 'src/roles/role.enum';
 import { VideoReview } from 'src/videos/video-review.entity';
+import { Group } from 'src/groups/group.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
   OneToMany,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
@@ -13,25 +15,25 @@ import type { Relation } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  firstName: string;
+  firstName!: string;
 
   @Column()
-  lastName: string;
+  lastName!: string;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  password: string;
+  password!: string;
 
   @Column({ default: false })
-  isEmailVerified: boolean;
+  isEmailVerified!: boolean;
 
   @Column({ nullable: true })
-  emailValidKey: string;
+  emailValidKey!: string;
 
   @Column({
     type: 'enum',
@@ -39,23 +41,32 @@ export class User {
     array: true,
     default: [Role.User],
   })
-  roles: Role[];
+  roles!: Role[];
 
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  createdAt: Date;
+  createdAt!: Date;
 
   @OneToMany(() => VideoReview, (review) => review.user)
-  videoReviews: Relation<VideoReview[]>;
+  videoReviews!: Relation<VideoReview[]>;
+
+  @ManyToMany(() => Group, (group) => group.members)
+  memberGroups!: Relation<Group[]>;
+
+  @ManyToMany(() => Group, (group) => group.moderators)
+  moderatedGroups!: Relation<Group[]>;
+
+  @OneToMany(() => Group, (group) => group.admin)
+  administeredGroups!: Relation<Group[]>;
 
   constructor(partial: Partial<User> = {}) {
     Object.assign(this, partial);

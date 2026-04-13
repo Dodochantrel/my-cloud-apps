@@ -1,11 +1,11 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { WatchedVideoStore } from '../../stores/watched-video-store';
 import { HttpErrorResponse, httpResource } from '@angular/common/http';
 import { VideosRoutes } from '../../../../core/api/videos/videos-routes';
 import { VideoType } from '../../../../core/models/videos/video';
 import { NotificationService } from '../../../../core/notification/notification-service';
 import { PaginatedResponseDto } from '../../../../core/api/paginated-reponse-dto';
 import { GetWatchedVideoDto, mapFromGetWatchedVideoDtosToVideos } from '../../../../core/api/videos/dtos/get-watched-video-dto';
+import { WatchedVideoStore } from '../../stores/watched-video-store';
 
 @Injectable({
   providedIn: 'root',

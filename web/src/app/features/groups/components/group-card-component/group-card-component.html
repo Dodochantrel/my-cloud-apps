@@ -1,0 +1,49 @@
+<div class="flex flex-col w-full p-4 border rounded-md shadow-md border-surface max-w-sm">
+
+    <div class="flex justify-between items-center">
+
+        <p class="font-bold text-xl">{{ group().name }}</p>
+        <p-tag [value]="userCountToDisplay" />
+
+    </div>
+
+    <p-divider />
+
+    <div class="flex gap-2 items-center">
+        <p-avatar shape="circle" size="normal">
+            <span class="material-symbols">shield_person</span>
+        </p-avatar>
+        <div class="flex flex-col">
+            <p class="text-sm text-secondary text-muted-color">Administrateur</p>
+            <p>{{ group().admin?.fullName }}</p>
+        </div>
+    </div>
+
+    <div class="flex gap-2 items-center mt-2">
+        <p-avatar shape="circle" size="normal">
+            <span class="material-symbols">health_and_safety</span>
+        </p-avatar>
+        <div class="flex flex-col">
+            <p class="text-sm text-secondary text-muted-color">Modérateur</p>
+            <p>{{ moderatorsToDisplay }}</p>
+        </div>
+    </div>
+
+    <div class="mt-2">
+    @if (group().members.length > 0) {
+        <p-avatar-group>
+            @for (member of membersToDisplay; track $index) {
+                <p-avatar [label]="member.initials" shape="circle" size="normal" />
+            }
+            @if (group().usersCount > 5) {
+                <p-avatar [label]="'+' + (group().usersCount - 5)" shape="circle" size="normal" />
+            }
+        </p-avatar-group>
+    } @else {
+        <p>Aucun membre</p>
+    }
+    </div>
+
+    <p-divider />
+
+</div>

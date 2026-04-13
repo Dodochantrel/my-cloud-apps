@@ -4,7 +4,7 @@ import { VideosRoutes } from '../../../core/api/videos/videos-routes';
 import { NotificationService } from '../../../core/notification/notification-service';
 import { mapFromGetAllVideoDtosToVideos } from '../../../core/api/videos/dtos/get-all-video-dto';
 import { VideoType } from '../../../core/models/videos/video';
-import { VideoStore } from '../stores/video-store';
+import { StoreUtils } from '../../../shared/utils/store-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class VideoListService {
   public type = signal<VideoType>('movie');
 
   private readonly videosRoutes = new VideosRoutes();
-  public readonly videoStore = inject(VideoStore);
+  public readonly videoStore = inject(StoreUtils);
 
   constructor(private readonly notificationService: NotificationService) {
     // Quand search change, passer à la page 1

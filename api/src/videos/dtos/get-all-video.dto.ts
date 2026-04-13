@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsEnum, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { VideoType } from '../video.entity';
 
@@ -13,14 +13,17 @@ export class GetAllVideoQueryDto {
     @IsNotEmpty()
     @IsEnum(VideoType, { message: 'Le type doit être movie, series ou anime' })
     @Transform(({ value }) => value as VideoType)
-    type: VideoType;
+    type!: VideoType;
 
     @ApiProperty({
         description: 'Terme de recherche pour filtrer les vidéos',
         example: 'Inception',
-        required: true,
+        required: false,
     })
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    search: string;
+    @Transform(({ value }) =>
+      typeof value === 'string' ? value.trim() : ''
+    )
+    search: string = '';
 }

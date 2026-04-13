@@ -1,11 +1,12 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { VideoType } from '../../../../core/models/videos/video';
+import { Video, VideoType } from '../../../../core/models/videos/video';
 import { VideosRoutes } from '../../../../core/api/videos/videos-routes';
-import { ToWatchVideoStore } from '../../stores/to-watch-video-store';
 import { NotificationService } from '../../../../core/notification/notification-service';
 import { HttpErrorResponse, httpResource } from '@angular/common/http';
 import { GetToWatchVideoDto, mapFromGetToWatchVideoDtosToVideos } from '../../../../core/api/videos/dtos/get-to-watch-video-dto';
 import { PaginatedResponseDto } from '../../../../core/api/paginated-reponse-dto';
+import { StoreUtils } from '../../../../shared/utils/store-utils';
+import { ToWatchVideoStore } from '../../stores/to-watch-video-store';
 
 @Injectable({
   providedIn: 'root',

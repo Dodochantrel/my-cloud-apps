@@ -4,10 +4,9 @@ import { inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { VideoTrailer } from '../../models/videos/video-trailer';
 import { GetTrailerDto, mapFromGetTrailerDtoToVideoTrailer } from './dtos/get-trailer-dto';
-import { Video, VideoType } from '../../models/videos/video';
+import { VideoType } from '../../models/videos/video';
 import { mapFromPatchVideoReviewRequestDtoToVideoReview, PatchVideoReviewRequestDto, PatchVideoReviewResponseDto } from './dtos/patch-video-review-dto';
 import { VideoReview } from '../../models/videos/video-review';
-import { GetVideoReviewResponseDto, mapFromGetVideoReviewResponseDtoToVideoReview } from './dtos/get-video-review-dto';
 
 export class VideosRoutes {
   private readonly baseUrl = `${environment.apiUrl}videos`;

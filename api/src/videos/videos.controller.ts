@@ -17,7 +17,6 @@ import { UserData } from 'src/users/user-data.decorator';
 import type { AccessTokenPayload } from 'src/utils/tokens/tokens.service';
 import { GetVideoReviewResponseDto } from './dtos/get-video-review.dto';
 import { PaginatedResponse } from 'src/pagination/paginated-response';
-import { PageQuery } from 'src/pagination/page-query';
 import {
   GetToWatchVideoResponseDto,
   toGetToWatchVideoResponseDtoList,
@@ -49,16 +48,15 @@ export class VideosController {
   async getWatchedVideos(
     @UserData() user: AccessTokenPayload,
     @Query() query: GetVideoQueryDto,
-    @Query() pageQuery: PageQuery,
   ): Promise<PaginatedResponse<GetWatchedVideoResponseDto>> {
     const { items, total } = await this.videosService.getWatchedVideos(
       user.id,
       query.type,
-      pageQuery,
+      query,
     );
     return new PaginatedResponse(
       toGetWatchedVideoResponseDtoList(items),
-      pageQuery,
+      query,
       total,
     );
   }
@@ -67,16 +65,15 @@ export class VideosController {
   async getToWatchVideos(
     @UserData() user: AccessTokenPayload,
     @Query() query: GetVideoQueryDto,
-    @Query() pageQuery: PageQuery,
   ): Promise<PaginatedResponse<GetToWatchVideoResponseDto>> {
     const { items, total } = await this.videosService.getToWatchVideos(
       user.id,
       query.type,
-      pageQuery,
+      query,
     );
     return new PaginatedResponse(
       toGetToWatchVideoResponseDtoList(items),
-      pageQuery,
+      query,
       total,
     );
   }

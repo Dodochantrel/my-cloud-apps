@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { NotificationService } from '../../../../core/notification/notification-service';
 import { VideosRoutes } from '../../../../core/api/videos/videos-routes';
-import { WatchedVideoStore } from '../../stores/watched-video-store';
-import { ToWatchVideoStore } from '../../stores/to-watch-video-store';
 import { Video } from '../../../../core/models/videos/video';
+import { StoreUtils } from '../../../../shared/utils/store-utils';
+import { WatchedVideoStore } from '../../stores/watched-video-store';
 import { CurrentVideoStore } from '../../stores/current-video-store';
+import { ToWatchVideoStore } from '../../stores/to-watch-video-store';
 
 @Injectable({
   providedIn: 'root',
@@ -69,16 +70,16 @@ export class VideoCardService {
   }
 
   updateOneInStores(video: Video) {
-    this.currentVideoStore.editOne(video);
+    this.currentVideoStore.editOne(video.id, video);
 
     if (video.videoWatched) {
-      this.watchedVideoStore.createOrEdit(video);
+      this.watchedVideoStore.addOrEditOne(video.id, video);
     } else {
       this.watchedVideoStore.deleteOne(video.id);
     }
 
     if (video.videoToWatch) {
-      this.toWatchVideoStore.createOrEdit(video);
+      this.toWatchVideoStore.addOrEditOne(video.id, video);
     } else {
       this.toWatchVideoStore.deleteOne(video.id);
     }

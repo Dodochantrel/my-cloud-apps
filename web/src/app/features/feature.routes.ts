@@ -45,5 +45,20 @@ export const featureRoutes: Routes = [
                 },
             },
         ]
+    },
+    {
+        path: 'groups',
+        component: ApplicationTemplate,
+        children: [
+            {
+                path: 'list',
+                title: 'Groupes - Liste',
+                loadComponent: () => import('./groups/group-list/group-list-page/group-list-page').then(m => m.GroupListPage),
+                data: {
+                    title: 'Groupes - Liste',
+                    breadcrumb: [{ label: 'Groupes' }, { label: 'Liste' }],
+                },
+            },
+        ]
     }
 ];

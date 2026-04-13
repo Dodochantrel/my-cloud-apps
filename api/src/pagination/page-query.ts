@@ -1,69 +1,42 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsDefined, IsInt, Max, Min } from 'class-validator';
 
 export class PageQuery {
   public static readonly DEFAULT_LIMIT = 100;
   public static readonly DEFAULT_PAGE = 1;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     minimum: 1,
-    default: PageQuery.DEFAULT_PAGE,
     type: Number,
+    required: true,
   })
-  @IsNumber()
-  @Transform(({ value }) =>
-    toNumber(value as string, { default: PageQuery.DEFAULT_PAGE, min: 1 }),
-  )
-  public page: number = PageQuery.DEFAULT_PAGE;
+  @IsDefined({ message: 'Le paramètre "page" est requis.' })
+  @Type(() => Number)
+  @IsInt({ message: 'Le paramètre "page" doit être un entier.' })
+  @Min(1, { message: 'Le paramètre "page" doit être supérieur ou égal à 1.' })
+  public page!: number;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     minimum: 1,
-    default: PageQuery.DEFAULT_LIMIT,
     type: Number,
+    required: true,
   })
-  @Transform(({ value }) =>
-    toNumber(value as string, { default: PageQuery.DEFAULT_LIMIT, min: 1 }),
-  )
-  public limit: number = PageQuery.DEFAULT_LIMIT;
+  @IsDefined({ message: 'Le paramètre "limit" est requis.' })
+  @Type(() => Number)
+  @IsInt({ message: 'Le paramètre "limit" doit être un entier.' })
+  @Min(1, { message: 'Le paramètre "limit" doit être supérieur ou égal à 1.' })
+  @Max(1000, { message: 'Le paramètre "limit" doit être inférieur ou égal à 1000.' })
+  public limit!: number;
 
   public static of(page: number, limit: number): PageQuery {
-    const dto = new PageQuery(page, limit);
+    const dto = new PageQuery();
+    dto.page = page;
+    dto.limit = limit;
     return dto;
   }
 
   get offset(): number {
     return (this.page - 1) * this.limit;
   }
-
-  constructor(page: number, limit: number) {
-    this.page = Number(page);
-    this.limit = Number(limit);
-  }
-}
-
-interface ToNumberOptions {
-  default?: number;
-  min?: number;
-  max?: number;
-}
-
-function toNumber(value: string, opts: ToNumberOptions = {}): number {
-  let newValue: number = Number.parseInt(value || String(opts.default), 10);
-
-  if (Number.isNaN(newValue)) {
-    newValue = opts.default!;
-  }
-
-  if (opts.min) {
-    if (newValue < opts.min) {
-      newValue = opts.min;
-    }
-
-    if (newValue > opts.max!) {
-      newValue = opts.max!;
-    }
-  }
-
-  return newValue;
 }

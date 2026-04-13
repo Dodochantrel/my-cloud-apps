@@ -1,0 +1,9 @@
+<app-default-container-component [title]="'Gestion des groupes'">
+
+    <div class="flex gap-4 flex-wrap">
+        @for (group of groupStore.data(); track $index) {
+        <app-group-card-component [group]="group" class="flex-1" />
+        }
+    </div>
+
+</app-default-container-component>

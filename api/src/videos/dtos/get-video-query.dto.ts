@@ -2,8 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { VideoType } from '../video.entity';
+import { PageQuery } from 'src/pagination/page-query';
 
-export class GetVideoQueryDto {
+export class GetVideoQueryDto extends PageQuery {
   @ApiProperty({
     description: 'Type de vidéo à rechercher',
     enum: VideoType,
@@ -13,5 +14,5 @@ export class GetVideoQueryDto {
   @IsNotEmpty()
   @IsEnum(VideoType, { message: 'Le type doit être movie, series ou anime' })
   @Transform(({ value }) => value as VideoType)
-  type: VideoType;
+  type!: VideoType;
 }

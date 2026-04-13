@@ -16,6 +16,10 @@ import { HttpModule } from '@nestjs/axios/dist/http.module';
 import { TmdbRepositoryRepository } from './videos/tmdb/tmdb-repository.repository';
 import { VideoReview } from './videos/video-review.entity';
 import { Video } from './videos/video.entity';
+import { GroupsController } from './groups/groups.controller';
+import { GroupsService } from './groups/groups.service';
+
+import { Group } from './groups/group.entity';
 
 @Module({
   imports: [
@@ -35,9 +39,9 @@ import { Video } from './videos/video.entity';
         },
       }),
     }),
-    TypeOrmModule.forFeature([User, VideoReview, Video]),
+    TypeOrmModule.forFeature([User, VideoReview, Video, Group]),
   ],
-  controllers: [AuthenticationsController, VideosController],
+  controllers: [AuthenticationsController, VideosController, GroupsController],
   providers: [
     TokensService,
     HashsService,
@@ -46,6 +50,7 @@ import { Video } from './videos/video.entity';
     AuthenticationsService,
     VideosService,
     TmdbRepositoryRepository,
+    GroupsService,
   ],
 })
 export class AppModule {}

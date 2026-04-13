@@ -24,6 +24,13 @@ export const navigationItems: NavigationItem[] = [
     isOpen: false,
     subNavigationItems: undefined,
   },
+  {
+    name: 'Groupes',
+    icon: 'groups',
+    path: 'groups/list',
+    isOpen: false,
+    subNavigationItems: undefined,
+  }
 ];
 
 export interface NavigationItem {
