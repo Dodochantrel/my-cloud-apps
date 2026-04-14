@@ -2,9 +2,9 @@ export class UserModel {
     id: string;
     firstName: string;
     lastName: string;
-    email: string;
+    email: string | null;
 
-    constructor(id: string, firstName: string, lastName: string, email: string) {
+    constructor(id: string, firstName: string, lastName: string, email: string | null) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -4,7 +4,7 @@
     <app-input-text-component [form]="form" [controlName]="'name'" [label]="'Nom'" [icon]="'id_card'"
         [placeholder]="'Nom du groupe'" />
 
-    <app-input-auto-complete-component [form]="form" [controlName]="'name'" [label]="'Nom'" [icon]="'id_card'"
-        [placeholder]="'Nom du groupe'" [items]="[]" />
+    <app-header-auto-complete-component [label]="'Utilisateur'" [icon]="'person_add'" [(input)]="createOrEditGroupService.search"
+        class="flex-1" [placeholder]="'Nom de l\'utilisateur'" [items]="users()" />
 
 </app-dialog-form-component>

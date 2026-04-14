@@ -1,0 +1,8 @@
+<label class="label">{{ label() }}</label>
+<p-iconfield>
+    <p-inputicon>
+        <span class="material-symbols text-[18px]!">{{ icon() }}</span>
+    </p-inputicon>
+    <p-autocomplete [placeholder]="placeholder()" [(ngModel)]="input" fluid optionValue="value" optionLabel="label"
+        [suggestions]="items()" />
+</p-iconfield>

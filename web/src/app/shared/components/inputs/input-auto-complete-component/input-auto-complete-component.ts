@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -15,6 +15,7 @@ import { InputErrorMessageComponent } from '../input-error-message-component/inp
     AutoFocusModule,
     ReactiveFormsModule,
     InputErrorMessageComponent,
+    FormsModule
   ],
   templateUrl: './input-auto-complete-component.html',
   styleUrl: './input-auto-complete-component.css',
