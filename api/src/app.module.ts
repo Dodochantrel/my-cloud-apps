@@ -20,6 +20,7 @@ import { GroupsController } from './groups/groups.controller';
 import { GroupsService } from './groups/groups.service';
 
 import { Group } from './groups/group.entity';
+import { UsersController } from './users/users.controller';
 
 @Module({
   imports: [
@@ -41,7 +42,7 @@ import { Group } from './groups/group.entity';
     }),
     TypeOrmModule.forFeature([User, VideoReview, Video, Group]),
   ],
-  controllers: [AuthenticationsController, VideosController, GroupsController],
+  controllers: [AuthenticationsController, VideosController, GroupsController, UsersController],
   providers: [
     TokensService,
     HashsService,

@@ -9,6 +9,9 @@ import { Group } from './group.entity';
 import { User } from 'src/users/user.entity';
 import { PageQuery } from 'src/pagination/page-query';
 
+import { GroupRole } from './group-role.enum';
+import type { AddUserToGroupItemDto } from './dtos/add-users-to-group.dto';
+
 @Injectable()
 export class GroupsService {
   constructor(
@@ -59,7 +62,7 @@ export class GroupsService {
 
   async addUsers(
     groupId: string,
-    userIds: string[],
+    users: AddUserToGroupItemDto[],
     updatedById: string,
   ): Promise<Group> {
     const group = await this.groupRepository.findOne({
@@ -70,6 +73,7 @@ export class GroupsService {
       throw new NotFoundException('Groupe non trouvé.');
     }
 
+    const userIds = users.map((u) => u.userId);
     const usersToAdd = await this.userRepository.findBy({ id: In(userIds) });
     if (usersToAdd.length !== userIds.length) {
       throw new NotFoundException(
@@ -77,9 +81,24 @@ export class GroupsService {
       );
     }
 
+    const userMap = new Map(usersToAdd.map((u) => [u.id, u]));
     const existingIds = new Set(group.allMembers.map((u) => u.id));
-    const newUsers = usersToAdd.filter((u) => !existingIds.has(u.id));
-    group.members = [...group.members, ...newUsers];
+
+    for (const { userId, role } of users) {
+      if (existingIds.has(userId)) continue;
+      const user = userMap.get(userId)!;
+      switch (role) {
+        case GroupRole.ADMIN:
+          group.admin = user;
+          break;
+        case GroupRole.MODERATOR:
+          group.moderators = [...group.moderators, user];
+          break;
+        case GroupRole.MEMBER:
+          group.members = [...group.members, user];
+          break;
+      }
+    }
 
     const updatedBy = await this.userRepository.findOneBy({ id: updatedById });
     if (updatedBy) {

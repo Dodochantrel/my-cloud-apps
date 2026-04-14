@@ -16,3 +16,9 @@ export class GroupModel {
         return this.members.length + this.moderators.length + (this.admin ? 1 : 0);
     }
 }
+
+export enum GroupRole {
+  ADMIN = 'admin',
+  MODERATOR = 'moderator',
+  MEMBER = 'member',
+}

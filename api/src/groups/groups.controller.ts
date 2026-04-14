@@ -88,7 +88,7 @@ export class GroupsController {
     @Body() dto: AddUsersToGroupRequestDto,
     @UserData() user: AccessTokenPayload,
   ): Promise<AddUsersToGroupResponseDto> {
-    const group = await this.groupsService.addUsers(id, dto.userIds, user.id);
+    const group = await this.groupsService.addUsers(id, dto.users, user.id);
     return new AddUsersToGroupResponseDto(group);
   }
 

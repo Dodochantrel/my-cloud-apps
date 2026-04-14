@@ -1,0 +1,10 @@
+<app-dialog-form-component [(isDisplay)]="isDisplay" [header]="isCreating() ? 'Créer un groupe' : 'Modifier le groupe'"
+    [(form)]="form" (onCancel)="cancel()" (onSubmit)="save()">
+
+    <app-input-text-component [form]="form" [controlName]="'name'" [label]="'Nom'" [icon]="'id_card'"
+        [placeholder]="'Nom du groupe'" />
+
+    <app-input-auto-complete-component [form]="form" [controlName]="'name'" [label]="'Nom'" [icon]="'id_card'"
+        [placeholder]="'Nom du groupe'" [items]="[]" />
+
+</app-dialog-form-component>

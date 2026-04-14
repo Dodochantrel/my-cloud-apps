@@ -1,11 +1,16 @@
 <app-default-container-component [title]="'Gestion des groupes'">
 
-    <app-header-search-component
-        [label]="'Rechercher un groupe'"
-        [icon]="'search'"
-        [placeholder]="'Entrez le nom du groupe...'"
-        [(input)]="groupListService.search"
-    />
+    <div class="flex gap-4 items-end">
+
+        <app-header-search-component [label]="'Rechercher un groupe'" [icon]="'search'" class="flex-1"
+            [placeholder]="'Entrez le nom du groupe...'" [(input)]="groupListService.search" />
+
+        <button pButton (click)="handleCreate()">
+            <i class="pi pi-plus-circle" pButtonIcon></i>
+            <span pButtonLabel>Ajouter</span>
+        </button>
+
+    </div>
 
     <p-divider />
 
@@ -16,3 +21,5 @@
     </div>
 
 </app-default-container-component>
+
+<app-create-or-edit-group-component [(isDisplay)]="isDisplayCreateOrEditGroup" [isCreating]="isCreatingCreateOrEditGroup()" />

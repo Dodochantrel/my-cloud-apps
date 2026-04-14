@@ -1,18 +1,49 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsUUID } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 import { Group } from '../group.entity';
+import { GroupRole } from '../group-role.enum';
+
+export class AddUserToGroupItemDto {
+  @ApiProperty({
+    description: 'Identifiant de l\'utilisateur',
+    example: 'uuid-1',
+  })
+  @IsNotEmpty()
+  @IsUUID()
+  userId!: string;
+
+  @ApiProperty({
+    description: 'Rôle de l\'utilisateur dans le groupe',
+    enum: GroupRole,
+    example: GroupRole.MEMBER,
+  })
+  @IsNotEmpty()
+  @IsEnum(GroupRole)
+  role!: GroupRole;
+}
 
 export class AddUsersToGroupRequestDto {
   @ApiProperty({
-    description: 'Liste des identifiants des utilisateurs à ajouter',
-    example: ['uuid-1', 'uuid-2'],
+    description: 'Liste des utilisateurs à ajouter avec leur rôle',
+    type: [AddUserToGroupItemDto],
+    example: [
+      { userId: 'uuid-1', role: 'member' },
+      { userId: 'uuid-2', role: 'moderator' },
+    ],
     required: true,
-    type: [String],
   })
   @IsNotEmpty()
   @IsArray()
-  @IsUUID('all', { each: true })
-  userIds!: string[];
+  @ValidateNested({ each: true })
+  @Type(() => AddUserToGroupItemDto)
+  users!: AddUserToGroupItemDto[];
 }
 
 export class AddUsersToGroupResponseDto {

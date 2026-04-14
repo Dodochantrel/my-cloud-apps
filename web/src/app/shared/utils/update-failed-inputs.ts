@@ -5,6 +5,9 @@ export function updateFailedInputs(form: FormGroup): FormGroup {
       const control = form.get(field);
       control?.markAsTouched({ onlySelf: true });
       control?.markAsDirty({ onlySelf: true });
+      if (control instanceof FormGroup) {
+        updateFailedInputs(control);
+      }
     });
     return form;
   }
