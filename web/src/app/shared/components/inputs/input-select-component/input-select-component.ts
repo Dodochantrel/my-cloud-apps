@@ -12,7 +12,7 @@ import { InputErrorMessageComponent } from '../input-error-message-component/inp
   styleUrl: './input-select-component.css',
 })
 export class InputSelectComponent {
-  label = input.required<string>();
+  label = input<string | null>(null);
   icon = input.required<string>();
   controlName = input.required<string>();
   placeholder = input.required<string>();

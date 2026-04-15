@@ -21,4 +21,10 @@ export enum GroupRole {
   ADMIN = 'admin',
   MODERATOR = 'moderator',
   MEMBER = 'member',
-}
+} 
+
+export const groupRolesOptions: { label: string, value: GroupRole }[] = [
+  { label: 'Admin', value: GroupRole.ADMIN },
+  { label: 'Modérateur', value: GroupRole.MODERATOR },
+  { label: 'Membre', value: GroupRole.MEMBER },
+];

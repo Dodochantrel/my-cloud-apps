@@ -15,11 +15,7 @@ export class CreateOrEditGroupService {
 
   public search = signal<string>('');
 
-  constructor() {
-    effect(() => {
-      console.log('Search term changed:', this.search());
-    });
-  }
+  constructor() {}
 
   private readonly usersResource = httpResource<PaginatedResponseDto<GetAllUsersResponseDto>>(() =>
     this.usersRoutes.getAll(this.search(), 1, 20),

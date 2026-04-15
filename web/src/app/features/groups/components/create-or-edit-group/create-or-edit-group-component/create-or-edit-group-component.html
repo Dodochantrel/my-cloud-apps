@@ -4,7 +4,26 @@
     <app-input-text-component [form]="form" [controlName]="'name'" [label]="'Nom'" [icon]="'id_card'"
         [placeholder]="'Nom du groupe'" />
 
-    <app-header-auto-complete-component [label]="'Utilisateur'" [icon]="'person_add'" [(input)]="createOrEditGroupService.search"
-        class="flex-1" [placeholder]="'Nom de l\'utilisateur'" [items]="users()" />
+    <app-header-auto-complete-component [label]="'Chercher un utilisateur'" [icon]="'person_add'" (searchChange)="createOrEditGroupService.search.set($event)"
+        class="flex-1" [placeholder]="'Nom de l\'utilisateur'" [items]="users()" (valueSelected)="onSelectedUser($event)" />
+
+    <p-divider />
+
+    @for (lineForm of selectedUsers; track $index) {
+
+        <div class="p-2 flex border border-primary-300 bg-primary-50 gap-2 items-center rounded">
+
+            <p-avatar [label]="lineForm.controls.user.value?.initials || ''" />
+
+            <p>{{ lineForm.controls.user.value?.fullName }}</p>
+
+            <app-input-select-component class="ml-auto" [form]="lineForm" [controlName]="'role'" [options]="groupRoles"
+                [icon]="'person_shield'" [placeholder]="'Sélectionner un rôle'" />
+
+            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="removeSelectedUser($index)" />
+
+        </div>
+
+    }
 
 </app-dialog-form-component>
