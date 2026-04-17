@@ -43,7 +43,11 @@ export class GroupsService {
     return { items, total };
   }
 
-  async create(name: string, adminId: string): Promise<Group> {
+  async create(
+    name: string,
+    adminId: string,
+    users?: AddUserToGroupItemDto[],
+  ): Promise<Group> {
     const admin = await this.userRepository.findOneBy({ id: adminId });
     if (!admin) {
       throw new NotFoundException('Utilisateur non trouvé.');
@@ -56,6 +60,33 @@ export class GroupsService {
       moderators: [],
       createdBy: admin,
     });
+
+    if (users?.length) {
+      const userIds = users.map((u) => u.userId);
+      const usersToAdd = await this.userRepository.findBy({ id: In(userIds) });
+      if (usersToAdd.length !== userIds.length) {
+        throw new NotFoundException(
+          'Un ou plusieurs utilisateurs sont introuvables.',
+        );
+      }
+
+      const userMap = new Map(usersToAdd.map((u) => [u.id, u]));
+
+      for (const { userId, role } of users) {
+        const user = userMap.get(userId)!;
+        switch (role) {
+          case GroupRole.ADMIN:
+            group.admin = user;
+            break;
+          case GroupRole.MODERATOR:
+            group.moderators = [...group.moderators, user];
+            break;
+          case GroupRole.MEMBER:
+            group.members = [...group.members, user];
+            break;
+        }
+      }
+    }
 
     return this.groupRepository.save(group);
   }
@@ -112,10 +143,11 @@ export class GroupsService {
     groupId: string,
     adminId: string,
     data: Partial<Pick<Group, 'name'>>,
+    users?: AddUserToGroupItemDto[],
   ): Promise<Group> {
     const group = await this.groupRepository.findOne({
       where: { id: groupId },
-      relations: ['admin'],
+      relations: ['admin', 'members', 'moderators'],
     });
     if (!group) {
       throw new NotFoundException('Groupe non trouvé.');
@@ -127,6 +159,37 @@ export class GroupsService {
     }
 
     Object.assign(group, data);
+
+    if (users) {
+      const userIds = users.map((u) => u.userId);
+      const usersFound = await this.userRepository.findBy({ id: In(userIds) });
+      if (usersFound.length !== userIds.length) {
+        throw new NotFoundException(
+          'Un ou plusieurs utilisateurs sont introuvables.',
+        );
+      }
+
+      const userMap = new Map(usersFound.map((u) => [u.id, u]));
+
+      group.members = [];
+      group.moderators = [];
+
+      for (const { userId, role } of users) {
+        const user = userMap.get(userId)!;
+        switch (role) {
+          case GroupRole.ADMIN:
+            group.admin = user;
+            break;
+          case GroupRole.MODERATOR:
+            group.moderators = [...group.moderators, user];
+            break;
+          case GroupRole.MEMBER:
+            group.members = [...group.members, user];
+            break;
+        }
+      }
+    }
+
     group.updatedBy = group.admin;
     return this.groupRepository.save(group);
   }

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderSearchComponent } from './header-search-component';
+import { DayDetailsPanelComponent } from './day-details-panel-component';
 
-describe('HeaderSearchComponent', () => {
-  let component: HeaderSearchComponent;
-  let fixture: ComponentFixture<HeaderSearchComponent>;
+describe('DayDetailsPanelComponent', () => {
+  let component: DayDetailsPanelComponent;
+  let fixture: ComponentFixture<DayDetailsPanelComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeaderSearchComponent]
+      imports: [DayDetailsPanelComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HeaderSearchComponent);
+    fixture = TestBed.createComponent(DayDetailsPanelComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

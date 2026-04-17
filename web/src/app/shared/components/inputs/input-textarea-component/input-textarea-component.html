@@ -1,5 +1,16 @@
-<div [formGroup]="form()">
-    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label><br>
-    <textarea rows="5" cols="30" pTextarea [formControlName]="controlName()" [placeholder]="placeholder()" fluid></textarea>
-    <app-input-error-message-component [controlName]="controlName()" [form]="form()" />
+@if (form()) {
+<div [formGroup]="form()!">
+    @if (label()) {
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*' : '' }}</label><br>
+    }
+    <textarea rows="5" cols="30" pTextarea [formControlName]="controlName()!" [placeholder]="placeholder()" fluid></textarea>
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
+} @else {
+<div>
+    @if (label()) {
+    <label class="label">{{ label() }}</label><br>
+    }
+    <textarea rows="5" cols="30" pTextarea [(ngModel)]="value" [placeholder]="placeholder()" fluid></textarea>
+</div>
+}

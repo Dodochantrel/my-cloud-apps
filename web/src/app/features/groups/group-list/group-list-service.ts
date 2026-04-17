@@ -44,4 +44,16 @@ export class GroupListService {
     ),
   );
   public isLoadingGroups = this.groupsResource.isLoading;
+
+  public deleteGroup(groupId: string) {
+    this.groupsRoutes.delete(groupId).subscribe({
+      next: () => {
+        this.groupStore.deleteOne(groupId);
+        this.notificationService.success('Groupe supprimé', 'Le groupe a été supprimé avec succès.');
+      },
+      error: (error) => {
+        this.notificationService.error('Erreur lors de la suppression du groupe', error.message || 'Erreur inconnue');
+      },
+    });
+  }
 }

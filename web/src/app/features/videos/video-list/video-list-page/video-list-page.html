@@ -3,9 +3,20 @@
     <div class="flex flex-col w-full gap-4">
 
         <div class="flex w-full gap-4 items-end mt-4">
-            <app-video-search-input-component class="w-full" [label]="searchLabel" [placeholder]="searchPlaceholder"
-                [search]="videoListService.search()" [videos]="videoListService.videoStore.data()"
-                (searchChange)="onSearchChange($event)" (videoSelected)="redirectToVideoDetails($event)" />
+
+            <app-input-auto-complete-component [label]="searchLabel" [icon]="'person_add'"
+                (searchChange)="onSearchChange($event)" class="flex-1" [placeholder]="searchPlaceholder"
+                [items]="videos()" (valueSelected)="redirectToVideoDetails($event)">
+
+                <ng-template #itemTemplate let-item>
+                    <div class="flex items-center gap-2">
+                        <img [src]="item.value.fileUrlOrEmpty" style="width: 18px" />
+                        <div>{{ item.value.title }}</div>
+                    </div>
+                </ng-template>
+
+            </app-input-auto-complete-component>
+
         </div>
 
 

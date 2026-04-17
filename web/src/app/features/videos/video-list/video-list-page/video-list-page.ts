@@ -1,25 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, OnInit } from '@angular/core';
+import { Component, effect, linkedSignal, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DefaultContainerComponent } from '../../../../shared/components/default-container-component/default-container-component';
-import { VideoSearchInputComponent } from '../../components/video-search-input-component/video-search-input-component';
 import { VideoListService } from '../video-list-service';
 import { Video, VideoType } from '../../../../core/models/videos/video';
 import { TabsModule } from 'primeng/tabs';
 import { CurrentVideoComponent } from '../../components/current-video/current-video-component/current-video-component';
 import { WatchedVideoComponent } from "../../components/watched-video/watched-video-component/watched-video-component";
 import { ToWatchVideoComponent } from '../../components/to-watch-video/to-watch-video-component/to-watch-video-component';
+import { InputAutoCompleteComponent } from '../../../../shared/components/inputs/input-auto-complete-component/input-auto-complete-component';
 
 @Component({
   selector: 'app-video-list-page',
   imports: [
     DefaultContainerComponent,
-    VideoSearchInputComponent,
+    InputAutoCompleteComponent,
     CommonModule,
     TabsModule,
     CurrentVideoComponent,
     WatchedVideoComponent,
-    ToWatchVideoComponent,
+    ToWatchVideoComponent
 ],
   templateUrl: './video-list-page.html',
   styleUrl: './video-list-page.css',
@@ -101,4 +101,12 @@ export class VideoListPage implements OnInit {
     if (type === 'movie' || type === 'serie') return type;
     return null;
   }
+
+  public videos = linkedSignal(() => {
+    return this.videoListService.videoStore.data()
+      .map((video) => ({
+        label: video.title,
+        value: video,
+      }));
+  });
 }

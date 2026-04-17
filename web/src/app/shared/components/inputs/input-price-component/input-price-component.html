@@ -1,10 +1,26 @@
-<div [formGroup]="form()">
-    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+@if (form()) {
+<div [formGroup]="form()!">
+    @if (label()) {
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*' : '' }}</label>
+    }
     <p-iconfield>
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
-        <p-inputnumber [name]="controlName()" [formControlName]="controlName()" mode="currency" currency="EUR" [minFractionDigits]="2" [maxFractionDigits]="2" fluid [placeholder]="placeholder()" />
+        <p-inputnumber [name]="controlName()!" [formControlName]="controlName()!" mode="currency" currency="EUR" [minFractionDigits]="2" [maxFractionDigits]="2" fluid [placeholder]="placeholder()" />
     </p-iconfield>
-    <app-input-error-message-component [controlName]="controlName()" [form]="form()" />
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
+} @else {
+<div>
+    @if (label()) {
+    <label class="label">{{ label() }}</label>
+    }
+    <p-iconfield>
+        <p-inputicon>
+            <span class="material-symbols text-[18px]!">{{ icon() }}</span>
+        </p-inputicon>
+        <p-inputnumber [(ngModel)]="value" mode="currency" currency="EUR" [minFractionDigits]="2" [maxFractionDigits]="2" fluid [placeholder]="placeholder()" />
+    </p-iconfield>
+</div>
+}

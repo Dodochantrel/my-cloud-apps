@@ -1,8 +1,0 @@
-<label class="label">{{ label() }}</label>
-<p-iconfield>
-    <p-inputicon>
-        <span class="material-symbols text-[18px]!">{{ icon() }}</span>
-    </p-inputicon>
-    <p-autocomplete [(ngModel)]="value" [placeholder]="placeholder()" [dropdown]="true" ontionValue="value"
-        [suggestions]="items()" (completeMethod)="search($event)" fluid (onSelect)="onSelect($event)" />
-</p-iconfield>

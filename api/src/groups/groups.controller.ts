@@ -72,7 +72,7 @@ export class GroupsController {
     @Body() dto: CreateGroupRequestDto,
     @UserData() user: AccessTokenPayload,
   ): Promise<CreateGroupResponseDto> {
-    const group = await this.groupsService.create(dto.name, user.id);
+    const group = await this.groupsService.create(dto.name, user.id, dto.users);
     return new CreateGroupResponseDto(group);
   }
 
@@ -104,7 +104,8 @@ export class GroupsController {
     @Body() dto: UpdateGroupRequestDto,
     @UserData() user: AccessTokenPayload,
   ): Promise<UpdateGroupResponseDto> {
-    const group = await this.groupsService.update(id, user.id, dto);
+    const { users, ...data } = dto;
+    const group = await this.groupsService.update(id, user.id, data, users);
     return new UpdateGroupResponseDto(group);
   }
 

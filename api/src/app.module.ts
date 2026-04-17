@@ -21,6 +21,12 @@ import { GroupsService } from './groups/groups.service';
 
 import { Group } from './groups/group.entity';
 import { UsersController } from './users/users.controller';
+import { EventsController } from './events/events.controller';
+import { EventsService } from './events/events.service';
+import { EventsCategoriesService } from './events-categories/events-categories.service';
+import { EventsCategoriesController } from './events-categories/events-categories.controller';
+import { Event } from './events/event.entity';
+import { EventCategory } from './events-categories/event-category.entity';
 
 @Module({
   imports: [
@@ -40,9 +46,23 @@ import { UsersController } from './users/users.controller';
         },
       }),
     }),
-    TypeOrmModule.forFeature([User, VideoReview, Video, Group]),
+    TypeOrmModule.forFeature([
+      User,
+      VideoReview,
+      Video,
+      Group,
+      Event,
+      EventCategory,
+    ]),
   ],
-  controllers: [AuthenticationsController, VideosController, GroupsController, UsersController],
+  controllers: [
+    AuthenticationsController,
+    VideosController,
+    GroupsController,
+    UsersController,
+    EventsController,
+    EventsCategoriesController,
+  ],
   providers: [
     TokensService,
     HashsService,
@@ -52,6 +72,8 @@ import { UsersController } from './users/users.controller';
     VideosService,
     TmdbRepositoryRepository,
     GroupsService,
+    EventsService,
+    EventsCategoriesService,
   ],
 })
 export class AppModule {}

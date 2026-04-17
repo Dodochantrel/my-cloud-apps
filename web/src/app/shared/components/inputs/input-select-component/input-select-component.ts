@@ -1,5 +1,5 @@
-import { Component, input } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, input, model } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { SelectModule } from 'primeng/select';
@@ -7,15 +7,16 @@ import { InputErrorMessageComponent } from '../input-error-message-component/inp
 
 @Component({
   selector: 'app-input-select-component',
-  imports: [IconFieldModule, InputIconModule, SelectModule, ReactiveFormsModule, InputErrorMessageComponent],
+  imports: [IconFieldModule, InputIconModule, SelectModule, ReactiveFormsModule, FormsModule, InputErrorMessageComponent],
   templateUrl: './input-select-component.html',
   styleUrl: './input-select-component.css',
 })
 export class InputSelectComponent {
   label = input<string | null>(null);
   icon = input.required<string>();
-  controlName = input.required<string>();
+  controlName = input<string | null>(null);
   placeholder = input.required<string>();
   options = input.required<{ label: string, value: unknown }[]>();
-  form = input.required<FormGroup>();
+  form = input<FormGroup | null>(null);
+  value = model<unknown>(null);
 }

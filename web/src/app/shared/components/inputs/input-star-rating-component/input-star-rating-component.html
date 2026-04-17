@@ -1,18 +1,28 @@
-<div [formGroup]="form()">
-
+@if (form()) {
+<div [formGroup]="form()!">
+    @if (label()) {
     <label [for]="controlName()" class="label">
         @if(icon()) {
             <span class="material-symbols text-primary text-base!">{{ icon() }}</span>
         }
-        {{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}
+        {{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*' : '' }}
     </label>
-
     <br>
-
-    <p-rating [name]="controlName()" [formControlName]="controlName()" [stars]="starCount()" />
-
-    <app-input-error-message-component
-        [controlName]="controlName()"
-        [form]="form()"
-    />
+    }
+    <p-rating [name]="controlName()!" [formControlName]="controlName()!" [stars]="starCount()" />
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
+} @else {
+<div>
+    @if (label()) {
+    <label class="label">
+        @if(icon()) {
+            <span class="material-symbols text-primary text-base!">{{ icon() }}</span>
+        }
+        {{ label() }}
+    </label>
+    <br>
+    }
+    <p-rating [(ngModel)]="value" [stars]="starCount()" />
+</div>
+}

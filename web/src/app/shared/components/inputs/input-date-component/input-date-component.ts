@@ -1,5 +1,5 @@
-import { Component, input } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, input, model } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FluidModule } from 'primeng/fluid';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -8,14 +8,15 @@ import { InputErrorMessageComponent } from '../input-error-message-component/inp
 @Component({
   selector: 'app-input-date-component',
   standalone: true,
-  imports: [IconFieldModule, InputIconModule, FluidModule, ReactiveFormsModule, InputErrorMessageComponent],
+  imports: [IconFieldModule, InputIconModule, FluidModule, ReactiveFormsModule, FormsModule, InputErrorMessageComponent],
   templateUrl: './input-date-component.html',
   styleUrls: ['./input-date-component.css'],
 })
 export class InputDateComponent {
-  label = input.required<string>();
+  label = input<string | null>(null);
   icon = input.required<string>();
-  controlName = input.required<string>();
+  controlName = input<string | null>(null);
   placeholder = input.required<string>();
-  form = input.required<FormGroup>();
+  form = input<FormGroup | null>(null);
+  value = model<unknown>(null);
 }

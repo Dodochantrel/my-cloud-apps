@@ -1,15 +1,35 @@
-<div [formGroup]="form()">
+@if(form()) {
+<div [formGroup]="form()!">
     @if (label()) {
-    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*'
+        : '' }}</label>
     }
     <p-iconfield>
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
-        <p-select [options]="options()" optionLabel="label" optionValue="value" [formControlName]="controlName()" [name]="controlName()"
-            filterBy="label" [placeholder]="placeholder()" fluid appendTo="body"
+        <p-select [options]="options()" optionLabel="label" optionValue="value" [formControlName]="controlName()!"
+            [name]="controlName()!" filterBy="label" [placeholder]="placeholder()" fluid appendTo="body"
             [pt]="{ label: { class: 'pl-[calc((var(--p-form-field-padding-x)*2)+var(--p-icon-size))]' } }" />
     </p-iconfield>
-    <app-input-error-message-component [controlName]="controlName()" [form]="form()" />
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
+} @else {
 
+<ng-template #standaloneTemplate>
+    <div>
+        @if (label()) {
+        <label class="label">{{ label() }}</label>
+        }
+        <p-iconfield>
+            <p-inputicon>
+                <span class="material-symbols text-[18px]!">{{ icon() }}</span>
+            </p-inputicon>
+            <p-select [options]="options()" optionLabel="label" optionValue="value" [(ngModel)]="value" filterBy="label"
+                [placeholder]="placeholder()" fluid appendTo="body"
+                [pt]="{ label: { class: 'pl-[calc((var(--p-form-field-padding-x)*2)+var(--p-icon-size))]' } }" />
+        </p-iconfield>
+    </div>
+</ng-template>
+
+}

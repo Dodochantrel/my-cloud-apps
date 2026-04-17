@@ -1,5 +1,5 @@
-import { Component, inject, model } from '@angular/core';
-import { GroupModel } from '../../../../core/models/groups/group-model';
+import { Component, inject, model, output } from '@angular/core';
+import { getGroupRoleIcon, GroupModel, GroupRole } from '../../../../core/models/groups/group-model';
 import { TagModule } from 'primeng/tag';
 import { AvatarModule } from 'primeng/avatar';
 import { DividerModule } from 'primeng/divider';
@@ -24,6 +24,9 @@ import { AuthService } from '../../../../core/auth/auth-service';
 })
 export class GroupCardComponent {
   public group = model.required<GroupModel>();
+  public onEdit = output<GroupModel>();
+  public onDelete = output<GroupModel>();
+
   protected readonly authService = inject(AuthService);
 
   get userCountToDisplay(): string {
@@ -59,5 +62,21 @@ export class GroupCardComponent {
     const userConnected = this.authService.connectedUser();
     if (!userConnected) return false;
     return this.group().moderators.some((mod) => mod.id === userConnected.id);
+  }
+
+  get adminIcon(): string {
+    return getGroupRoleIcon(GroupRole.ADMIN);
+  }
+
+  get moderatorIcon(): string {
+    return getGroupRoleIcon(GroupRole.MODERATOR);
+  }
+
+  onEditClick() {
+    this.onEdit.emit(this.group());
+  }
+
+  onDeleteClick() {
+    this.onDelete.emit(this.group());
   }
 }

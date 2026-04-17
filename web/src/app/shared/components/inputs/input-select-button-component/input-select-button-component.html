@@ -1,6 +1,18 @@
-<div [formGroup]="form()">
-    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
-    <p-selectbutton fluid [options]="options()" formControlName="isService" optionLabel="label" [name]="controlName()"
+@if (form()) {
+<div [formGroup]="form()!">
+    @if (label()) {
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*' : '' }}</label>
+    }
+    <p-selectbutton fluid [options]="options()" [formControlName]="controlName()!" optionLabel="label" [name]="controlName()!"
         optionValue="value" aria-labelledby="basic" />
-    <app-input-error-message-component [controlName]="controlName()" [form]="form()" />
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
+} @else {
+<div>
+    @if (label()) {
+    <label class="label">{{ label() }}</label>
+    }
+    <p-selectbutton fluid [options]="options()" [(ngModel)]="value" optionLabel="label"
+        optionValue="value" aria-labelledby="basic" />
+</div>
+}

@@ -1,19 +1,42 @@
-<div [formGroup]="form()">
-    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+@if (form()) {
+<div [formGroup]="form()!">
+    @if (label()) {
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*' : '' }}</label>
+    }
     <p-iconfield>
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
-        <p-autocomplete [name]="controlName()" [placeholder]="placeholder()" [formControlName]="controlName()" fluid [suggestions]="items()" >
-            <ng-template let-country #item>
-                <ng-content />
+        <p-autocomplete [dropdown]="true" [name]="controlName()!" [placeholder]="placeholder()" [formControlName]="controlName()!" fluid [suggestions]="items()" optionLabel="label">
+            <ng-template let-item #item>
+                @if (customItemTemplate()) {
+                    <ng-container *ngTemplateOutlet="customItemTemplate()!; context: { $implicit: item }" />
+                } @else {
+                    {{ item.label }}
+                }
             </ng-template>
         </p-autocomplete>
-
     </p-iconfield>
-        
-    <app-input-error-message-component
-        [controlName]="controlName()"
-        [form]="form()"
-    />
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
+} @else {
+<div>
+    @if (label()) {
+    <label class="label">{{ label() }}</label>
+    }
+    <p-iconfield>
+        <p-inputicon>
+            <span class="material-symbols text-[18px]!">{{ icon() }}</span>
+        </p-inputicon>
+        <p-autocomplete [dropdown]="true" [(ngModel)]="value" [placeholder]="placeholder()" fluid [suggestions]="items()" (completeMethod)="search($event)" (onSelect)="onSelect($event)" optionLabel="label">
+            <ng-template let-item #item>
+                @if (customItemTemplate()) {
+                    <ng-container *ngTemplateOutlet="customItemTemplate()!; context: { $implicit: item }" />
+                } @else {
+                    {{ item.label }}
+                }
+            </ng-template>
+        </p-autocomplete>
+    </p-iconfield>
+</div>
+}

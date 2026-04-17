@@ -1,10 +1,26 @@
-<div [formGroup]="form()">
-    <label [for]="controlName()" class="label">{{ label() }} {{ form().get(controlName())?.errors?.['required'] ? '*' : '' }}</label>
+@if (form()) {
+<div [formGroup]="form()!">
+    @if (label()) {
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*' : '' }}</label>
+    }
     <div class="flex gap-2 items-center flex-wrap">
     @for (option of options(); track $index) {
-        <p-radiobutton [value]="option.value" [inputId]="controlName() + '-' + $index" [formControlName]="controlName()" />
-        <label [for]="controlName() + '-' + $index">{{ option.label }}</label>
+        <p-radiobutton [value]="option.value" [inputId]="controlName()! + '-' + $index" [formControlName]="controlName()!" />
+        <label [for]="controlName()! + '-' + $index">{{ option.label }}</label>
     }
     </div>
-    <app-input-error-message-component [controlName]="controlName()" [form]="form()" />
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
+} @else {
+<div>
+    @if (label()) {
+    <label class="label">{{ label() }}</label>
+    }
+    <div class="flex gap-2 items-center flex-wrap">
+    @for (option of options(); track $index) {
+        <p-radiobutton [value]="option.value" [inputId]="'radio-' + $index" [(ngModel)]="value" />
+        <label [for]="'radio-' + $index">{{ option.label }}</label>
+    }
+    </div>
+</div>
+}

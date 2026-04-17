@@ -1,4 +1,15 @@
-<div class="flex gap-2 items-center" [formGroup]="form()">
-    <p-toggleswitch [name]="controlName()" [formControlName]="controlName()" />
+@if (form()) {
+<div class="flex gap-2 items-center" [formGroup]="form()!">
+    <p-toggleswitch [name]="controlName()!" [formControlName]="controlName()!" />
+    @if (label()) {
     <label>{{ label() }}</label>
+    }
 </div>
+} @else {
+<div class="flex gap-2 items-center">
+    <p-toggleswitch [(ngModel)]="value" />
+    @if (label()) {
+    <label>{{ label() }}</label>
+    }
+</div>
+}

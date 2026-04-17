@@ -11,7 +11,7 @@
 
     <div class="flex gap-2 items-center">
         <p-avatar shape="circle" size="normal">
-            <span class="material-symbols">shield_person</span>
+            <span class="material-symbols">{{ adminIcon }}</span>
         </p-avatar>
         <div class="flex flex-col">
             <p class="text-sm text-secondary text-muted-color">Administrateur</p>
@@ -21,7 +21,7 @@
 
     <div class="flex gap-2 items-center mt-2">
         <p-avatar shape="circle" size="normal">
-            <span class="material-symbols">health_and_safety</span>
+            <span class="material-symbols">{{ moderatorIcon }}</span>
         </p-avatar>
         <div class="flex flex-col">
             <p class="text-sm text-secondary text-muted-color">Modérateur</p>
@@ -48,14 +48,12 @@
 
     <div class="flex gap-2">
 
-        <p-button [outlined]="true" class="flex-1" [pt]="{ root: { class: 'w-full' } }">
+        <p-button [outlined]="true" class="flex-1" [pt]="{ root: { class: 'w-full' } }" (onClick)="onEditClick()">
             <span class="material-symbols">groups</span>
-            <span pButtonLabel>Membres</span>
+            <span pButtonLabel>Gérer le groupe</span>
         </p-button>
 
-        <p-button icon="pi pi-pen-to-square" [outlined]="true" [disabled]="!userConnectedIsModerator && !userConnectedIsAdmin" />
-
-        <p-button icon="pi pi-trash" [outlined]="true" severity="danger" [disabled]="!userConnectedIsAdmin" />
+        <p-button icon="pi pi-trash" [outlined]="true" severity="danger" [disabled]="!userConnectedIsAdmin" (onClick)="onDeleteClick()" />
 
     </div>
 

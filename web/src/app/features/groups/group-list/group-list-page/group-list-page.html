@@ -2,8 +2,8 @@
 
     <div class="flex gap-4 items-end">
 
-        <app-header-search-component [label]="'Rechercher un groupe'" [icon]="'search'" class="flex-1"
-            [placeholder]="'Entrez le nom du groupe...'" [(input)]="groupListService.search" />
+        <app-input-text-component [label]="'Rechercher un groupe'" [icon]="'search'" class="flex-1"
+            [placeholder]="'Entrez le nom du groupe...'" [(value)]="groupListService.search" />
 
         <button pButton (click)="handleCreate()">
             <i class="pi pi-plus-circle" pButtonIcon></i>
@@ -16,10 +16,10 @@
 
     <div class="flex gap-4 flex-wrap">
         @for (group of groupStore.data(); track $index) {
-        <app-group-card-component [group]="group" class="flex-1" />
+        <app-group-card-component [group]="group" class="flex-1" (onEdit)="handleEdit($event)" (onDelete)="handleDelete($event, $event)" />
         }
     </div>
 
 </app-default-container-component>
 
-<app-create-or-edit-group-component [(isDisplay)]="isDisplayCreateOrEditGroup" [isCreating]="isCreatingCreateOrEditGroup()" />
+<app-create-or-edit-group-component [(groupToEdit)]="selectedGroup" [(isDisplay)]="isDisplayCreateOrEditGroup" [isCreating]="isCreatingCreateOrEditGroup()" />

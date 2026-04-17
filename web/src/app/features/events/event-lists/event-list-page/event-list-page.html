@@ -1,5 +1,11 @@
 <app-default-container-component [title]="'Liste des événements'">
 
-    <app-event-calendar-component [(events)]="eventListService.events" (dayClicked)="onDayClicked($event)" (eventClicked)="onEventClicked($event)" />
+    <app-event-list-filters-component [(search)]="eventListService.search" [(startDate)]="eventListService.startDate"
+        [(endDate)]="eventListService.endDate" />
+
+    <app-event-calendar-component [(events)]="eventStore.data" (dayClicked)="onDayClicked($event)"
+        (eventClicked)="onEventClicked($event)" />
 
 </app-default-container-component>
+
+<app-day-details-panel-component [(isVisible)]="isDisplayDayDetails" [(date)]="selectedDate" />

@@ -28,3 +28,16 @@ export const groupRolesOptions: { label: string, value: GroupRole }[] = [
   { label: 'Modérateur', value: GroupRole.MODERATOR },
   { label: 'Membre', value: GroupRole.MEMBER },
 ];
+
+export const getGroupRoleIcon = (role: GroupRole): string => {
+  switch (role) {
+    case GroupRole.ADMIN:
+      return 'shield_person';
+    case GroupRole.MODERATOR:
+      return 'health_and_safety';
+    case GroupRole.MEMBER:
+      return 'person';
+    default:
+      return '';
+  }
+};

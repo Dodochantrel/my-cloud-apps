@@ -1,7 +1,7 @@
 import { Video } from '../../../models/videos/video';
 
 export interface GetAllVideoDto {
-    id: string;
+    externalId: string;
     title: string;
     isToWatch: boolean;
     isSeen: boolean;
@@ -19,7 +19,7 @@ export interface GetAllVideoDto {
 
 export const mapFromGetAllVideoDtoToVideo = (dto: GetAllVideoDto): Video => {
     const video = new Video(
-        dto.id,
+        dto.externalId,
         dto.title,
         dto.type,
         new Date(dto.releaseDate),

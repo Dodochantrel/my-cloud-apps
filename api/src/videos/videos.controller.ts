@@ -26,6 +26,8 @@ import {
   toGetWatchedVideoResponseDtoList,
 } from './dtos/get-watched-video.dto';
 import { PatchVideoBooleanRequestDto } from './dtos/patch-video-boolean.dto';
+import { GetReviewQueryDto } from './dtos/get-review.dto';
+import { GetOneVideoQueryDto } from './dtos/get-one-video.dto';
 
 @Controller('videos')
 export class VideosController {
@@ -81,7 +83,7 @@ export class VideosController {
   @Get(':id')
   async getVideoById(
     @Param('id') id: string,
-    @Query() query: GetVideoQueryDto,
+    @Query() query: GetOneVideoQueryDto,
   ) {
     return await this.videosService.getByid(id, query.type);
   }
@@ -132,7 +134,7 @@ export class VideosController {
   })
   async getReviews(
     @Param('videoId') videoId: string,
-    @Query() query: GetVideoQueryDto,
+    @Query() query: GetReviewQueryDto,
     @UserData() user: AccessTokenPayload,
   ): Promise<GetVideoReviewResponseDto> {
     return new GetVideoReviewResponseDto(
