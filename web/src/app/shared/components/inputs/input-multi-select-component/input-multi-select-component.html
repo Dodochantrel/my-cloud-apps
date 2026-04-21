@@ -8,8 +8,8 @@
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
-        <p-select [options]="options()" optionLabel="label" optionValue="value" [formControlName]="controlName()!"
-            [name]="controlName()!" filterBy="label" [placeholder]="placeholder()" fluid appendTo="body" [checkmark]="true"
+        <p-multiselect [options]="options()" optionLabel="label" optionValue="value" [formControlName]="controlName()!"
+            [name]="controlName()!" filterBy="label" [placeholder]="placeholder()" fluid appendTo="body"
             (onFilter)="searchChange.emit($event.filter)" [filter]="filter()"
             [pt]="{ label: { class: 'pl-[calc((var(--p-form-field-padding-x)*2)+var(--p-icon-size))]' } }" />
     </p-iconfield>
@@ -26,9 +26,9 @@
             <p-inputicon>
                 <span class="material-symbols text-[18px]!">{{ icon() }}</span>
             </p-inputicon>
-            <p-select [options]="options()" optionLabel="label" optionValue="value" [(ngModel)]="value" filterBy="label"
-                [placeholder]="placeholder()" fluid appendTo="body" (onFilter)="searchChange.emit($event.filter)" [checkmark]="true"
-                [filter]="filter()"
+            <p-multiselect [options]="options()" optionLabel="label" optionValue="value" [(ngModel)]="value"
+                filterBy="label" [placeholder]="placeholder()" fluid appendTo="body"
+                (onFilter)="searchChange.emit($event.filter)" [filter]="filter()"
                 [pt]="{ label: { class: 'pl-[calc((var(--p-form-field-padding-x)*2)+var(--p-icon-size))]' } }" />
         </p-iconfield>
     </div>

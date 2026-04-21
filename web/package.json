@@ -33,6 +33,7 @@
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.20",
     "@fullcalendar/interaction": "^6.1.20",
+    "@fullcalendar/timegrid": "^6.1.20",
     "@primeuix/themes": "^2.0.2",
     "ngx-cookie-service": "^21.1.0",
     "primeicons": "^7.0.0",

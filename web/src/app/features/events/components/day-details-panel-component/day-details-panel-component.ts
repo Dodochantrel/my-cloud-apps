@@ -1,4 +1,4 @@
-import { Component, effect, inject, model, signal } from '@angular/core';
+import { Component, effect, inject, model, output, signal } from '@angular/core';
 import { DrawerModule } from 'primeng/drawer';
 import { EventStore } from '../../stores/event-store';
 import { EventModel } from '../../../../core/models/events/event-model';
@@ -15,6 +15,8 @@ import { TitleComponent } from '../../../../shared/components/title-component/ti
 export class DayDetailsPanelComponent {
   public isVisible = model.required<boolean>();
   public date = model.required<Date>();
+
+  onCreatedDate = output<Date>();
 
   protected eventStore = inject(EventStore);
 
@@ -38,5 +40,9 @@ export class DayDetailsPanelComponent {
     const nextDate = new Date(this.date());
     nextDate.setDate(nextDate.getDate() + 1);
     this.date.set(nextDate);
+  }
+
+  onAddEvent(): void {
+    this.onCreatedDate.emit(this.date());
   }
 }

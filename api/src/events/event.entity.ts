@@ -1,8 +1,10 @@
 import { EventCategory } from 'src/events-categories/event-category.entity';
+import { Group } from 'src/groups/group.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -43,4 +45,9 @@ export class Event {
     nullable: true,
   })
   category!: Relation<EventCategory | null>;
+
+  @ManyToMany(() => Group, (group) => group.events, {
+    nullable: true,
+  })
+  groups!: Relation<Group[]>;
 }

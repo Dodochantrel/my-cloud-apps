@@ -1,0 +1,12 @@
+<div class="flex rounded-lg hover:bg-primary-50 p-4">
+
+    <div class="h-4 w-4 bg-amber-500 rounded-full"></div>
+
+    <div class="ml-2">
+
+        <p class="text-sm font-bold">{{ event().title }}</p>
+        <p class="text-sm text-gray-500">{{ event().start | date: 'shortDate' }} - {{ event().end | date: 'shortDate' }}</p>
+
+    </div>
+
+</div>

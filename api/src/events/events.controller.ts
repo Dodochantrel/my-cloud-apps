@@ -12,6 +12,8 @@ import {
 import { EventsService } from './events.service';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from 'src/authentications/guards/auth.guard';
+import { UserData } from 'src/users/user-data.decorator';
+import type { AccessTokenPayload } from 'src/utils/tokens/tokens.service';
 import {
   GetAllEventsQueryDto,
   GetAllEventsResponseDto,
@@ -76,10 +78,11 @@ export class EventsController {
     type: CreateEventResponseDto,
   })
   async createEvent(
+    @UserData() user: AccessTokenPayload,
     @Body() dto: CreateEventRequestDto,
   ): Promise<CreateEventResponseDto> {
-    const { categoryId, ...data } = dto;
-    const event = await this.eventsService.create(data, categoryId);
+    const { categoryId, groupsId, ...data } = dto;
+    const event = await this.eventsService.create(data, user.id, categoryId, groupsId);
     return new CreateEventResponseDto(event);
   }
 
@@ -91,11 +94,12 @@ export class EventsController {
     type: UpdateEventResponseDto,
   })
   async updateEvent(
+    @UserData() user: AccessTokenPayload,
     @Param('id') id: string,
     @Body() dto: UpdateEventRequestDto,
   ): Promise<UpdateEventResponseDto> {
-    const { categoryId, ...data } = dto;
-    const event = await this.eventsService.update(id, data, categoryId);
+    const { categoryId, groupsId, ...data } = dto;
+    const event = await this.eventsService.update(id, data, user.id, categoryId, groupsId);
     return new UpdateEventResponseDto(event);
   }
 

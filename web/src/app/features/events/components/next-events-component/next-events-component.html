@@ -1,0 +1,7 @@
+<div class="flex gap-2 flex-col">
+@for (event of eventStore.getNextEvents(); track $index) {
+
+    <app-next-event-card-component [event]="event" />
+    
+}
+</div>

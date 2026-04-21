@@ -19,4 +19,24 @@ export class EventStore extends StoreUtils<EventModel> {
         && targetTime <= endTime;
     });
   }
+
+  getNextEvents(count: number = 5): EventModel[] {
+    const now = new Date().getTime();
+
+    return this.data()
+      .filter((event) => {
+        const startTime = new Date(event.start).getTime();
+        const endTime = new Date(event.end).getTime();
+
+        return !Number.isNaN(startTime)
+          && !Number.isNaN(endTime)
+          && endTime >= now;
+      })
+      .sort((a, b) => {
+        const aStart = new Date(a.start).getTime();
+        const bStart = new Date(b.start).getTime();
+        return aStart - bStart;
+      })
+      .slice(0, count);
+  }
 }

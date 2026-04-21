@@ -39,23 +39,23 @@ export class EventListService {
 
   constructor() {
     effect(() => {
-      const error = this.groupsResource.error();
+      const error = this.eventsResource.error();
       if (error) {
         this.notificationService.error(
-          'Erreur lors du chargement des groupes',
+          'Erreur lors du chargement des événements',
           (error as HttpErrorResponse).message || 'Erreur inconnue',
         );
       }
     });
 
     effect(() => {
-      const resource = this.groupsResource.value();
+      const resource = this.eventsResource.value();
       const events = resource ? mapFromGetAllEventsDtosToModels(resource.data) : [];
       this.eventStore.setData(events);
     });
   }
 
-  private readonly groupsResource = httpResource<PaginatedResponseDto<GetAllEventsResponseDto>>(
+  private readonly eventsResource = httpResource<PaginatedResponseDto<GetAllEventsResponseDto>>(
     () =>
       this.eventsRoutes.getAll(
         this.search(),
@@ -65,5 +65,5 @@ export class EventListService {
         this.endDate(),
       ),
   );
-  public isLoadingGroups = this.groupsResource.isLoading;
+  public isLoadingEvents = this.eventsResource.isLoading;
 }

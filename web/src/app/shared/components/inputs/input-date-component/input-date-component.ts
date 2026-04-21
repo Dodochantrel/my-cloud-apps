@@ -4,11 +4,12 @@ import { FluidModule } from 'primeng/fluid';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputErrorMessageComponent } from '../input-error-message-component/input-error-message-component';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-input-date-component',
   standalone: true,
-  imports: [IconFieldModule, InputIconModule, FluidModule, ReactiveFormsModule, FormsModule, InputErrorMessageComponent],
+  imports: [IconFieldModule, InputIconModule, FluidModule, ReactiveFormsModule, FormsModule, InputErrorMessageComponent, DatePickerModule],
   templateUrl: './input-date-component.html',
   styleUrls: ['./input-date-component.css'],
 })
@@ -18,5 +19,7 @@ export class InputDateComponent {
   controlName = input<string | null>(null);
   placeholder = input.required<string>();
   form = input<FormGroup | null>(null);
+  showHours = input<boolean>(false);
   value = model<unknown>(null);
+  isRange = input<boolean>(false);
 }

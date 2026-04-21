@@ -7,7 +7,7 @@
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
-        <p-autocomplete [dropdown]="true" [name]="controlName()!" [placeholder]="placeholder()" [formControlName]="controlName()!" fluid [suggestions]="items()" optionLabel="label">
+        <p-autocomplete [dropdown]="true" [name]="controlName()!" [placeholder]="placeholder()" [formControlName]="controlName()!" fluid [suggestions]="items()" optionLabel="label" (completeMethod)="search($event)" (onSelect)="onSelect($event)">
             <ng-template let-item #item>
                 @if (customItemTemplate()) {
                     <ng-container *ngTemplateOutlet="customItemTemplate()!; context: { $implicit: item }" />

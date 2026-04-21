@@ -1,11 +1,27 @@
 <app-default-container-component [title]="'Liste des événements'">
 
-    <app-event-list-filters-component [(search)]="eventListService.search" [(startDate)]="eventListService.startDate"
-        [(endDate)]="eventListService.endDate" />
+    <div class="mb-4">
+        <app-event-list-filters-component [(search)]="eventListService.search"
+            [(startDate)]="eventListService.startDate" [(endDate)]="eventListService.endDate" (onClickCreateEvent)="handleCreateEvent()" />
+    </div>
 
-    <app-event-calendar-component [(events)]="eventStore.data" (dayClicked)="onDayClicked($event)"
-        (eventClicked)="onEventClicked($event)" />
+    <div class="flex gap-4">
+
+        <app-event-calendar-component [(events)]="eventStore.data" (dayClicked)="onDayClicked($event)" class="flex-1"
+            (eventClicked)="onEventClicked($event)" />
+
+        <p-divider layout="vertical" class="mx-0" />
+
+        <div class="flex min-w-96 flex-col">
+            <app-title-component [styleClass]="'h3'">Prochains événements</app-title-component>
+
+            <app-next-events-component />
+        </div>
+
+    </div>
 
 </app-default-container-component>
 
-<app-day-details-panel-component [(isVisible)]="isDisplayDayDetails" [(date)]="selectedDate" />
+<app-day-details-panel-component (onCreatedDate)="handleCreateEvent($event)" [(isVisible)]="isDisplayDayDetails" [(date)]="selectedDate" />
+
+<app-create-or-edit-event-component [(isDisplay)]="isDisplayCreateOrEditEvent" [eventToEdit]="selectedEvent()" />

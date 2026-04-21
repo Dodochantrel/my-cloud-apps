@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsBoolean,
   IsDate,
   IsNotEmpty,
@@ -9,7 +10,7 @@ import {
   IsUUID,
 } from 'class-validator';
 import { Event } from '../event.entity';
-import { EventCategorySummaryDto } from './get-all-events.dto';
+import { EventCategorySummaryDto, GroupSummaryDto } from './get-all-events.dto';
 
 export class CreateEventRequestDto {
   @ApiProperty({
@@ -54,6 +55,16 @@ export class CreateEventRequestDto {
   @IsOptional()
   @IsUUID()
   categoryId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Identifiants des groupes associés',
+    example: ['uuid1', 'uuid2'],
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsUUID('all', { each: true })
+  groupsId?: string[];
 }
 
 export class CreateEventResponseDto {
@@ -75,6 +86,9 @@ export class CreateEventResponseDto {
   @ApiPropertyOptional({ description: 'Catégorie de l\'événement', type: EventCategorySummaryDto })
   category: EventCategorySummaryDto | null;
 
+  @ApiProperty({ description: 'Groupes associés à l\'événement', type: [GroupSummaryDto] })
+  groups: GroupSummaryDto[];
+
   constructor(event: Event) {
     this.id = event.id;
     this.title = event.title;
@@ -84,5 +98,6 @@ export class CreateEventResponseDto {
     this.category = event.category
       ? new EventCategorySummaryDto(event.category)
       : null;
+    this.groups = (event.groups ?? []).map((g) => new GroupSummaryDto(g));
   }
 }

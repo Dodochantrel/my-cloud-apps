@@ -1,1 +1,18 @@
-<full-calendar [options]="calendarOptions" [events]="events()" />
+<div class="flex items-center w-full justify-between">
+    <p-buttongroup class="flex-1">
+        <p-button variant="outlined" size="small" label="Précédent" icon="pi pi-arrow-left" (click)="goPrev()" />
+        <p-button variant="outlined" size="small" label="Aujourd'hui" (click)="goToday()" />
+        <p-button variant="outlined" size="small" label="Suivant" icon="pi pi-arrow-right" (click)="goNext()" iconPos="right" />
+    </p-buttongroup>
+
+    <span class="flex-1 text-center">{{ currentTitle() }}</span>
+
+    <p-buttongroup class="flex-1 text-right">
+        @for (v of viewLabels; track v.value) {
+        <p-button size="small" (click)="changeView(v.value)" [label]="v.label" />
+        }
+    </p-buttongroup>
+
+</div>
+
+<full-calendar #calendar [options]="calendarOptions" [events]="events()" class="mt-4" />

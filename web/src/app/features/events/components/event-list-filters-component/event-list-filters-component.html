@@ -1,1 +1,9 @@
-<p>event-list-filters-component works!</p>
+<div class="flex gap-2 items-end">
+
+    <app-input-auto-complete-component [label]="'Rechercher un événement'" [icon]="'person_add'"
+        (searchChange)="onSearchChange($event)" class="flex-1" [placeholder]="'Anniversaire Dorian'"
+        [items]="events()" />
+
+    <p-button label="Créer un événement" icon="pi pi-plus-circle" (click)="onClickCreateEvent.emit()" />
+
+</div>

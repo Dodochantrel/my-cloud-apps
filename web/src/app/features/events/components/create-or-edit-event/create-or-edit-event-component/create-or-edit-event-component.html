@@ -1,0 +1,18 @@
+<app-dialog-form-component [(isDisplay)]="isDisplay" [header]="eventToEdit() ? 'Modifier le groupe' : 'Créer un groupe'"
+    [(form)]="form" (onCancel)="cancel()" (onValidate)="save()">
+
+    <app-input-text-component [label]="'Intitulé'" [controlName]="'title'" [icon]="'label'"
+        [placeholder]="'Anniversaire Dorian'" [form]="form" />
+
+    <app-input-multi-select-component [label]="'Groupe'" [icon]="'group'" [placeholder]="'Choisir un groupe'" [filter]="true"
+        [form]="form" [options]="groups()" [controlName]="'groups'" (searchChange)="onSearchGroupChange($event)" />
+
+    <app-input-select-component [label]="'Catégorie'" [controlName]="'category'" [placeholder]="'Choisir une catégorie'"
+        [icon]="'category'" [form]="form" [options]="categories()" />
+
+    <app-input-toggle-switch-component [label]="'Toute la journée'" [controlName]="'allDay'" [form]="form" />
+
+    <app-input-date-component [label]="isAllDay ? 'Date' : 'Date de début et de fin'" [controlName]="'dates'" [icon]="'event'"
+        [placeholder]="'01/01/2024 10:00'" [form]="form" [showHours]="!isAllDay" [isRange]="!isAllDay" />
+
+</app-dialog-form-component>

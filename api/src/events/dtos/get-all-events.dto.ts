@@ -2,6 +2,20 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { PageQuery } from 'src/pagination/page-query';
 import { Event } from '../event.entity';
+import { Group } from 'src/groups/group.entity';
+
+export class GroupSummaryDto {
+  @ApiProperty({ description: 'Identifiant du groupe', example: 'uuid' })
+  id: string;
+
+  @ApiProperty({ description: 'Nom du groupe', example: 'Équipe A' })
+  name: string;
+
+  constructor(group: Group) {
+    this.id = group.id;
+    this.name = group.name;
+  }
+}
 
 export class EventCategorySummaryDto {
   @ApiProperty({ description: 'Identifiant de la catégorie', example: 'uuid' })
@@ -33,21 +47,29 @@ export class GetAllEventsQueryDto extends PageQuery {
     description: 'Date de début pour filtrer les événements',
     example: '2026-04-01T00:00:00.000Z',
   })
+  @IsOptional()
   @IsString()
-  startDate!: string;
+  startDate?: string;
 
   @ApiPropertyOptional({
     description: 'Date de fin pour filtrer les événements',
     example: '2026-04-30T23:59:59.999Z',
   })
+  @IsOptional()
   @IsString()
-  endDate!: string;
+  endDate?: string;
 
-  get startDateAsDate(): Date {
+  get startDateAsDate(): Date | undefined {
+    if (!this.startDate) {
+      return undefined;
+    }
     return new Date(this.startDate);
   }
 
-  get endDateAsDate(): Date {
+  get endDateAsDate(): Date | undefined {
+    if (!this.endDate) {
+      return undefined;
+    }
     return new Date(this.endDate);
   }
 }
@@ -71,6 +93,9 @@ export class GetAllEventsResponseDto {
   @ApiPropertyOptional({ description: 'Catégorie de l\'événement', type: EventCategorySummaryDto })
   category: EventCategorySummaryDto | null;
 
+  @ApiProperty({ description: 'Groupes associés à l\'événement', type: [GroupSummaryDto] })
+  groups: GroupSummaryDto[];
+
   constructor(event: Event) {
     this.id = event.id;
     this.title = event.title;
@@ -80,6 +105,7 @@ export class GetAllEventsResponseDto {
     this.category = event.category
       ? new EventCategorySummaryDto(event.category)
       : null;
+    this.groups = (event.groups ?? []).map((g) => new GroupSummaryDto(g));
   }
 }
 

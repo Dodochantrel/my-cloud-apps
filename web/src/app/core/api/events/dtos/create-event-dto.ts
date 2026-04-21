@@ -8,6 +8,7 @@ export interface CreateEventRequestDto {
   start: string;
   end: string;
   categoryId?: string;
+  groupsId: string[];
 }
 
 export interface CreateEventResponseDto {

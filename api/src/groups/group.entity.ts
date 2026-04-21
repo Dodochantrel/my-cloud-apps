@@ -1,3 +1,4 @@
+import { Event } from 'src/events/event.entity';
 import { User } from 'src/users/user.entity';
 import {
   Column,
@@ -62,6 +63,10 @@ export class Group {
 
   @ManyToOne(() => User, { nullable: true })
   updatedBy!: Relation<User>;
+
+  @ManyToMany(() => Event, (event) => event.groups)
+  @JoinTable()
+  events!: Relation<Event[]>;
 
   constructor(partial: Partial<Group>) {
     Object.assign(this, partial);

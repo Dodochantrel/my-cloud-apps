@@ -19,14 +19,14 @@ export class EventsRoutes {
   private readonly baseUrl = `${environment.apiUrl}events`;
   private readonly httpClient = inject(HttpClient);
 
-  public getAll(search: string, page: number, limit: number, startDate: Date, endDate: Date): string {
+  public getAll(search: string, page: number, limit: number, startDate?: Date, endDate?: Date): string {
     return (
       this.baseUrl +
       `?search=${encodeURIComponent(search)}` +
       `&page=${page}` +
       `&limit=${limit}` +
-      `&startDate=${startDate.toISOString()}` +
-      `&endDate=${endDate.toISOString()}`
+      (startDate ? `&startDate=${startDate.toISOString()}` : '') +
+      (endDate ? `&endDate=${endDate.toISOString()}` : '')
     );
   }
 
