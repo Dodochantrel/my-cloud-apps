@@ -1,4 +1,4 @@
-import { Component, inject, linkedSignal, model } from '@angular/core';
+import { Component, effect, inject, input, linkedSignal, model } from '@angular/core';
 import { CreateOrEditEventService } from '../create-or-edit-event-service';
 import { DialogFormComponent } from '../../../../../shared/components/dialog-form-component/dialog-form-component';
 import { EventModel } from '../../../../../core/models/events/event-model';
@@ -10,6 +10,7 @@ import { EventCategoryService } from '../../../events-categories/event-category-
 import { GroupStore } from '../../../../groups/stores/group-store';
 import { InputMultiSelectComponent } from '../../../../../shared/components/inputs/input-multi-select-component/input-multi-select-component';
 import { InputSelectComponent } from '../../../../../shared/components/inputs/input-select-component/input-select-component';
+import { GroupModel } from '../../../../../core/models/groups/group-model';
 
 @Component({
   selector: 'app-create-or-edit-event-component',
@@ -28,11 +29,58 @@ export class CreateOrEditEventComponent {
   public createOrEditEventService = inject(CreateOrEditEventService);
   public groupStore = inject(GroupStore);
 
-  public eventToEdit = model<EventModel | null>();
+  public eventToEdit = input<EventModel | null>(null);
   public isDisplay = model.required<boolean>();
   public choosedDate = model<Date | null>();
 
   public form = createCreateOrEditEventForm();
+
+  private readonly syncFormWithEventToEdit = effect(() => {
+    if (!this.isDisplay()) {
+      return;
+    }
+
+    const event = this.eventToEdit();
+
+    if (!event) {
+      return;
+    }
+
+    const start = new Date(event.start);
+    const end = new Date(event.end);
+    const dates = event.allDay ? start : [start, end];
+    const groups = (event as EventModel & { groups?: GroupModel[] }).groups ?? [];
+
+    this.form.patchValue(
+      {
+        id: event.id,
+        title: event.title,
+        allDay: event.allDay,
+        category: event.category,
+        groups,
+        dates,
+      },
+      { emitEvent: false },
+    );
+  });
+
+  private readonly resetFormWhenDialogIsClosed = effect(() => {
+    if (this.isDisplay()) {
+      return;
+    }
+
+    this.form.reset(
+      {
+        id: '',
+        category: null,
+        groups: [],
+        title: '',
+        allDay: false,
+        dates: [new Date(), new Date()],
+      },
+      { emitEvent: false },
+    );
+  });
 
   protected eventsCategoriesService = inject(EventCategoryService);
 
@@ -41,7 +89,6 @@ export class CreateOrEditEventComponent {
   }
 
   cancel() {
-    this.eventToEdit.set(null);
     this.isDisplay.set(false);
     this.choosedDate.set(null);
   }
@@ -103,8 +150,11 @@ export class CreateOrEditEventComponent {
       return { start, end };
     }
 
-    const datesArray = dates as Date[];
-    return { start: datesArray[0], end: datesArray[1] };
+    const datesArray = Array.isArray(dates) ? dates : [dates];
+    const start = datesArray[0] ? new Date(datesArray[0]) : new Date();
+    const end = datesArray[1] ? new Date(datesArray[1]) : new Date(start);
+
+    return { start, end };
   }
 
   onSearchGroupChange(search: string) {

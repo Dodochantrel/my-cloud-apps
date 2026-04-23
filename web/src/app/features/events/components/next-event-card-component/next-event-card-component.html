@@ -1,12 +1,15 @@
-<div class="flex rounded-lg hover:bg-primary-50 p-4">
+<div class="flex rounded-lg p-2 cursor-pointer border border-transparent" (click)="onEventClick()"
+    [ngClass]="eventIsToday ? 'bg-amber-50 border-amber-200! hover:bg-amber-100 border' : 'hover:bg-primary-50 hover:border hover:border-primary-200'">
 
-    <div class="h-4 w-4 bg-amber-500 rounded-full"></div>
+    <div class="h-4 w-4 rounded-full" [style.backgroundColor]="event().color"></div>
 
     <div class="ml-2">
 
         <p class="text-sm font-bold">{{ event().title }}</p>
-        <p class="text-sm text-gray-500">{{ event().start | date: 'shortDate' }} - {{ event().end | date: 'shortDate' }}</p>
+        <p class="text-sm text-gray-500">{{ fullDate }}</p>
 
     </div>
 
 </div>
+
+<app-create-or-edit-event-component [(isDisplay)]="isCreateOrEditEventDisplay" [eventToEdit]="event()" />

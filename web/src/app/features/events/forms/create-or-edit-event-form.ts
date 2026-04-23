@@ -39,17 +39,19 @@ export function createCreateOrEditEventForm(): CreateOrEditEventForm {
     }),
   });
 
-  // Quand isAllDay passe à false : on extrait la première date du tableau
-  // Quand isAllDay passe à true : on place la date courante en première valeur du tableau
+  // Quand allDay = true => mode single (Date)
+  // Quand allDay = false => mode range (Date[])
   form.controls.allDay.valueChanges.subscribe((isAllDay: boolean) => {
     const dates = form.controls.dates.value;
 
-    if (!isAllDay) {
+    if (isAllDay) {
       const firstDate = Array.isArray(dates) ? dates[0] : dates;
-      form.controls.dates.setValue(firstDate ?? new Date(), { emitEvent: false });
+      form.controls.dates.setValue(firstDate ? new Date(firstDate) : new Date(), { emitEvent: false });
     } else {
       const date = Array.isArray(dates) ? dates[0] : dates;
-      form.controls.dates.setValue([date ?? new Date(), new Date()], { emitEvent: false });
+      const start = date ? new Date(date) : new Date();
+      const end = new Date(start);
+      form.controls.dates.setValue([start, end], { emitEvent: false });
     }
   });
 

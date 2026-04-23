@@ -16,4 +16,11 @@ export class EventModel {
         this.title = title;
         this.category = category;
     }
+
+    get color(): string {
+        if (this.category) {
+            return `#${this.category.color}`;
+        }
+        return '#000000'; // Couleur par défaut si aucune catégorie n'est associée
+    }
 }
