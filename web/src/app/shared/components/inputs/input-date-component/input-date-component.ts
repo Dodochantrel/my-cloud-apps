@@ -19,7 +19,6 @@ export class InputDateComponent {
   controlName = input<string | null>(null);
   placeholder = input.required<string>();
   form = input<FormGroup | null>(null);
-  showHours = input<boolean>(false);
   value = model<unknown>(null);
   isRange = input<boolean>(false);
 }

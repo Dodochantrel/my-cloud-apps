@@ -18,7 +18,6 @@ import { VideoReview } from './videos/video-review.entity';
 import { Video } from './videos/video.entity';
 import { GroupsController } from './groups/groups.controller';
 import { GroupsService } from './groups/groups.service';
-
 import { Group } from './groups/group.entity';
 import { UsersController } from './users/users.controller';
 import { EventsController } from './events/events.controller';
@@ -27,6 +26,12 @@ import { EventsCategoriesService } from './events-categories/events-categories.s
 import { EventsCategoriesController } from './events-categories/events-categories.controller';
 import { Event } from './events/event.entity';
 import { EventCategory } from './events-categories/event-category.entity';
+import { GalleriesController } from './galleries/galleries.controller';
+import { GalleriesService } from './galleries/galleries.service';
+import { GalleriesCategoriesController } from './galleries-categories/galleries-categories.controller';
+import { GalleriesCategoriesService } from './galleries-categories/galleries-categories.service';
+import { Gallery } from './galleries/gallery.entity';
+import { GalleryCategory } from './galleries-categories/gallery-category.entity';
 
 @Module({
   imports: [
@@ -53,6 +58,8 @@ import { EventCategory } from './events-categories/event-category.entity';
       Group,
       Event,
       EventCategory,
+      GalleryCategory,
+      Gallery
     ]),
   ],
   controllers: [
@@ -62,6 +69,8 @@ import { EventCategory } from './events-categories/event-category.entity';
     UsersController,
     EventsController,
     EventsCategoriesController,
+    GalleriesController,
+    GalleriesCategoriesController,
   ],
   providers: [
     TokensService,
@@ -74,6 +83,8 @@ import { EventCategory } from './events-categories/event-category.entity';
     GroupsService,
     EventsService,
     EventsCategoriesService,
+    GalleriesService,
+    GalleriesCategoriesService,
   ],
 })
 export class AppModule {}

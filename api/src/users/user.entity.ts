@@ -11,6 +11,9 @@ import {
   OneToMany,
 } from 'typeorm';
 import type { Relation } from 'typeorm';
+import { FileData } from 'src/files/file-data.entity';
+import { Event } from 'src/events/event.entity';
+import { GalleryCategory } from 'src/galleries-categories/gallery-category.entity';
 
 @Entity()
 export class User {
@@ -67,6 +70,15 @@ export class User {
 
   @OneToMany(() => Group, (group) => group.admin)
   administeredGroups!: Relation<Group[]>;
+
+  @OneToMany(() => FileData, (fileData) => fileData.user)
+  filesData!: Relation<FileData[]>;
+
+  @OneToMany(() => Event, (event) => event.user)
+  events!: Relation<Event[]>;
+
+  @OneToMany(() => GalleryCategory, (category) => category.user)
+  galleryCategories!: Relation<GalleryCategory[]>;
 
   constructor(partial: Partial<User> = {}) {
     Object.assign(this, partial);

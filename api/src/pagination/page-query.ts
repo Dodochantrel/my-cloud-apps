@@ -30,10 +30,12 @@ export class PageQuery {
   public limit!: number;
 
   public static of(page: number, limit: number): PageQuery {
-    const dto = new PageQuery();
-    dto.page = page;
-    dto.limit = limit;
-    return dto;
+    return new PageQuery(page, limit);
+  }
+
+  constructor(page: number, limit: number) {
+    this.page = Number(page) ?? PageQuery.DEFAULT_PAGE;
+    this.limit = Number(limit) ?? PageQuery.DEFAULT_LIMIT;
   }
 
   get offset(): number {

@@ -8,8 +8,13 @@
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
+        @if (isRange()) {
         <p-datepicker type="text" pInputText [name]="controlName()!" [placeholder]="placeholder()" appendTo="body"
-            [formControlName]="controlName()!" fluid [showIcon]="true" [showTime]="showHours()" [selectionMode]="isRange() ? 'range' : 'single'" />
+            [formControlName]="controlName()!" fluid [showIcon]="true" selectionMode="range" />
+        } @else {
+        <p-datepicker type="text" pInputText [name]="controlName()!" [placeholder]="placeholder()" appendTo="body"
+            [formControlName]="controlName()!" fluid [showIcon]="true" selectionMode="single" />
+        }
     </p-iconfield>
     <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
@@ -22,8 +27,13 @@
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
-        <p-datepicker type="text" pInputText [(ngModel)]="value" [placeholder]="placeholder()" appendTo="body" fluid [showIcon]="true"
-            [showTime]="showHours()" [selectionMode]="isRange() ? 'range' : 'single'" />
+        @if (isRange()) {
+        <p-datepicker type="text" pInputText [(ngModel)]="value" [placeholder]="placeholder()" appendTo="body" fluid
+            [showIcon]="true" selectionMode="range" />
+        } @else {
+        <p-datepicker type="text" pInputText [(ngModel)]="value" [placeholder]="placeholder()" appendTo="body" fluid
+            [showIcon]="true" selectionMode="single" />
+        }
     </p-iconfield>
 </div>
 }

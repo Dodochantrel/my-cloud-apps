@@ -1,7 +1,7 @@
-import { Component, model, output, ViewChild, signal } from '@angular/core';
+import { Component, computed, model, output, ViewChild, signal } from '@angular/core';
 import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
-import { CalendarOptions, EventClickArg } from '@fullcalendar/core/index.js';
+import { CalendarOptions, EventClickArg, EventInput } from '@fullcalendar/core/index.js';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
@@ -22,10 +22,23 @@ export class EventCalendarComponent {
 
   public events = model.required<EventModel[]>();
   public dayClicked = output<{ date: Date; dateStr: string }>();
-  public eventClicked = output<EventClickArg>();
+  public eventClicked = output<EventModel>();
 
   protected currentView = signal<CalendarView>('dayGridMonth');
   protected currentTitle = signal<string>('');
+  protected calendarEvents = computed<EventInput[]>(() =>
+    this.events().map((event) => ({
+      id: event.id,
+      title: event.title,
+      start: event.start,
+      end: event.end,
+      allDay: event.allDay,
+      color: event.color,
+      extendedProps: {
+        eventModel: event,
+      },
+    })),
+  );
 
   protected calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
@@ -71,6 +84,16 @@ export class EventCalendarComponent {
   }
 
   private onEventClick(arg: EventClickArg): void {
-    this.eventClicked.emit(arg);
+    const eventFromProps = arg.event.extendedProps['eventModel'] as EventModel | undefined;
+
+    if (eventFromProps) {
+      this.eventClicked.emit(eventFromProps);
+      return;
+    }
+
+    const fallbackEvent = this.events().find((event) => event.id === arg.event.id);
+    if (fallbackEvent) {
+      this.eventClicked.emit(fallbackEvent);
+    }
   }
 }

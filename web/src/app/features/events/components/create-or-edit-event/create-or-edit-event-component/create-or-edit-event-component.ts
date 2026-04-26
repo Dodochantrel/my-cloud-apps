@@ -11,6 +11,7 @@ import { GroupStore } from '../../../../groups/stores/group-store';
 import { InputMultiSelectComponent } from '../../../../../shared/components/inputs/input-multi-select-component/input-multi-select-component';
 import { InputSelectComponent } from '../../../../../shared/components/inputs/input-select-component/input-select-component';
 import { GroupModel } from '../../../../../core/models/groups/group-model';
+import { InputHoursComponent } from '../../../../../shared/components/inputs/input-hours-component/input-hours-component';
 
 @Component({
   selector: 'app-create-or-edit-event-component',
@@ -20,7 +21,8 @@ import { GroupModel } from '../../../../../core/models/groups/group-model';
     InputToggleSwitchComponent,
     InputDateComponent,
     InputMultiSelectComponent,
-    InputSelectComponent
+    InputSelectComponent,
+    InputHoursComponent,
   ],
   templateUrl: './create-or-edit-event-component.html',
   styleUrl: './create-or-edit-event-component.css',
@@ -49,7 +51,7 @@ export class CreateOrEditEventComponent {
     const start = new Date(event.start);
     const end = new Date(event.end);
     const dates = event.allDay ? start : [start, end];
-    const groups = (event as EventModel & { groups?: GroupModel[] }).groups ?? [];
+    const groups = this.groupStore.findMany(event.groups.map((group) => group.id)) || [];
 
     this.form.patchValue(
       {
@@ -110,7 +112,7 @@ export class CreateOrEditEventComponent {
         dates.start,
         dates.end,
         this.form.get('category')?.value!.id!,
-        this.form.get('groups')?.value.map(group => group.id)!,
+        this.form.get('groups')?.value ? this.form.get('groups')?.value!.map(group => group.id)! : [],
       )
       .subscribe({
         next: () => {
@@ -129,7 +131,7 @@ export class CreateOrEditEventComponent {
         dates.start,
         dates.end,
         this.form.get('category')?.value!.id!,
-        this.form.get('groups')?.value.map(group => group.id)!,
+        this.form.get('groups')?.value ? this.form.get('groups')?.value!.map(group => group.id)! : [],
       )
       .subscribe({
         next: () => {
@@ -153,6 +155,12 @@ export class CreateOrEditEventComponent {
     const datesArray = Array.isArray(dates) ? dates : [dates];
     const start = datesArray[0] ? new Date(datesArray[0]) : new Date();
     const end = datesArray[1] ? new Date(datesArray[1]) : new Date(start);
+    // Met les heures maintenant a partir des champs du formulaire startHours et endHours
+    const startHours = this.form.get('startHours')?.value!;
+    const endHours = this.form.get('endHours')?.value!;
+
+    start.setHours(startHours.getHours(), startHours.getMinutes(), 0, 0);
+    end.setHours(endHours.getHours(), endHours.getMinutes(), 0, 0);
 
     return { start, end };
   }

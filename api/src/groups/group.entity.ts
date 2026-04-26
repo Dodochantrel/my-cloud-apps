@@ -1,4 +1,5 @@
 import { Event } from 'src/events/event.entity';
+import { GalleryCategory } from 'src/galleries-categories/gallery-category.entity';
 import { User } from 'src/users/user.entity';
 import {
   Column,
@@ -7,6 +8,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -67,6 +69,9 @@ export class Group {
   @ManyToMany(() => Event, (event) => event.groups)
   @JoinTable()
   events!: Relation<Event[]>;
+
+  @OneToMany(() => GalleryCategory, (category) => category.group)
+  galleryCategories!: Relation<GalleryCategory[]>;
 
   constructor(partial: Partial<Group>) {
     Object.assign(this, partial);

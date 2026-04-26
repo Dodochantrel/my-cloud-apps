@@ -13,6 +13,20 @@
     <app-input-toggle-switch-component [label]="'Toute la journée'" [controlName]="'allDay'" [form]="form" />
 
     <app-input-date-component [label]="isAllDay ? 'Date' : 'Date de début et de fin'" [controlName]="'dates'" [icon]="'event'"
-        [placeholder]="'01/01/2024 10:00'" [form]="form" [showHours]="!isAllDay" [isRange]="!isAllDay" />
+        [placeholder]="'01/01/2024 10:00'" [form]="form" [isRange]="!isAllDay" />
+
+    @if (!isAllDay) {
+
+    <div class="flex gap-2">
+
+        <app-input-hours-component [label]="'Heure de début'" [controlName]="'startHours'"
+            [icon]="'schedule'" [placeholder]="'10:00'" [form]="form" />
+
+        <app-input-hours-component [label]="'Heure de fin'" [controlName]="'endHours'"
+            [icon]="'schedule'" [placeholder]="'12:00'" [form]="form" />
+
+    </div>
+
+    }
 
 </app-dialog-form-component>

@@ -1,3 +1,4 @@
+import { GroupModel } from '../groups/group-model';
 import { EventCategoryModel } from './event-category-model';
 
 export class EventModel {
@@ -7,6 +8,7 @@ export class EventModel {
     end: Date;
     title: string;
     category: EventCategoryModel | null;
+    groups: GroupModel[] = [];
 
     constructor(id: string, allDay: boolean, start: Date, end: Date, title: string, category: EventCategoryModel | null = null) {
         this.id = id;

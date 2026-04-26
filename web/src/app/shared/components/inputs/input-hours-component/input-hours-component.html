@@ -1,0 +1,29 @@
+@if (form()) {
+<div [formGroup]="form()!">
+    @if (label()) {
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*'
+        : '' }}</label>
+    }
+    <p-iconfield>
+        <p-inputicon>
+            <span class="material-symbols text-[18px]!">{{ icon() }}</span>
+        </p-inputicon>
+        <p-datepicker type="text" pInputText [name]="controlName()!" [timeOnly]="true" [placeholder]="placeholder()" appendTo="body"
+            [formControlName]="controlName()!" fluid [showIcon]="true" [showTime]="true" [selectionMode]="'single'" />
+    </p-iconfield>
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
+</div>
+} @else {
+<div>
+    @if (label()) {
+    <label class="label">{{ label() }}</label>
+    }
+    <p-iconfield>
+        <p-inputicon>
+            <span class="material-symbols text-[18px]!">{{ icon() }}</span>
+        </p-inputicon>
+        <p-datepicker type="text" pInputText [(ngModel)]="value" [timeOnly]="true" [placeholder]="placeholder()" appendTo="body" fluid [showIcon]="true"
+            [showTime]="true" [selectionMode]="'single'" />
+    </p-iconfield>
+</div>
+}

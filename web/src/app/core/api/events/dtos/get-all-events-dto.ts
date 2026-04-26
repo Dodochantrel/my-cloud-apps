@@ -1,11 +1,6 @@
 import { EventModel } from '../../../models/events/event-model';
-import { EventCategoryModel } from '../../../models/events/event-category-model';
-
-export interface EventCategorySummaryDto {
-  id: string;
-  name: string;
-  color: string;
-}
+import { EventCategorySummaryDto, mapCategorySummary } from './event-category-summary-dto';
+import { GroupSummaryDto, mapFromGroupSummaryDtos } from './group-summary-dto';
 
 export interface GetAllEventsResponseDto {
   id: string;
@@ -14,17 +9,11 @@ export interface GetAllEventsResponseDto {
   start: string;
   end: string;
   category: EventCategorySummaryDto | null;
+  groups: GroupSummaryDto[];
 }
 
-const mapCategorySummary = (
-  dto: EventCategorySummaryDto | null,
-): EventCategoryModel | null =>
-  dto ? new EventCategoryModel(dto.id, dto.name, dto.color) : null;
-
-export const mapFromGetAllEventsDtoToModel = (
-  dto: GetAllEventsResponseDto,
-): EventModel => {
-  return new EventModel(
+export const mapFromGetAllEventsDtoToModel = (dto: GetAllEventsResponseDto): EventModel => {
+  const event = new EventModel(
     dto.id,
     dto.allDay,
     new Date(dto.start),
@@ -32,10 +21,10 @@ export const mapFromGetAllEventsDtoToModel = (
     dto.title,
     mapCategorySummary(dto.category),
   );
+  event.groups = mapFromGroupSummaryDtos(dto.groups);
+  return event;
 };
 
-export const mapFromGetAllEventsDtosToModels = (
-  dtos: GetAllEventsResponseDto[],
-): EventModel[] => {
+export const mapFromGetAllEventsDtosToModels = (dtos: GetAllEventsResponseDto[]): EventModel[] => {
   return dtos.map(mapFromGetAllEventsDtoToModel);
 };

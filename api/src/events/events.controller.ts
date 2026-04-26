@@ -43,8 +43,10 @@ export class EventsController {
   })
   async getAllEvents(
     @Query() query: GetAllEventsQueryDto,
+    @UserData() user: AccessTokenPayload,
   ): Promise<PaginatedResponse<GetAllEventsResponseDto>> {
     const { items, total } = await this.eventsService.findAll(
+      user.id,
       query,
       query.startDateAsDate,
       query.endDateAsDate,
@@ -65,8 +67,9 @@ export class EventsController {
   })
   async getEvent(
     @Param('id') id: string,
+    @UserData() user: AccessTokenPayload,
   ): Promise<GetAllEventsResponseDto> {
-    const event = await this.eventsService.findOne(id);
+    const event = await this.eventsService.findOne(id, user.id);
     return new GetAllEventsResponseDto(event);
   }
 
@@ -111,8 +114,9 @@ export class EventsController {
   })
   async deleteEvent(
     @Param('id') id: string,
+    @UserData() user: AccessTokenPayload,
   ): Promise<DeleteEventResponseDto> {
-    await this.eventsService.delete(id);
+    await this.eventsService.delete(id, user.id);
     return new DeleteEventResponseDto();
   }
 }

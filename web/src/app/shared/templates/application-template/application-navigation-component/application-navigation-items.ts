@@ -30,6 +30,13 @@ export const navigationItems: NavigationItem[] = [
     path: 'groups/list',
     isOpen: false,
     subNavigationItems: undefined,
+  },
+  {
+    name: 'Galeries',
+    icon: 'photo_library',
+    path: 'galleries/list',
+    isOpen: false,
+    subNavigationItems: undefined,
   }
 ];
 

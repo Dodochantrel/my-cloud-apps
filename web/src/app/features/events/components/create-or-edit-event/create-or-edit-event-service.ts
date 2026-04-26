@@ -80,7 +80,7 @@ export class CreateOrEditEventService {
       start: start.toISOString(),
       end: end.toISOString(),
       categoryId,
-      groupsId: [],
+      groupsId: groupsId,
     };
     return this.eventsRoutes.update(id, body).pipe(
       tap((response) => {

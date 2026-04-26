@@ -50,7 +50,9 @@ export class EventListPage {
     this.selectedDate.set(event.date);
   }
 
-  onEventClicked(event: any): void {
-    console.log('Event clicked:', event);
+  onEventClicked(event: EventModel): void {
+    this.selectedEvent.set(event);
+    this.isDisplayCreateOrEditEvent.set(true);
+    this.selectedDateForCreate.set(null);
   }
 }

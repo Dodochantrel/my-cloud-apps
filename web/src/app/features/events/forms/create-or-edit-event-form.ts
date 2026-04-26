@@ -5,10 +5,12 @@ import { GroupModel } from '../../../core/models/groups/group-model';
 export type CreateOrEditEventFormModel = {
   id: FormControl<string | null>;
   category: FormControl<EventCategoryModel | null>;
-  groups: FormControl<GroupModel[]>;
+  groups: FormControl<GroupModel[] | null>;
   title: FormControl<string>;
   allDay: FormControl<boolean>;
   dates: FormControl<Date[] | Date>;
+  startHours: FormControl<Date>;
+  endHours: FormControl<Date>;
 };
 
 export type CreateOrEditEventForm = FormGroup<CreateOrEditEventFormModel>;
@@ -22,9 +24,8 @@ export function createCreateOrEditEventForm(): CreateOrEditEventForm {
       validators: [Validators.required],
       nonNullable: false,
     }),
-    groups: new FormControl<GroupModel[]>([], {
-      validators: [Validators.required],
-      nonNullable: true,
+    groups: new FormControl<GroupModel[] | null>(null, {
+      nonNullable: false,
     }),
     title: new FormControl('', {
       validators: [Validators.required],
@@ -37,11 +38,35 @@ export function createCreateOrEditEventForm(): CreateOrEditEventForm {
       validators: [Validators.required],
       nonNullable: true,
     }),
+    startHours: new FormControl(new Date(), {
+      validators: [],
+      nonNullable: true,
+    }),
+    endHours: new FormControl(new Date(), {
+      validators: [],
+      nonNullable: true,
+    }),
   });
+
+  const updateHoursRequiredValidators = (isAllDay: boolean) => {
+    const validators = isAllDay
+      ? []
+      : [Validators.required];
+
+    form.controls.startHours.setValidators(validators);
+    form.controls.endHours.setValidators(validators);
+    form.controls.startHours.updateValueAndValidity({ emitEvent: false });
+    form.controls.endHours.updateValueAndValidity({ emitEvent: false });
+  };
+
+  // État initial des validateurs d'heures
+  updateHoursRequiredValidators(form.controls.allDay.value);
 
   // Quand allDay = true => mode single (Date)
   // Quand allDay = false => mode range (Date[])
   form.controls.allDay.valueChanges.subscribe((isAllDay: boolean) => {
+    updateHoursRequiredValidators(isAllDay);
+
     const dates = form.controls.dates.value;
 
     if (isAllDay) {

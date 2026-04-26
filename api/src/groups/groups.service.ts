@@ -43,6 +43,18 @@ export class GroupsService {
     return { items, total };
   }
 
+  async getMyGroups(userId: string): Promise<Group[]> {
+    return this.groupRepository.find({
+      where: [
+        { admin: { id: userId } },
+        { moderators: { id: userId } },
+        { members: { id: userId } },
+      ],
+      relations: ['members', 'moderators', 'admin'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async create(
     name: string,
     adminId: string,

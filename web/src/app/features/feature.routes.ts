@@ -60,5 +60,20 @@ export const featureRoutes: Routes = [
                 },
             },
         ]
+    },
+    {
+        path: 'galleries',
+        component: ApplicationTemplate,
+        children: [
+            {
+                path: 'list',
+                title: 'Galeries - Liste',
+                loadComponent: () => import('./galleries/gallery-list/gallery-list-page/gallery-list-page').then(m => m.GalleryListPage),
+                data: {
+                    title: 'Galeries - Liste',
+                    breadcrumb: [{ label: 'Galeries' }, { label: 'Liste' }],
+                },
+            },
+        ]
     }
 ];

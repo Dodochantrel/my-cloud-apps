@@ -1,10 +1,15 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, ILike, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Event } from './event.entity';
 import { EventCategory } from 'src/events-categories/event-category.entity';
 import { Group } from 'src/groups/group.entity';
 import { PageQuery } from 'src/pagination/page-query';
+import { GroupsService } from 'src/groups/groups.service';
 
 @Injectable()
 export class EventsService {
@@ -13,38 +18,54 @@ export class EventsService {
     private readonly eventRepository: Repository<Event>,
     @InjectRepository(EventCategory)
     private readonly categoryRepository: Repository<EventCategory>,
-    @InjectRepository(Group)
-    private readonly groupRepository: Repository<Group>,
+    private readonly groupsService: GroupsService,
   ) {}
 
+  // ─── Public API ────────────────────────────────────────────────────────────
+
   async findAll(
+    userId: string,
     pageQuery: PageQuery,
     startDate?: Date,
     endDate?: Date,
     search?: string,
   ): Promise<{ items: Event[]; total: number }> {
-    const where: any = search ? { title: ILike(`%${search}%`) } : {};
-    where.start = Between(startDate, endDate);
+    const qb = this.eventRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.category', 'category')
+      .leftJoinAndSelect('event.groups', 'group')
+      .leftJoinAndSelect('group.members', 'member')
+      .leftJoinAndSelect('group.moderators', 'moderator')
+      .leftJoinAndSelect('group.admin', 'admin')
+      .leftJoinAndSelect('event.user', 'user')
+      .where(
+        '(user.id = :userId OR member.id = :userId OR moderator.id = :userId OR admin.id = :userId)',
+        { userId },
+      );
 
-    const [items, total] = await this.eventRepository.findAndCount({
-      where,
-      relations: ['category', 'groups'],
-      skip: pageQuery.offset,
-      take: pageQuery.limit,
-      order: { start: 'DESC' },
-    });
+    if (search) {
+      qb.andWhere('event.title ILIKE :search', { search: `%${search}%` });
+    }
+
+    if (startDate && endDate) {
+      qb.andWhere('event.start BETWEEN :startDate AND :endDate', {
+        startDate,
+        endDate,
+      });
+    }
+
+    const [items, total] = await qb
+      .orderBy('event.start', 'DESC')
+      .skip(pageQuery.offset)
+      .take(pageQuery.limit)
+      .getManyAndCount();
 
     return { items, total };
   }
 
-  async findOne(id: string): Promise<Event> {
-    const event = await this.eventRepository.findOne({
-      where: { id },
-      relations: ['category', 'groups'],
-    });
-    if (!event) {
-      throw new NotFoundException('Événement non trouvé.');
-    }
+  async findOne(id: string, userId: string): Promise<Event> {
+    const event = await this.findOneWithRelationsOrFail(id);
+    this.assertCanAccess(event, userId);
     return event;
   }
 
@@ -56,35 +77,13 @@ export class EventsService {
   ): Promise<Event> {
     const event = this.eventRepository.create(data);
 
-    if (categoryId) {
-      const category = await this.categoryRepository.findOne({
-        where: { id: categoryId },
-      });
-      if (!category) {
-        throw new NotFoundException('Catégorie non trouvée.');
-      }
-      event.category = category;
-    }
-
-    if (groupsId && groupsId.length > 0) {
-      const groups = await this.groupRepository.find({
-        where: { id: In(groupsId) },
-        relations: ['admin', 'members', 'moderators'],
-      });
-
-      for (const group of groups) {
-        const isMember = group.allMembers.some((m) => m.id === userId);
-        if (!isMember) {
-          throw new ForbiddenException(
-            `Vous n'appartenez pas au groupe "${group.name}".`,
-          );
-        }
-      }
-
-      event.groups = groups;
-    } else {
-      event.groups = [];
-    }
+    event.user = { id: userId } as any;
+    event.category = categoryId
+      ? await this.resolveCategoryOrFail(categoryId)
+      : null;
+    event.groups = groupsId?.length
+      ? await this.resolveGroupsOrFail(groupsId, userId)
+      : [];
 
     return this.eventRepository.save(event);
   }
@@ -96,59 +95,107 @@ export class EventsService {
     categoryId?: string | null,
     groupsId?: string[],
   ): Promise<Event> {
-    const event = await this.eventRepository.findOne({
-      where: { id },
-      relations: ['category', 'groups'],
-    });
-    if (!event) {
-      throw new NotFoundException('Événement non trouvé.');
-    }
+    const event = await this.findOneWithRelationsOrFail(id);
+    this.assertIsOwner(event, userId);
 
     Object.assign(event, data);
 
     if (categoryId === null) {
       event.category = null;
     } else if (categoryId !== undefined) {
-      const category = await this.categoryRepository.findOne({
-        where: { id: categoryId },
-      });
-      if (!category) {
-        throw new NotFoundException('Catégorie non trouvée.');
-      }
-      event.category = category;
+      event.category = await this.resolveCategoryOrFail(categoryId);
     }
 
     if (groupsId !== undefined) {
-      if (groupsId.length > 0) {
-        const groups = await this.groupRepository.find({
-          where: { id: In(groupsId) },
-          relations: ['admin', 'members', 'moderators'],
-        });
-
-        for (const group of groups) {
-          const isMember = group.allMembers.some((m) => m.id === userId);
-          if (!isMember) {
-            throw new ForbiddenException(
-              `Vous n'appartenez pas au groupe "${group.name}".`,
-            );
-          }
-        }
-
-        event.groups = groups;
-      } else {
-        event.groups = [];
-      }
+      event.groups = groupsId.length
+        ? await this.resolveGroupsOrFail(groupsId, userId)
+        : [];
     }
 
     return this.eventRepository.save(event);
   }
 
-  async delete(id: string): Promise<void> {
-    const event = await this.eventRepository.findOne({ where: { id } });
-    if (!event) {
-      throw new NotFoundException('Événement non trouvé.');
+  async delete(id: string, userId: string): Promise<void> {
+    const event = await this.findOneOrFail(id);
+    this.assertIsOwner(event, userId);
+    await this.eventRepository.remove(event);
+  }
+
+  // ─── Resolvers ─────────────────────────────────────────────────────────────
+
+  private async resolveCategoryOrFail(categoryId: string): Promise<EventCategory> {
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId },
+    });
+    if (!category) throw new NotFoundException('Catégorie non trouvée.');
+    return category;
+  }
+
+  private async resolveGroupsOrFail(
+    groupsId: string[],
+    userId: string,
+  ): Promise<Group[]> {
+    const groups = await this.groupsService.getMyGroups(userId);
+
+    for (const group of groups) {
+      if (!group.allMembers.some((m) => m.id === userId)) {
+        throw new ForbiddenException(
+          `Vous n'appartenez pas au groupe "${group.name}".`,
+        );
+      }
     }
 
-    await this.eventRepository.remove(event);
+    return groups;
+  }
+
+  // ─── Finders ───────────────────────────────────────────────────────────────
+
+  private async findOneOrFail(id: string): Promise<Event> {
+    const event = await this.eventRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+    if (!event) throw new NotFoundException('Événement non trouvé.');
+    return event;
+  }
+
+  private async findOneWithRelationsOrFail(id: string): Promise<Event> {
+    const event = await this.eventRepository.findOne({
+      where: { id },
+      relations: [
+        'category',
+        'groups',
+        'groups.admin',
+        'groups.members',
+        'groups.moderators',
+        'user',
+      ],
+    });
+    if (!event) throw new NotFoundException('Événement non trouvé.');
+    return event;
+  }
+
+  // ─── Guards ────────────────────────────────────────────────────────────────
+
+  private assertIsOwner(event: Event, userId: string): void {
+    if (event.user.id !== userId) {
+      throw new ForbiddenException(
+        "Vous n'êtes pas autorisé à effectuer cette action sur cet événement.",
+      );
+    }
+  }
+
+  private assertCanAccess(event: Event, userId: string): void {
+    if (event.user.id === userId) return;
+
+    const belongsToLinkedGroup = event.groups?.some((group) =>
+      group.allMembers.some((m) => m.id === userId),
+    );
+
+    if (!belongsToLinkedGroup) {
+      throw new ForbiddenException(
+        "Vous n'êtes pas autorisé à accéder à cet événement.",
+      );
+    }
   }
 }
