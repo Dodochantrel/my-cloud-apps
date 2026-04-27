@@ -30,6 +30,8 @@ export class Gallery {
   })
   updatedAt!: Date;
 
-  @ManyToOne(() => GalleryCategory, (category) => category.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => GalleryCategory, (category) => category.id, {
+    onDelete: 'CASCADE',
+  })
   category!: Relation<GalleryCategory>;
 }

@@ -1,7 +1,6 @@
-import { User } from "src/users/user.entity";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import type { Relation } from "typeorm";
-
+import { User } from 'src/users/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import type { Relation } from 'typeorm';
 
 @Entity()
 export class FileData {

@@ -32,6 +32,7 @@ import { GalleriesCategoriesController } from './galleries-categories/galleries-
 import { GalleriesCategoriesService } from './galleries-categories/galleries-categories.service';
 import { Gallery } from './galleries/gallery.entity';
 import { GalleryCategory } from './galleries-categories/gallery-category.entity';
+import { StorageService } from './files/storage.service';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { GalleryCategory } from './galleries-categories/gallery-category.entity'
     EventsCategoriesService,
     GalleriesService,
     GalleriesCategoriesService,
+    StorageService,
   ],
 })
 export class AppModule {}
