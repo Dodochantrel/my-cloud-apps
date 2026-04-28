@@ -4,9 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, IsNull, Repository, TreeRepository } from 'typeorm';
+import { Repository, TreeRepository } from 'typeorm';
 import { GalleryCategory } from './gallery-category.entity';
 import { PageQuery } from 'src/pagination/page-query';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class GalleriesCategoriesService {
@@ -24,10 +25,8 @@ export class GalleriesCategoriesService {
     pageQuery: PageQuery,
     search?: string,
   ): Promise<{ items: GalleryCategory[]; total: number }> {
-    // On cherche les racines accessibles par l'utilisateur (owner ou groupe)
     const qb = this.galleryCategoryBaseRepository
       .createQueryBuilder('category')
-      .leftJoinAndSelect('category.children', 'children')
       .leftJoinAndSelect('category.group', 'group')
       .leftJoinAndSelect('group.members', 'member')
       .leftJoinAndSelect('group.moderators', 'moderator')
@@ -68,7 +67,7 @@ export class GalleriesCategoriesService {
   ): Promise<GalleryCategory> {
     const category = this.galleryCategoryRepository.create({ name });
 
-    category.user = { id: userId } as any;
+    category.user = new User({ id: userId });
     category.parent = parentId ? await this.findOneOrFail(parentId) : null;
 
     return this.galleryCategoryRepository.save(category);
@@ -109,10 +108,20 @@ export class GalleriesCategoriesService {
     return category;
   }
 
-  private async findOneWithRelationsOrFail(id: string): Promise<GalleryCategory> {
+  private async findOneWithRelationsOrFail(
+    id: string,
+  ): Promise<GalleryCategory> {
     const category = await this.galleryCategoryRepository.findOne({
       where: { id },
-      relations: ['parent', 'children', 'user', 'group', 'group.admin', 'group.members', 'group.moderators'],
+      relations: [
+        'parent',
+        'children',
+        'user',
+        'group',
+        'group.admin',
+        'group.members',
+        'group.moderators',
+      ],
     });
     if (!category) throw new NotFoundException('Catégorie non trouvée.');
     return category;

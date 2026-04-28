@@ -1,6 +1,12 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as Minio from 'minio';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectsCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import sharp from 'sharp';
 
 export type StorageFile = {
@@ -17,28 +23,26 @@ const WIDTH_PERCENTAGES = [100, 60, 20] as const;
 
 @Injectable()
 export class StorageService {
-  private readonly client: Minio.Client;
+  private readonly client: S3Client;
   private readonly bucket: string;
   private readonly logger = new Logger(StorageService.name);
 
   constructor(private readonly configService: ConfigService) {
-    this.bucket = this.configService.getOrThrow<string>('MINIO_BUCKET');
+    this.bucket = this.configService.getOrThrow<string>('SEAWEEDFS_BUCKET');
 
-    this.client = new Minio.Client({
-      endPoint: this.configService.getOrThrow<string>('MINIO_ENDPOINT'),
-      port: this.configService.get<number>('MINIO_PORT', 9000),
-      useSSL: this.configService.get<boolean>('MINIO_USE_SSL', false),
-      accessKey: this.configService.getOrThrow<string>('MINIO_ACCESS_KEY'),
-      secretKey: this.configService.getOrThrow<string>('MINIO_SECRET_KEY'),
+    this.client = new S3Client({
+      endpoint: this.configService.getOrThrow<string>('SEAWEEDFS_ENDPOINT'),
+      region: 'us-east-1', // SeaweedFS l'ignore mais le SDK l'exige
+      forcePathStyle: true, // obligatoire pour SeaweedFS
+      credentials: {
+        accessKeyId: this.configService.getOrThrow<string>(
+          'SEAWEEDFS_ACCESS_KEY',
+        ),
+        secretAccessKey: this.configService.getOrThrow<string>(
+          'SEAWEEDFS_SECRET_KEY',
+        ),
+      },
     });
-  }
-
-  async onModuleInit(): Promise<void> {
-    const exists = await this.client.bucketExists(this.bucket);
-    if (!exists) {
-      await this.client.makeBucket(this.bucket);
-      this.logger.log(`Bucket "${this.bucket}" created.`);
-    }
   }
 
   async saveFile(
@@ -58,14 +62,13 @@ export class StorageService {
 
       const objectKey = this.buildObjectKey(basePath, pct, fileName, extension);
 
-      await this.client.putObject(
-        this.bucket,
-        objectKey,
-        resizedBuffer,
-        resizedBuffer.length,
-        {
-          'Content-Type': file.mimetype,
-        },
+      await this.client.send(
+        new PutObjectCommand({
+          Bucket: this.bucket,
+          Key: objectKey,
+          Body: resizedBuffer,
+          ContentType: file.mimetype,
+        }),
       );
 
       this.logger.log(`Uploaded: ${objectKey}`);
@@ -85,7 +88,13 @@ export class StorageService {
       this.buildObjectKey(basePath, pct, fileName, extension),
     );
 
-    await this.client.removeObjects(this.bucket, keys);
+    await this.client.send(
+      new DeleteObjectsCommand({
+        Bucket: this.bucket,
+        Delete: { Objects: keys.map((Key) => ({ Key })) },
+      }),
+    );
+
     this.logger.log(`Deleted objects: ${keys.join(', ')}`);
   }
 
@@ -98,11 +107,14 @@ export class StorageService {
     const extension = this.getExtension(mimetype);
     const objectKey = this.buildObjectKey(basePath, width, fileName, extension);
 
-    return this.client.presignedGetObject(
-      this.bucket,
-      objectKey,
-      7 * 24 * 60 * 60,
-    );
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: objectKey,
+    });
+
+    return getSignedUrl(this.client, command, {
+      expiresIn: 7 * 24 * 60 * 60,
+    }) as Promise<string>;
   }
 
   private buildObjectKey(

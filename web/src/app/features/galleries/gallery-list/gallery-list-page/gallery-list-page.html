@@ -1,5 +1,19 @@
 <app-default-container-component title="Gallerie">
 
+    <div class="flex gap-4 items-end">
+
+        <app-input-text-component [label]="'Rechercher un groupe'" [icon]="'search'" class="flex-1"
+            [placeholder]="'Entrez le nom du groupe...'" [(value)]="galleryListService.search" />
+
+        <button pButton (click)="handleCreate()">
+            <i class="pi pi-plus-circle" pButtonIcon></i>
+            <span pButtonLabel>Ajouter</span>
+        </button>
+
+    </div>
+
+    <p-divider />
+
     <div class="flex">
 
         <p-tree [value]="galleryCategoryStore.data()" class="w-full md:w-120" />

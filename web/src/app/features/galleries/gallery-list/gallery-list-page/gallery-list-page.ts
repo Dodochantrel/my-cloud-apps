@@ -1,19 +1,21 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DefaultContainerComponent } from '../../../../shared/components/default-container-component/default-container-component';
 import { TreeModule } from 'primeng/tree';
-import { TreeNode } from 'primeng/api';
-import { GalleryCategory } from '../../../../core/models/galleries/gallery-category';
 import { DividerModule } from 'primeng/divider';
 import { GalleryCategoryStore } from '../../stores/gallery-category-store';
 import { GalleryListService } from '../gallery-list-service';
+import { InputTextComponent } from '../../../../shared/components/inputs/input-text-component/input-text-component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-gallery-list-page',
-  imports: [DefaultContainerComponent, TreeModule, DividerModule],
+  imports: [DefaultContainerComponent, TreeModule, DividerModule, InputTextComponent, ButtonModule],
   templateUrl: './gallery-list-page.html',
   styleUrl: './gallery-list-page.css',
 })
 export class GalleryListPage {
   protected readonly galleryCategoryStore = inject(GalleryCategoryStore);
-  private readonly galleryListService = inject(GalleryListService);
+  protected readonly galleryListService = inject(GalleryListService);
+
+  handleCreate() {}
 }
