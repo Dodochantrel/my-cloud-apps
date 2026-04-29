@@ -2,13 +2,8 @@
 
     <div class="flex gap-4 items-end">
 
-        <app-input-text-component [label]="'Rechercher un groupe'" [icon]="'search'" class="flex-1"
-            [placeholder]="'Entrez le nom du groupe...'" [(value)]="galleryListService.search" />
-
-        <button pButton (click)="handleCreate()">
-            <i class="pi pi-plus-circle" pButtonIcon></i>
-            <span pButtonLabel>Ajouter</span>
-        </button>
+        <app-input-text-component [label]="'Rechercher une catégorie'" [icon]="'search'" class="flex-1"
+            [placeholder]="'Entrez le nom de la catégorie...'" [(value)]="galleryListService.search" />
 
     </div>
 
@@ -16,7 +11,11 @@
 
     <div class="flex">
 
-        <p-tree [value]="galleryCategoryStore.data()" class="w-full md:w-120" />
+        <p-tree [value]="galleryCategoryStore.data()" class="w-full md:w-120">
+            <ng-template let-node pTemplate="footer">
+                <p-button (click)="handleCreate()" variant="outlined" label="Ajouter une catégorie" icon="pi pi-plus-circle"></p-button>
+            </ng-template>
+        </p-tree>
 
         <p-divider layout="vertical" />
 

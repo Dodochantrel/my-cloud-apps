@@ -1,4 +1,4 @@
-import { GalleryCategory } from '../../../models/galleries/gallery-category';
+import { GalleryCategoryModel } from '../../../models/galleries/gallery-category-model';
 
 export interface GetAllGalleriesCategoriesDto {
   id: string;
@@ -10,10 +10,10 @@ export interface GetAllGalleriesCategoriesDto {
 
 export const mapFromGetAllGalleriesCategoriesDtosToGalleriesCategories = (
   dtos: GetAllGalleriesCategoriesDto[],
-): GalleryCategory[] =>
+): GalleryCategoryModel[] =>
   dtos.map(
     (dto) =>
-      new GalleryCategory(
+      new GalleryCategoryModel(
         dto.id,
         dto.name,
         dto.createdAt,

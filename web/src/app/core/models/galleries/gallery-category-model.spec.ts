@@ -1,4 +1,4 @@
-import { GalleryCategory } from './gallery-category';
+import { GalleryCategory } from './gallery-category-model';
 
 describe('GalleryCategory', () => {
   it('should create an instance', () => {

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { TreeStoreUtils } from '../../../shared/utils/store-tree-node-utils';
-import { GalleryCategory } from '../../../core/models/galleries/gallery-category';
+import { GalleryCategoryModel } from '../../../core/models/galleries/gallery-category-model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GalleryCategoryStore extends TreeStoreUtils<GalleryCategory> {
+export class GalleryCategoryStore extends TreeStoreUtils<GalleryCategoryModel> {
   mapFromGalleryCategoryToTreeNode(
-    categories: GalleryCategory[],
-  ): { label: string; data: GalleryCategory; children: any[] }[] {
+    categories: GalleryCategoryModel[],
+  ): { label: string; data: GalleryCategoryModel; children: any[] }[] {
     return categories.map((category) => ({
       label: category.name,
       data: category,

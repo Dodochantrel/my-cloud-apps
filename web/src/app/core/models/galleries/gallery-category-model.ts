@@ -1,11 +1,11 @@
-export class GalleryCategory {
+export class GalleryCategoryModel {
     id: string;
     name: string;
     createdAt: Date;
     updatedAt: Date;
-    childrens: GalleryCategory[];
+    childrens: GalleryCategoryModel[];
 
-    constructor(id: string, name: string, createdAt: Date, updatedAt: Date, childrens: GalleryCategory[] = []) {
+    constructor(id: string, name: string, createdAt: Date, updatedAt: Date, childrens:  GalleryCategoryModel[] = []) {
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
