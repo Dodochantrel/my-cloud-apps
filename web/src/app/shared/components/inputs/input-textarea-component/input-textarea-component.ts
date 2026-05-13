@@ -11,7 +11,6 @@ import { InputErrorMessageComponent } from '../input-error-message-component/inp
 })
 export class InputTextareaComponent {
   label = input<string | null>(null);
-  icon = input.required<string>();
   controlName = input<string | null>(null);
   placeholder = input.required<string>();
   form = input<FormGroup | null>(null);

@@ -8,7 +8,14 @@ import { TreeNode } from 'primeng/api';
 
 @Component({
   selector: 'app-input-tree-select-component',
-  imports: [IconFieldModule, InputIconModule, TreeSelectModule, ReactiveFormsModule, FormsModule, InputErrorMessageComponent],
+  imports: [
+    IconFieldModule,
+    InputIconModule,
+    TreeSelectModule,
+    ReactiveFormsModule,
+    FormsModule,
+    InputErrorMessageComponent
+  ],
   templateUrl: './input-tree-select-component.html',
   styleUrl: './input-tree-select-component.css',
 })

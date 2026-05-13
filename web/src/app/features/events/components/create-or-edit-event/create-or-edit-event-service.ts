@@ -36,7 +36,7 @@ export class CreateOrEditEventService {
     effect(() => {
       const resource = this.groupsResource.value();
       const groups = resource ? mapFromGetAllGroupsDtosToGroupModels(resource.data) : [];
-      this.groupStore.setData(groups);
+      this.groupStore.setAll(groups);
     });
   }
 
@@ -84,7 +84,7 @@ export class CreateOrEditEventService {
     };
     return this.eventsRoutes.update(id, body).pipe(
       tap((response) => {
-        this.eventStore.editOne(response.id, response);
+        this.eventStore.editOne(response);
         this.notificationService.success('Événement modifié', 'L\'événement a été modifié avec succès.');
       }),
       catchError((error) => {

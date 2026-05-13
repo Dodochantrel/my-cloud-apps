@@ -1,4 +1,4 @@
-import { Component, input, model } from '@angular/core';
+import { Component, effect, input, model, signal } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -27,4 +27,32 @@ export class InputTextComponent {
   placeholder = input.required<string>();
   form = input<FormGroup | null>(null);
   value = model<unknown>(null);
+  debounceTime = input<number>(300);
+
+  internalValue = signal<unknown>(null);
+  private debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private isDebouncing = false;
+
+  constructor() {
+    effect(() => {
+      const v = this.value();
+      if (!this.isDebouncing) {
+        this.internalValue.set(v);
+      }
+    });
+  }
+
+  onInputChange(newValue: unknown): void {
+    this.isDebouncing = true;
+    this.internalValue.set(newValue);
+
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+    }
+
+    this.debounceTimer = setTimeout(() => {
+      this.value.set(newValue);
+      this.isDebouncing = false;
+    }, this.debounceTime());
+  }
 }

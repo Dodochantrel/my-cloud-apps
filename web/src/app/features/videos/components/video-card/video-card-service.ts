@@ -70,16 +70,16 @@ export class VideoCardService {
   }
 
   updateOneInStores(video: Video) {
-    this.currentVideoStore.editOne(video.id, video);
+    this.currentVideoStore.editOne(video);
 
     if (video.videoWatched) {
-      this.watchedVideoStore.addOrEditOne(video.id, video);
+      this.watchedVideoStore.addOrEditOne(video);
     } else {
       this.watchedVideoStore.deleteOne(video.id);
     }
 
     if (video.videoToWatch) {
-      this.toWatchVideoStore.addOrEditOne(video.id, video);
+      this.toWatchVideoStore.addOrEditOne(video);
     } else {
       this.toWatchVideoStore.deleteOne(video.id);
     }

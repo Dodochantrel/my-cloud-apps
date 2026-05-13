@@ -15,4 +15,5 @@ export class InputSelectButtonComponent {
   options = input.required<{ label: string, value: unknown }[]>();
   form = input<FormGroup | null>(null);
   value = model<unknown>(null);
+  isFluid = input<boolean>(true);
 }

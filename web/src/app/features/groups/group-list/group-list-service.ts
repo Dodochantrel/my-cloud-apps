@@ -32,7 +32,7 @@ export class GroupListService {
     effect(() => {
       const resource = this.groupsResource.value();
       const groups = resource ? mapFromGetAllGroupsDtosToGroupModels(resource.data) : [];
-      this.groupStore.setData(groups);
+      this.groupStore.setAll(groups);
     });
   }
 

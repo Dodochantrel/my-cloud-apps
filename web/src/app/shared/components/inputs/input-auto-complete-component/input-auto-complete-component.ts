@@ -42,4 +42,6 @@ export class InputAutoCompleteComponent {
     this.valueSelected.emit(event.value.value);
     this.value.set(null);
   }
+
+  
 }

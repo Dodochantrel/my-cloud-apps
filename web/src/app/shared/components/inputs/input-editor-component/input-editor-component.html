@@ -1,0 +1,29 @@
+@if(form()) {
+<div [formGroup]="form()!">
+    @if (label()) {
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*'
+        : '' }}</label>
+    }
+    <p-editor [formControlName]="controlName()" [style]="{ height: '260px' }">
+        <ng-template #header>
+            <span class="ql-formats">
+                <button type="button" class="ql-bold" aria-label="Bold"></button>
+                <button type="button" class="ql-italic" aria-label="Italic"></button>
+                <button type="button" class="ql-underline" aria-label="Underline"></button>
+            </span>
+        </ng-template>
+    </p-editor>
+    <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
+</div>
+} @else {
+
+<ng-template #standaloneTemplate>
+    <div>
+        @if (label()) {
+        <label class="label">{{ label() }}</label>
+        }
+        <p-editor [(ngModel)]="value" [style]="{ height: '260px' }" />
+    </div>
+</ng-template>
+
+}

@@ -13,7 +13,7 @@
 
         <p-tree [value]="galleryCategoryStore.data()" class="w-full md:w-120">
             <ng-template let-node pTemplate="footer">
-                <p-button (click)="handleCreate()" variant="outlined" label="Ajouter une catégorie" icon="pi pi-plus-circle"></p-button>
+                <p-button (click)="handleCreate()" variant="outlined" label="Ajouter une catégorie" icon="pi pi-plus-circle" />
             </ng-template>
         </p-tree>
 
@@ -28,3 +28,5 @@
     </div>
 
 </app-default-container-component>
+
+<app-create-or-edit-gallery-category-component [(isDisplay)]="isDisplayCreateOrEditDialog" />

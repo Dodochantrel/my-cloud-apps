@@ -61,7 +61,7 @@ export class CreateOrEditGroupService {
 
     return this.groupsRoutes.update(groupId, body).pipe(
       tap((response) => {
-        this.groupStore.editOne(response.id, response);
+        this.groupStore.editOne(response);
         this.notificationService.success('Groupe modifié', 'Le groupe a été modifié avec succès.');
       }),
       catchError((error) => {

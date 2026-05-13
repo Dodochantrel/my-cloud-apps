@@ -36,7 +36,7 @@ export class CurrentVideoService {
     effect(() => {
       const resource = this.videosResource.value();
       const videos = resource ? mapFromGetCurrentVideoDtosToVideos(resource) : [];
-      this.currentVideoStore.setData(videos);
+      this.currentVideoStore.setAll(videos);
     });
   }
 

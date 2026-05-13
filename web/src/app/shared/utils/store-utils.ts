@@ -1,64 +1,59 @@
-import { Injectable, signal } from "@angular/core";
+import { signal } from "@angular/core";
 
-@Injectable({
-  providedIn: 'root',
-})
-export class StoreUtils<T> {
+// ─── Interface ─────────────────────────────────────────────────────────────
+
+export interface StoreEntity {
+  id: string;
+}
+
+// ─── Class ─────────────────────────────────────────────────────────────────
+
+export class StoreUtils<T extends StoreEntity> {
   public data = signal<T[]>([]);
 
-  setData(data: T[]) {
-    this.data.set(data);
+  // ─── Initialisation ──────────────────────────────────────────────────────
+
+  setAll(items: T[]): void {
+    this.data.set(items);
   }
 
-  addOne(item: T) {
-    const currentData = this.data();
-    this.data.set([item, ...currentData]);
+  // ─── Ajout ───────────────────────────────────────────────────────────────
+
+  addOne(item: T, limit?: number): void {
+    const current = [item, ...this.data()];
+    if (limit && current.length > limit) current.pop();
+    this.data.set(current);
   }
 
-  addOnePaginated(item: T, limit: number) {
-    const currentData = this.data();
-    if (currentData.length >= limit) {
-      currentData.pop();
-    }
-    this.data.set([...currentData, item]);
+  addOrEditOne(item: T, limit?: number): void {
+    const exists = this.data().some((i) => i.id === item.id);
+    exists ? this.editOne(item) : this.addOne(item, limit);
   }
 
-  editOne(id: string, item: T) {
-    const currentData = this.data();
-    const index = currentData.findIndex((i: any) => i.id === id);
-    if (index !== -1) {
-      currentData[index] = item;
-      this.data.set([...currentData]);
-    }
+  // ─── Modification ────────────────────────────────────────────────────────
+
+  editOne(item: T): void {
+    const current = this.data();
+    const index = current.findIndex((i) => i.id === item.id);
+    if (index === -1) return;
+    const updated = [...current];
+    updated[index] = item;
+    this.data.set(updated);
   }
 
-  addOrEditOne(id: string, item: T) {
-    const currentData = this.data();
-    const index = currentData.findIndex((i: any) => i.id === id);
-    if (index !== -1) {
-      currentData[index] = item;
-    } else {
-      currentData.unshift(item);
-    }
-    this.data.set([...currentData]);
+  // ─── Suppression ─────────────────────────────────────────────────────────
+
+  deleteOne(id: string): void {
+    this.data.set(this.data().filter((i) => i.id !== id));
   }
 
-  deleteOne(id: string) {
-    const currentData = this.data();
-    const index = currentData.findIndex((i: any) => i.id === id);
-    if (index !== -1) {
-      currentData.splice(index, 1);
-      this.data.set([...currentData]);
-    }
-  }
+  // ─── Readers ─────────────────────────────────────────────────────────────
 
   findOne(id: string): T | undefined {
-    const currentData = this.data();
-    return currentData.find((i: any) => i.id === id);
+    return this.data().find((i) => i.id === id);
   }
 
   findMany(ids: string[]): T[] {
-    const currentData = this.data();
-    return currentData.filter((i: any) => ids.includes(i.id));
+    return this.data().filter((i) => ids.includes(i.id));
   }
 }

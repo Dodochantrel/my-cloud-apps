@@ -33,7 +33,7 @@ export class WatchedVideoService {
     effect(() => {
       const resource = this.videosResource.value();
       const videos = resource ? mapFromGetWatchedVideoDtosToVideos(resource.data) : [];
-      this.watchedVideoStore.setData(videos);
+      this.watchedVideoStore.setAll(videos);
     });
   }
 

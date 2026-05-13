@@ -8,7 +8,15 @@ import { FluidModule } from 'primeng/fluid';
 
 @Component({
   selector: 'app-input-price-component',
-  imports: [IconFieldModule, InputIconModule, ReactiveFormsModule, FormsModule, InputErrorMessageComponent, InputNumberModule, FluidModule],
+  imports: [
+    IconFieldModule,
+    InputIconModule,
+    ReactiveFormsModule,
+    FormsModule,
+    InputErrorMessageComponent,
+    InputNumberModule,
+    FluidModule,
+  ],
   templateUrl: './input-price-component.html',
   styleUrl: './input-price-component.css',
 })

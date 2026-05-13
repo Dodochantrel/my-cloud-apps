@@ -1,9 +1,9 @@
 @if (form()) {
-<div [formGroup]="form()!">
+<div [formGroup]="form()!" class="flex flex-col">
     @if (label()) {
     <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*' : '' }}</label>
     }
-    <p-selectbutton fluid [options]="options()" [formControlName]="controlName()!" optionLabel="label" [name]="controlName()!"
+    <p-selectbutton [fluid]="isFluid()" [options]="options()" [formControlName]="controlName()!" optionLabel="label" [name]="controlName()!"
         optionValue="value" aria-labelledby="basic" />
     <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
@@ -12,7 +12,7 @@
     @if (label()) {
     <label class="label">{{ label() }}</label>
     }
-    <p-selectbutton fluid [options]="options()" [(ngModel)]="value" optionLabel="label"
+    <p-selectbutton [fluid]="isFluid()" [options]="options()" [(ngModel)]="value" optionLabel="label"
         optionValue="value" aria-labelledby="basic" />
 </div>
 }

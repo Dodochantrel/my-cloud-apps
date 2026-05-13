@@ -10,7 +10,7 @@
         </p-inputicon>
         <p-select [options]="options()" optionLabel="label" optionValue="value" [formControlName]="controlName()!"
             [name]="controlName()!" filterBy="label" [placeholder]="placeholder()" fluid appendTo="body" [checkmark]="true"
-            (onFilter)="searchChange.emit($event.filter)" [filter]="filter()"
+            (onFilter)="searchChange.emit($event.filter)" [filter]="filter()" [loading]="isLoading()"
             [pt]="{ label: { class: 'pl-[calc((var(--p-form-field-padding-x)*2)+var(--p-icon-size))]' } }" />
     </p-iconfield>
     <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
@@ -28,7 +28,7 @@
             </p-inputicon>
             <p-select [options]="options()" optionLabel="label" optionValue="value" [(ngModel)]="value" filterBy="label"
                 [placeholder]="placeholder()" fluid appendTo="body" (onFilter)="searchChange.emit($event.filter)" [checkmark]="true"
-                [filter]="filter()"
+                [filter]="filter()" [loading]="isLoading()"
                 [pt]="{ label: { class: 'pl-[calc((var(--p-form-field-padding-x)*2)+var(--p-icon-size))]' } }" />
         </p-iconfield>
     </div>

@@ -34,7 +34,7 @@ export class ToWatchVideoService {
     effect(() => {
       const resource = this.videosResource.value();
       const videos = resource ? mapFromGetToWatchVideoDtosToVideos(resource.data) : [];
-      this.toWatchVideoStore.setData(videos);
+      this.toWatchVideoStore.setAll(videos);
     });
   }
 

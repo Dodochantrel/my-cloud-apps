@@ -16,10 +16,16 @@ export class InputSelectComponent {
   icon = input.required<string>();
   controlName = input<string | null>(null);
   placeholder = input.required<string>();
-  options = input.required<{ label: string, value: unknown }[]>();
+  options = input.required<InputSelectOption[]>();
   form = input<FormGroup | null>(null);
   value = model<unknown>(null);
   searchChange = output<string>();
   filter = input<boolean>(false);
   canMultiple = input<boolean>(false);
+  isLoading = input<boolean>(false);
+}
+
+export interface InputSelectOption {
+  label: string;
+  value: unknown; 
 }

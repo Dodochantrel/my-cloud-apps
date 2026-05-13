@@ -1,13 +1,15 @@
 @if (form()) {
 <div [formGroup]="form()!">
     @if (label()) {
-    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*' : '' }}</label>
+    <label [for]="controlName()" class="label">{{ label() }} {{ form()!.get(controlName()!)?.errors?.['required'] ? '*'
+        : '' }}</label>
     }
     <p-iconfield>
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
-        <input type="text" pInputText [name]="controlName()!" [placeholder]="placeholder()" [formControlName]="controlName()!" fluid/>
+        <input type="text" pInputText [name]="controlName()!" [placeholder]="placeholder()"
+            [formControlName]="controlName()!" fluid />
     </p-iconfield>
     <app-input-error-message-component [controlName]="controlName()!" [form]="form()!" />
 </div>
@@ -20,7 +22,8 @@
         <p-inputicon>
             <span class="material-symbols text-[18px]!">{{ icon() }}</span>
         </p-inputicon>
-        <input type="text" pInputText [(ngModel)]="value" [placeholder]="placeholder()" fluid/>
+        <input type="text" pInputText [ngModel]="internalValue()" (ngModelChange)="onInputChange($event)"
+            [placeholder]="placeholder()" fluid />
     </p-iconfield>
 </div>
 }

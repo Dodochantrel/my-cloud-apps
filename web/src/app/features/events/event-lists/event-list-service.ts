@@ -51,7 +51,7 @@ export class EventListService {
     effect(() => {
       const resource = this.eventsResource.value();
       const events = resource ? mapFromGetAllEventsDtosToModels(resource.data) : [];
-      this.eventStore.setData(events);
+      this.eventStore.setAll(events);
     });
   }
 

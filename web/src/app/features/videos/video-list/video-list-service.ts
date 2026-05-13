@@ -4,7 +4,7 @@ import { VideosRoutes } from '../../../core/api/videos/videos-routes';
 import { NotificationService } from '../../../core/notification/notification-service';
 import { mapFromGetAllVideoDtosToVideos } from '../../../core/api/videos/dtos/get-all-video-dto';
 import { VideoType } from '../../../core/models/videos/video';
-import { StoreUtils } from '../../../shared/utils/store-utils';
+import { VideoStore } from '../stores/video-store';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class VideoListService {
   public type = signal<VideoType>('movie');
 
   private readonly videosRoutes = new VideosRoutes();
-  public readonly videoStore = inject(StoreUtils);
+  public readonly videoStore = inject(VideoStore);
 
   constructor(private readonly notificationService: NotificationService) {
     // Quand search change, passer à la page 1
@@ -39,7 +39,7 @@ export class VideoListService {
     effect(() => {
       const resource = this.videosResource.value();
       const videos = resource ? mapFromGetAllVideoDtosToVideos(resource) : [];
-      this.videoStore.setData(videos);
+      this.videoStore.setAll(videos);
     });
   }
 
