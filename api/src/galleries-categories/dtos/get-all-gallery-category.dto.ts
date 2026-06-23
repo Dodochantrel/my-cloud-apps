@@ -32,9 +32,9 @@ export class GetAllGalleriesCategoriesResponseDto {
     this.name = galleryCategory.name;
     this.createdAt = galleryCategory.createdAt;
     this.updatedAt = galleryCategory.updatedAt;
-    this.childrens = galleryCategory.childrens.map(
+    this.childrens = galleryCategory.childrens ? galleryCategory.childrens.map(
       (child) => new GetAllGalleriesCategoriesResponseDto(child),
-    );
+    ) : [];
   }
 }
 

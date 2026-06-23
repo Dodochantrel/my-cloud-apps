@@ -1,27 +1,15 @@
-<app-dialog-form-component 
-    [(isDisplay)]="isDisplay" 
-    [(form)]="form" 
-    header="Créer ou éditer une catégorie de galerie"
-    (onValidate)="save()"
-    (onCancel)="cancel()"
-    >
+<app-dialog-form-component [(isDisplay)]="isDisplay" [(form)]="form" header="Créer ou éditer une catégorie de galerie"
+    (onValidate)="save()" (onCancel)="cancel()">
 
-    <app-input-text-component 
-        label="Nom de la catégorie" 
-        icon="category"
-        controlName="name"
-        placeholder="Entrez le nom de la catégorie"
-        [form]="form"
-    />
+    <app-input-text-component label="Nom de la catégorie" icon="category" controlName="name"
+        placeholder="Entrez le nom de la catégorie" [form]="form" />
 
-    <app-input-select-component
-        label="Catégorie parente"
-        icon="category"
-        controlName="parentId"
-        placeholder="Sélectionnez une catégorie parente"
-        [options]="galleryCategories()"
-        [form]="form"
-        (searchChange)="onSearchParentCategories($event)"
-    />
+    <app-input-select-component label="Catégorie parente" icon="category" controlName="parent"
+        placeholder="Sélectionnez une catégorie parente" [options]="galleryCategories()" [form]="form"
+        (searchChange)="onSearchParentCategories($event)" />
+
+    <app-input-multi-select-component [label]="'Groupe'" [icon]="'group'" [placeholder]="'Choisir un groupe'"
+        [filter]="true" [form]="form" [options]="groups()" [controlName]="'groups'"
+        (searchChange)="onSearchGroupChange($event)" />
 
 </app-dialog-form-component>

@@ -16,15 +16,15 @@ export class GalleriesCategoriesRoutes {
     );
   }
 
-  create(name: string, parentId: string | null): Observable<GalleryCategoryModel> {
-    const dto: PostGalleryCategoryRequestDto = { name, parentId };
+  create(name: string, parentId: string | null, groupsId: string[]): Observable<GalleryCategoryModel> {
+    const dto: PostGalleryCategoryRequestDto = { name, parentId, groupsId };
     return this.httpClient
       .post<PostGalleryCategoryResponseDto>(this.baseUrl, dto)
       .pipe(map(mapFromPostGalleryCategoryResponseDtoToGalleryCategory));
   }
 
-  edit(id: string, name: string, parentId: string | null): Observable<GalleryCategoryModel> {
-    const dto: PatchGalleryCategoryRequestDto = { name, parentId };
+  edit(id: string, name: string, parentId: string | null, groupsId: string[]): Observable<GalleryCategoryModel> {
+    const dto: PatchGalleryCategoryRequestDto = { name, parentId, groupsId };
     return this.httpClient
       .patch<PatchGalleryCategoryResponseDto>(`${this.baseUrl}/${id}`, dto)
       .pipe(map(mapFromPatchGalleryCategoryResponseDtoToGalleryCategory));

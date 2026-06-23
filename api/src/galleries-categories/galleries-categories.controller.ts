@@ -16,6 +16,8 @@ import type { AccessTokenPayload } from 'src/utils/tokens/tokens.service';
 import { PageQuery } from 'src/pagination/page-query';
 import { PaginatedResponse } from 'src/pagination/paginated-response';
 import { GetAllGalleriesCategoriesResponseDto, GetAllGalleryCategoriesQueryDto, mapFromGalleryCategoryToGetAllGalleriesCategoriesResponseDto } from './dtos/get-all-gallery-category.dto';
+import { PostGalleryCategoryBodyDto } from './dtos/post-gallery-category.dto';
+import { PutGalleryCategoryBodyDto } from './dtos/put-gallery-category.dto';
 
 @ApiTags('Galleries Categories')
 @ApiBearerAuth()
@@ -49,9 +51,9 @@ export class GalleriesCategoriesController {
   @ApiOperation({ summary: 'Créer une catégorie' })
   async create(
     @UserData() user: AccessTokenPayload,
-    @Body() body: any,
+    @Body() body: PostGalleryCategoryBodyDto,
   ) {
-    return this.galleriesCategoriesService.create(user.id, body.name, body.parentId);
+    return this.galleriesCategoriesService.create(user.id, body.name, body.parentId, body.groupsId);
   }
 
   @Put(':id')
@@ -59,9 +61,9 @@ export class GalleriesCategoriesController {
   async update(
     @UserData() user: AccessTokenPayload,
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: any,
+    @Body() body: PutGalleryCategoryBodyDto,
   ) {
-    return this.galleriesCategoriesService.update(id, user.id, body.name, body.parentId);
+    return this.galleriesCategoriesService.update(id, user.id, body.name, body.parentId, body.groupsId);
   }
 
   @Delete(':id')

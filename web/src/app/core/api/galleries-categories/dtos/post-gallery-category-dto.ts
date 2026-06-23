@@ -3,6 +3,7 @@ import { GalleryCategoryModel } from "../../../models/galleries/gallery-category
 export interface PostGalleryCategoryRequestDto {
   name: string;
   parentId: string | null;
+  groupsId: string[];
 }
 
 export interface PostGalleryCategoryResponseDto {

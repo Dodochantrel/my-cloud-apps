@@ -12,6 +12,7 @@ import { InputMultiSelectComponent } from '../../../../../shared/components/inpu
 import { InputSelectComponent } from '../../../../../shared/components/inputs/input-select-component/input-select-component';
 import { GroupModel } from '../../../../../core/models/groups/group-model';
 import { InputHoursComponent } from '../../../../../shared/components/inputs/input-hours-component/input-hours-component';
+import { MinimalGroupService } from '../../../../../shared/services/minimal-group-service';
 
 @Component({
   selector: 'app-create-or-edit-event-component',
@@ -29,6 +30,7 @@ import { InputHoursComponent } from '../../../../../shared/components/inputs/inp
 })
 export class CreateOrEditEventComponent {
   public createOrEditEventService = inject(CreateOrEditEventService);
+  public minimalGroupService = inject(MinimalGroupService);
   public groupStore = inject(GroupStore);
 
   public eventToEdit = input<EventModel | null>(null);
@@ -166,7 +168,7 @@ export class CreateOrEditEventComponent {
   }
 
   onSearchGroupChange(search: string) {
-    this.createOrEditEventService.searchGroup.set(search);
+    this.minimalGroupService.search.set(search);
   }
 
   public categories = linkedSignal(() => {

@@ -17,6 +17,12 @@ export class Gallery {
   @Column()
   name!: string;
 
+  @Column()
+  mimetype!: string;
+
+  @Column({ type: 'int' })
+  size!: number;
+
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',

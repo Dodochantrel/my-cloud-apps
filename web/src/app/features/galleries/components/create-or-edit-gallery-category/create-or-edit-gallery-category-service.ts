@@ -13,8 +13,8 @@ export class CreateOrEditGalleryCategoryService {
   private readonly galleriesCategoriesRoutes = inject(GalleriesCategoriesRoutes);
   private readonly notificationService = inject(NotificationService);
   
-  create(name: string, parentId: string | null) {
-    this.galleriesCategoriesRoutes.create(name, parentId).pipe(
+  create(name: string, parentId: string | null, groupsId: string[]) {
+    this.galleriesCategoriesRoutes.create(name, parentId, groupsId).pipe(
       tap((galleryCategory: GalleryCategoryModel) => {
         this.galleryCategoryStore.addOne(galleryCategory, 10);
         this.notificationService.success('Catégorie créée avec succès', `La catégorie "${galleryCategory.name}" a été créée avec succès.`);
@@ -26,8 +26,8 @@ export class CreateOrEditGalleryCategoryService {
     )
   }
 
-  edit(id: string, name: string, parentId: string | null) {
-    this.galleriesCategoriesRoutes.edit(id, name, parentId).pipe(
+  edit(id: string, name: string, parentId: string | null, groupsId: string[]) {
+    this.galleriesCategoriesRoutes.edit(id, name, parentId, groupsId).pipe(
       tap((galleryCategory: GalleryCategoryModel) => {
         this.galleryCategoryStore.editOne(galleryCategory);
         this.notificationService.success('Catégorie modifiée avec succès', `La catégorie "${galleryCategory.name}" a été modifiée avec succès.`);

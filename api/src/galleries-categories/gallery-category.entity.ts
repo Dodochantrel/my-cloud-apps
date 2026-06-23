@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -46,8 +47,8 @@ export class GalleryCategory {
   @OneToMany(() => Gallery, (gallery) => gallery.category)
   galleries!: Relation<Gallery[]>;
 
-  @ManyToOne(() => Group, (group) => group.galleryCategories, { onDelete: 'CASCADE' })
-  group!: Relation<Group>;
+  @ManyToMany(() => Group, (group) => group.galleryCategories, { onDelete: 'CASCADE' })
+  groups!: Relation<Group[]>;
 
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'SET NULL' })
   user!: Relation<User>;

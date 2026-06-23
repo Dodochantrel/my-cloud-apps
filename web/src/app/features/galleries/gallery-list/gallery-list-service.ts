@@ -32,8 +32,7 @@ export class GalleryListService {
     effect(() => {
       const resource = this.galleriesCategoriesResource.value();
       const categories = resource ? mapFromGetAllGalleriesCategoriesDtosToGalleriesCategories(resource.data) : [];
-      console.log('categories', categories);
-      // this.galleryCategoryStore.mapAndsetAll(categories);
+      this.galleryCategoryStore.mapAndsetAll(categories);
     });
   }
 

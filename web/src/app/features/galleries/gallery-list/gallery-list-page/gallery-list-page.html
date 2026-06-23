@@ -11,9 +11,11 @@
 
     <div class="flex">
 
-        <p-tree [value]="galleryCategoryStore.data()" class="w-full md:w-120">
+        <p-tree [value]="galleryCategoryStore.data()" class="w-full md:w-120" selectionMode="single" [(selection)]="selectedFile">
             <ng-template let-node pTemplate="footer">
-                <p-button (click)="handleCreate()" variant="outlined" label="Ajouter une catégorie" icon="pi pi-plus-circle" />
+                <div class="mt-4">
+                    <p-button (click)="handleCreate()" variant="outlined" label="Ajouter une catégorie" icon="pi pi-plus-circle" />
+                </div>
             </ng-template>
         </p-tree>
 

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class PostGalleryCategoryBodyDto {
+export class PutGalleryCategoryBodyDto {
   @ApiProperty({ description: 'Nom de la catégorie', example: 'Vacances' })
   name!: string;
 

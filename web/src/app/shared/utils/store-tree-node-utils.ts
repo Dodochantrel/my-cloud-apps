@@ -20,6 +20,7 @@ export class TreeStoreUtils<T extends TreeEntity> {
   private toNode(entity: T): TreeNode<T> {
     const children = ((entity.children ?? []) as T[]).map((child) => this.toNode(child));
     return {
+      key: entity.id,
       label: entity.name,
       data: entity,
       children,
@@ -31,6 +32,13 @@ export class TreeStoreUtils<T extends TreeEntity> {
 
   setAll(entities: T[]): void {
     this.data.set(entities.map((e) => this.toNode(e)));
+  }
+
+  // ─── Map And Initialisation ───────────────────────────────────────────────────────────────
+
+  mapAndsetAll(entities: T[]): void {
+    const nodes = entities.map((e) => this.toNode(e));
+    this.data.set(nodes);
   }
 
   // ─── Ajout ───────────────────────────────────────────────────────────────

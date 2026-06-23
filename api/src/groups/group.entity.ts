@@ -70,7 +70,8 @@ export class Group {
   @JoinTable()
   events!: Relation<Event[]>;
 
-  @OneToMany(() => GalleryCategory, (category) => category.group)
+  @ManyToMany(() => GalleryCategory, (category) => category.groups)
+  @JoinTable()
   galleryCategories!: Relation<GalleryCategory[]>;
 
   constructor(partial: Partial<Group>) {

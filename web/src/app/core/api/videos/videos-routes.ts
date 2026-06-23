@@ -76,21 +76,18 @@ export class VideosRoutes {
   public patchOneWatched(id: string, type: VideoType) {
     return this.httpClient.patch(`${this.baseUrl}/${id}/watched`, {
       type: type,
-      id: id,
     })
   }
 
   public patchOneToWatch(id: string, type: VideoType) {
     return this.httpClient.patch(`${this.baseUrl}/${id}/to-watch`, {
       type: type,
-      id: id,
     })
   }
 
   public patchOneFavorite(id: string, type: VideoType) {
     return this.httpClient.patch(`${this.baseUrl}/${id}/favorite`, {
       type: type,
-      id: id,
     })
   }
 }

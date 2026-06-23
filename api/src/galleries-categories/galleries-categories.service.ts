@@ -8,6 +8,7 @@ import { Repository, TreeRepository } from 'typeorm';
 import { GalleryCategory } from './gallery-category.entity';
 import { PageQuery } from 'src/pagination/page-query';
 import { User } from 'src/users/user.entity';
+import { GroupsService } from 'src/groups/groups.service';
 
 @Injectable()
 export class GalleriesCategoriesService {
@@ -16,6 +17,7 @@ export class GalleriesCategoriesService {
     private readonly galleryCategoryRepository: TreeRepository<GalleryCategory>,
     @InjectRepository(GalleryCategory)
     private readonly galleryCategoryBaseRepository: Repository<GalleryCategory>,
+    private readonly groupsService: GroupsService,
   ) {}
 
   // ─── Public API ────────────────────────────────────────────────────────────
@@ -27,7 +29,7 @@ export class GalleriesCategoriesService {
   ): Promise<{ items: GalleryCategory[]; total: number }> {
     const qb = this.galleryCategoryBaseRepository
       .createQueryBuilder('category')
-      .leftJoinAndSelect('category.group', 'group')
+      .leftJoinAndSelect('category.groups', 'group')
       .leftJoinAndSelect('group.members', 'member')
       .leftJoinAndSelect('group.moderators', 'moderator')
       .leftJoinAndSelect('group.admin', 'admin')
@@ -63,21 +65,33 @@ export class GalleriesCategoriesService {
   async create(
     userId: string,
     name: string,
-    parentId?: string,
+    parentId: string | null,
+    groupsId: string[],
   ): Promise<GalleryCategory> {
     const category = this.galleryCategoryRepository.create({ name });
 
     category.user = new User({ id: userId });
     category.parent = parentId ? await this.findOneOrFail(parentId) : null;
 
+    if (groupsId && groupsId.length > 0) {
+      category.groups = await Promise.all(groupsId.map((id) => this.findGroupOrFail(id, userId)));
+    }
+
     return this.galleryCategoryRepository.save(category);
+  }
+
+  async findGroupOrFail(id: string, userId: string) {
+    const group = await this.groupsService.findOne(id, userId);
+    if (!group) throw new NotFoundException('Groupe non trouvé.');
+    return group;
   }
 
   async update(
     id: string,
     userId: string,
     name: string,
-    parentId?: string,
+    parentId: string | null,
+    groupsId: string[],
   ): Promise<GalleryCategory> {
     const category = await this.findOneWithRelationsOrFail(id);
     this.assertIsOwner(category, userId);
@@ -86,6 +100,10 @@ export class GalleriesCategoriesService {
 
     if (parentId !== undefined) {
       category.parent = parentId ? await this.findOneOrFail(parentId) : null;
+    }
+
+    if (groupsId !== undefined) {
+      category.groups = await Promise.all(groupsId.map((id) => this.findGroupOrFail(id, userId)));
     }
 
     return this.galleryCategoryRepository.save(category);
@@ -140,8 +158,8 @@ export class GalleriesCategoriesService {
   private assertCanAccess(category: GalleryCategory, userId: string): void {
     if (category.user?.id === userId) return;
 
-    const belongsToGroup = category.group?.allMembers?.some(
-      (m) => m.id === userId,
+    const belongsToGroup = category.groups?.some((group) =>
+      group.allMembers?.some((member) => member.id === userId),
     );
 
     if (!belongsToGroup) {
