@@ -1,12 +1,14 @@
-import { Component, computed, effect, inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DefaultContainerComponent } from '../../../../shared/components/default-container-component/default-container-component';
-import { TreeModule } from 'primeng/tree';
+import { TreeModule, TreeNodeSelectEvent } from 'primeng/tree';
 import { DividerModule } from 'primeng/divider';
 import { GalleryCategoryStore } from '../../stores/gallery-category-store';
 import { GalleryListService } from '../gallery-list-service';
 import { InputTextComponent } from '../../../../shared/components/inputs/input-text-component/input-text-component';
 import { ButtonModule } from 'primeng/button';
 import { CreateOrEditGalleryCategoryComponent } from '../../components/create-or-edit-gallery-category/create-or-edit-gallery-category-component/create-or-edit-gallery-category-component';
+import { GalleryFileListService } from '../gallery-file-list-service';
+import { GalleryCategoryModel } from '../../../../core/models/galleries/gallery-category-model';
 import { TreeNode } from 'primeng/api';
 
 @Component({
@@ -18,8 +20,7 @@ import { TreeNode } from 'primeng/api';
 export class GalleryListPage {
   protected readonly galleryCategoryStore = inject(GalleryCategoryStore);
   protected readonly galleryListService = inject(GalleryListService);
-
-  protected selectedFile: WritableSignal<TreeNode | null> = signal<TreeNode | null>(null);
+  protected readonly galleryFileListService = inject(GalleryFileListService);
 
   public isDisplayCreateOrEditDialog = signal<boolean>(false);
 
@@ -27,9 +28,7 @@ export class GalleryListPage {
     this.isDisplayCreateOrEditDialog.set(true);
   }
 
-  constructor() {
-    effect(() => {
-      console.log('selectedFile', this.selectedFile());
-    });
+  categorySelected(event: TreeNodeSelectEvent) {
+    this.galleryFileListService.selectedCategory.set(event.node.data);
   }
 }

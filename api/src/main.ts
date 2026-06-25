@@ -3,25 +3,25 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  const logger = new Logger(
-    configService.get<string>('APPLICATION_NAME') as string,
-  );
+  const logger = new Logger(configService.get<string>('APPLICATION_NAME') as string);
 
   const config = new DocumentBuilder()
-  .setTitle('Cloud API')
-  .setDescription('The Cloud API description')
-  .setVersion('1.0')
-  .addTag('cloud')
-  .build();
+    .setTitle('Cloud API')
+    .setDescription('The Cloud API description')
+    .setVersion('1.0')
+    .addTag('cloud')
+    .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
   app.setGlobalPrefix('api');
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({

@@ -13,7 +13,7 @@ export type CreateOrEditGalleryCategoryForm = FormGroup<CreateOrEditGalleryCateg
 
 export function createCreateOrEditGalleryCategoryForm(): CreateOrEditGalleryCategoryForm {
   const form = new FormGroup<CreateOrEditGalleryCategoryFormModel>({
-    id: new FormControl(''),
+    id: new FormControl(null),
     name: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],

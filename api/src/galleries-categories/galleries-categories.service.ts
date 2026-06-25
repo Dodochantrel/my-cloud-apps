@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, TreeRepository } from 'typeorm';
 import { GalleryCategory } from './gallery-category.entity';
@@ -35,10 +31,9 @@ export class GalleriesCategoriesService {
       .leftJoinAndSelect('group.admin', 'admin')
       .leftJoinAndSelect('category.user', 'user')
       .where('category.parent IS NULL')
-      .andWhere(
-        '(user.id = :userId OR member.id = :userId OR moderator.id = :userId OR admin.id = :userId)',
-        { userId },
-      );
+      .andWhere('(user.id = :userId OR member.id = :userId OR moderator.id = :userId OR admin.id = :userId)', {
+        userId,
+      });
 
     if (search) {
       qb.andWhere('category.name ILIKE :search', { search: `%${search}%` });
@@ -62,12 +57,16 @@ export class GalleriesCategoriesService {
     });
   }
 
-  async create(
-    userId: string,
-    name: string,
-    parentId: string | null,
-    groupsId: string[],
-  ): Promise<GalleryCategory> {
+  async getGalleriesForCategory(id: string, userId: string): Promise<GalleryCategory> {
+    const category = await this.findOneWithRelationsOrFail(id);
+    this.assertCanAccess(category, userId);
+
+    return this.galleryCategoryRepository.findDescendantsTree(category, {
+      relations: ['galleries'],
+    });
+  }
+
+  async create(userId: string, name: string, parentId: string | null, groupsId: string[]): Promise<GalleryCategory> {
     const category = this.galleryCategoryRepository.create({ name });
 
     category.user = new User({ id: userId });
@@ -120,26 +119,16 @@ export class GalleriesCategoriesService {
   private async findOneOrFail(id: string): Promise<GalleryCategory> {
     const category = await this.galleryCategoryRepository.findOne({
       where: { id },
-      relations: ['parent', 'children'],
+      relations: ['parent', 'childrens'],
     });
     if (!category) throw new NotFoundException('Catégorie non trouvée.');
     return category;
   }
 
-  private async findOneWithRelationsOrFail(
-    id: string,
-  ): Promise<GalleryCategory> {
+  private async findOneWithRelationsOrFail(id: string): Promise<GalleryCategory> {
     const category = await this.galleryCategoryRepository.findOne({
       where: { id },
-      relations: [
-        'parent',
-        'children',
-        'user',
-        'group',
-        'group.admin',
-        'group.members',
-        'group.moderators',
-      ],
+      relations: ['parent', 'childrens', 'user', 'groups', 'groups.admin', 'groups.members', 'groups.moderators'],
     });
     if (!category) throw new NotFoundException('Catégorie non trouvée.');
     return category;
@@ -149,23 +138,17 @@ export class GalleriesCategoriesService {
 
   private assertIsOwner(category: GalleryCategory, userId: string): void {
     if (category.user?.id !== userId) {
-      throw new ForbiddenException(
-        "Vous n'êtes pas autorisé à modifier cette catégorie.",
-      );
+      throw new ForbiddenException("Vous n'êtes pas autorisé à modifier cette catégorie.");
     }
   }
 
   private assertCanAccess(category: GalleryCategory, userId: string): void {
     if (category.user?.id === userId) return;
 
-    const belongsToGroup = category.groups?.some((group) =>
-      group.allMembers?.some((member) => member.id === userId),
-    );
+    const belongsToGroup = category.groups?.some((group) => group.allMembers?.some((member) => member.id === userId));
 
     if (!belongsToGroup) {
-      throw new ForbiddenException(
-        "Vous n'êtes pas autorisé à accéder à cette catégorie.",
-      );
+      throw new ForbiddenException("Vous n'êtes pas autorisé à accéder à cette catégorie.");
     }
   }
 }

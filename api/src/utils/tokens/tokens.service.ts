@@ -13,11 +13,7 @@ export class TokensService {
     private jwtService: JwtService,
   ) {}
 
-  generateAccessToken(
-    id: string,
-    email: string,
-    roles: string[],
-  ): Promise<string> {
+  generateAccessToken(id: string, email: string, roles: string[]): Promise<string> {
     const payload: AccessTokenPayload = { id, email, roles };
     return this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -55,25 +51,26 @@ export interface RefreshTokenPayload {
   id: string;
 }
 
-export const TokenPayload = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest<Request>();
-    if (!request.headers.authorization) {
-      return null;
-    }
-    const accessToken = request.headers.authorization.split(' ')[1];
-    return jwtDecode<AccessTokenPayload>(accessToken);
-  },
-);
+export const TokenPayload = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest<Request>();
+  if (!request.headers.authorization) {
+    return null;
+  }
+  const accessToken = request.headers.authorization.split(' ')[1];
+  return jwtDecode<AccessTokenPayload>(accessToken);
+});
 
-export const RefreshTokenPayload = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest<Request>();
-    const cookies = request.cookies as Record<string, string> | undefined;
-    if (!cookies?.['refreshToken']) {
-      return null;
-    }
-    const refreshToken = cookies['refreshToken'];
-    return jwtDecode<RefreshTokenPayload>(refreshToken);
-  },
-);
+export const RefreshTokenPayload = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest<Request>();
+  const userFromGuard = request['user'] as RefreshTokenPayload | undefined;
+  if (userFromGuard?.id) {
+    return userFromGuard;
+  }
+
+  const cookies = request.cookies as Record<string, string> | undefined;
+  if (!cookies?.['refreshToken']) {
+    return null;
+  }
+  const refreshToken = cookies['refreshToken'];
+  return jwtDecode<RefreshTokenPayload>(refreshToken);
+});

@@ -8,6 +8,7 @@ import { InputSelectComponent } from '../../../../../shared/components/inputs/in
 import { MinimalGroupService } from '../../../../../shared/services/minimal-group-service';
 import { GroupStore } from '../../../../groups/stores/group-store';
 import { InputMultiSelectComponent } from '../../../../../shared/components/inputs/input-multi-select-component/input-multi-select-component';
+import { CreateOrEditGalleryCategoryService } from '../create-or-edit-gallery-category-service';
 
 @Component({
   selector: 'app-create-or-edit-gallery-category-component',
@@ -20,6 +21,7 @@ export class CreateOrEditGalleryCategoryComponent {
   public groupStore = inject(GroupStore);
   public isDisplay = model.required<boolean>();
   protected galleryCategoryService = inject(GalleryCategoryService);
+  protected createOrEditGalleryCategoryService = inject(CreateOrEditGalleryCategoryService);
 
   protected form = createCreateOrEditGalleryCategoryForm();
 
@@ -40,7 +42,30 @@ export class CreateOrEditGalleryCategoryComponent {
   }
 
   save() {
-    
+    if (this.form.value.id) {
+      this.createOrEditGalleryCategoryService.edit(
+        this.form.value.id,
+        this.form.value.name!,
+        this.form.value.parent?.id || null,
+        this.form.value.groups?.map((group) => group.id) || [],
+      ).subscribe({
+        next: () => {
+          this.isDisplay.set(false);
+          this.form = createCreateOrEditGalleryCategoryForm();
+        }
+      });
+    } else {
+      this.createOrEditGalleryCategoryService.create(
+        this.form.value.name!,
+        this.form.value.parent?.id || null,
+        this.form.value.groups?.map((group) => group.id) || [],
+      ).subscribe({
+        next: () => {
+          this.isDisplay.set(false);
+          this.form = createCreateOrEditGalleryCategoryForm();
+        }
+      });
+    }
   }
 
   onSearchGroupChange(search: string) {

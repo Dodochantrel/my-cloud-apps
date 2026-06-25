@@ -13,9 +13,7 @@ import type { AccessTokenPayload } from 'src/utils/tokens/tokens.service';
 
 @Controller('authentications')
 export class AuthenticationsController {
-  constructor(
-    private readonly authenticationsService: AuthenticationsService
-  ) {}
+  constructor(private readonly authenticationsService: AuthenticationsService) {}
 
   @Post('register')
   @ApiBody({
@@ -35,10 +33,7 @@ export class AuthenticationsController {
     type: LoginRequestDto,
     description: 'Login request body',
   })
-  async login(
-    @Body() body: LoginRequestDto,
-    @Res() res: Response,
-  ): Promise<Response> {
+  async login(@Body() body: LoginRequestDto, @Res() res: Response): Promise<Response> {
     const { accessToken, refreshToken } = await this.authenticationsService.login(
       body.email,
       body.password,
@@ -53,17 +48,11 @@ export class AuthenticationsController {
 
   @Post('refresh')
   @UseGuards(RefreshGuard)
-  async refresh(
-    @Res() res: Response,
-    @RefreshTokenPayload() user: RefreshTokenPayload,
-  ): Promise<Response> {
-    const accessToken = await this.authenticationsService.refreshTokens(
-      user.id,
-    );
-    return this.prepareAccessTokenCookie(accessToken, res)
-      .status(200).send({
-        message: 'Tokens refreshed successfully',
-      });
+  async refresh(@Res() res: Response, @RefreshTokenPayload() user: RefreshTokenPayload): Promise<Response> {
+    const accessToken = await this.authenticationsService.refreshTokens(user.id);
+    return this.prepareAccessTokenCookie(accessToken, res).status(200).send({
+      message: 'Tokens refreshed successfully',
+    });
   }
 
   @Get('me')
@@ -73,16 +62,11 @@ export class AuthenticationsController {
     type: GetMeResponseDto,
   })
   @UseGuards(AuthGuard)
-  async me(
-    @UserData() user: AccessTokenPayload,
-  ) {
+  async me(@UserData() user: AccessTokenPayload) {
     return new GetMeResponseDto(await this.authenticationsService.getMe(user.id));
   }
 
-  private prepareAccessTokenCookie(
-    accessToken: string,
-    res: Response,
-  ): Response {
+  private prepareAccessTokenCookie(accessToken: string, res: Response): Response {
     res.cookie('accessToken', accessToken, {
       httpOnly: false,
       secure: true,
@@ -91,14 +75,12 @@ export class AuthenticationsController {
     return res;
   }
 
-  private prepareRefreshTokenCookie(
-    refreshToken: string,
-    res: Response,
-  ): Response {
+  private prepareRefreshTokenCookie(refreshToken: string, res: Response): Response {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
+      path: '/authentications/refresh',
     });
     return res;
   }

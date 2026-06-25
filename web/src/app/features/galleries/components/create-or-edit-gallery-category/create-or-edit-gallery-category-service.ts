@@ -10,11 +10,11 @@ import { catchError, tap } from 'rxjs';
 })
 export class CreateOrEditGalleryCategoryService {
   private readonly galleryCategoryStore = inject(GalleryCategoryStore);
-  private readonly galleriesCategoriesRoutes = inject(GalleriesCategoriesRoutes);
+  private readonly galleriesCategoriesRoutes = new GalleriesCategoriesRoutes();
   private readonly notificationService = inject(NotificationService);
   
   create(name: string, parentId: string | null, groupsId: string[]) {
-    this.galleriesCategoriesRoutes.create(name, parentId, groupsId).pipe(
+    return this.galleriesCategoriesRoutes.create(name, parentId, groupsId).pipe(
       tap((galleryCategory: GalleryCategoryModel) => {
         this.galleryCategoryStore.addOne(galleryCategory, 10);
         this.notificationService.success('Catégorie créée avec succès', `La catégorie "${galleryCategory.name}" a été créée avec succès.`);
@@ -27,7 +27,7 @@ export class CreateOrEditGalleryCategoryService {
   }
 
   edit(id: string, name: string, parentId: string | null, groupsId: string[]) {
-    this.galleriesCategoriesRoutes.edit(id, name, parentId, groupsId).pipe(
+    return this.galleriesCategoriesRoutes.edit(id, name, parentId, groupsId).pipe(
       tap((galleryCategory: GalleryCategoryModel) => {
         this.galleryCategoryStore.editOne(galleryCategory);
         this.notificationService.success('Catégorie modifiée avec succès', `La catégorie "${galleryCategory.name}" a été modifiée avec succès.`);
