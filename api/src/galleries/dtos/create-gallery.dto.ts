@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { IsBoolean, IsUUID } from 'class-validator';
 
 export class CreateGalleryDto {
   @ApiProperty({
@@ -10,13 +10,8 @@ export class CreateGalleryDto {
   categoryId!: string;
 
   @ApiProperty({
-    description: 'Nom de l’élément de galerie',
-    required: false,
-    maxLength: 120,
+    description: 'Indique si la galerie est privée',
   })
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(120)
-  name?: string;
+  @IsBoolean()
+  isPrivate!: boolean;
 }

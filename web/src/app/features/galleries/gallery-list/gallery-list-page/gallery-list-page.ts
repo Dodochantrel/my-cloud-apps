@@ -8,12 +8,11 @@ import { InputTextComponent } from '../../../../shared/components/inputs/input-t
 import { ButtonModule } from 'primeng/button';
 import { CreateOrEditGalleryCategoryComponent } from '../../components/create-or-edit-gallery-category/create-or-edit-gallery-category-component/create-or-edit-gallery-category-component';
 import { GalleryFileListService } from '../gallery-file-list-service';
-import { GalleryCategoryModel } from '../../../../core/models/galleries/gallery-category-model';
-import { TreeNode } from 'primeng/api';
+import { AddGalleryComponent } from '../../components/add-gallery/add-gallery-component/add-gallery-component';
 
 @Component({
   selector: 'app-gallery-list-page',
-  imports: [DefaultContainerComponent, TreeModule, DividerModule, InputTextComponent, ButtonModule, CreateOrEditGalleryCategoryComponent],
+  imports: [DefaultContainerComponent, TreeModule, DividerModule, InputTextComponent, ButtonModule, CreateOrEditGalleryCategoryComponent, AddGalleryComponent],
   templateUrl: './gallery-list-page.html',
   styleUrl: './gallery-list-page.css',
 })

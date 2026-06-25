@@ -7,10 +7,10 @@ import {
 import { Gallery } from './gallery.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { StorageService } from '../files/storage.service';
 import { GalleryCategory } from 'src/galleries-categories/gallery-category.entity';
-import { CreateGalleryDto } from './dtos/create-gallery.dto';
 import { StorageFile } from 'src/files/storage.service';
+import { FilesManager } from 'src/files/files.manager';
+import { FileData } from 'src/files/file-data.entity';
 
 type UploadedGalleryFile = {
   buffer: Buffer;
@@ -26,11 +26,12 @@ export class GalleriesService {
     private readonly galleryRepository: Repository<Gallery>,
     @InjectRepository(GalleryCategory)
     private readonly galleryCategoryRepository: Repository<GalleryCategory>,
-    private readonly storageService: StorageService,
+    private readonly filesManager: FilesManager,
   ) {}
 
   async create(
-    dto: CreateGalleryDto,
+    categoryId: string,
+    isPrivate: boolean,
     userId: string,
     file?: UploadedGalleryFile,
   ): Promise<Gallery> {
@@ -42,41 +43,42 @@ export class GalleriesService {
       throw new BadRequestException('Seules les images sont autorisées.');
     }
 
-    const category = await this.findCategoryWithRelationsOrFail(dto.categoryId);
+    const category = await this.findCategoryWithRelationsOrFail(categoryId, userId);
     this.assertIsOwner(category, userId);
-
-    const gallery = this.galleryRepository.create({
-      name: dto.name?.trim() || file.originalname,
-      mimetype: file.mimetype,
-      size: file.size,
-      category,
-    });
-
-    const savedGallery = await this.galleryRepository.save(gallery);
 
     const storageFile: StorageFile = {
       buffer: file.buffer,
       mimetype: file.mimetype,
     };
 
+    const fileDate = new FileData({
+      name: file.originalname,
+      path: this.buildStorageBasePath(category.id),
+      mimetype: file.mimetype,
+      size: file.size,
+      user: category.user,
+    })
+
+    let savedGallery: Gallery;
+
     try {
-      await this.storageService.saveFile(
+      const fileSaved = await this.filesManager.uploadFile(
         storageFile,
-        this.buildStorageBasePath(savedGallery.category.id),
-        savedGallery.id,
+        fileDate,
       );
+      savedGallery = await this.galleryRepository.save(new Gallery({ isPrivate, category, fileData: fileSaved }));
+
+      return this.findOneOrFail(savedGallery.id, userId);
     } catch (error) {
-      await this.galleryRepository.delete(savedGallery.id);
       throw error;
     }
-
-    return this.findOneOrFail(savedGallery.id, userId);
   }
 
   async findOneOrFail(id: string, userId: string): Promise<Gallery> {
     const gallery = await this.galleryRepository.findOne({
       where: { id },
       relations: [
+        'fileData',
         'category',
         'category.user',
         'category.group',
@@ -98,11 +100,7 @@ export class GalleriesService {
     const gallery = await this.findOneOrFail(id, userId);
     this.assertIsOwner(gallery.category, userId);
 
-    await this.storageService.deleteFile(
-      this.buildStorageBasePath(gallery.category.id),
-      gallery.id,
-      gallery.mimetype,
-    );
+    await this.filesManager.deleteFile(gallery.fileData);
 
     await this.galleryRepository.remove(gallery);
   }
@@ -111,17 +109,18 @@ export class GalleriesService {
     const basePath = this.buildStorageBasePath(gallery.category.id);
 
     return Promise.all([
-      this.storageService.getFileUrl(basePath, gallery.id, gallery.mimetype, 20),
-      this.storageService.getFileUrl(basePath, gallery.id, gallery.mimetype, 60),
-      this.storageService.getFileUrl(basePath, gallery.id, gallery.mimetype, 100),
+      this.filesManager.getFileUrl(gallery.fileData, 'small'),
+      this.filesManager.getFileUrl(gallery.fileData, 'medium'),
+      this.filesManager.getFileUrl(gallery.fileData, 'big'),
     ]).then(([small, medium, big]) => ({ small, medium, big }));
   }
 
   private async findCategoryWithRelationsOrFail(
     id: string,
+    userId: string,
   ): Promise<GalleryCategory> {
     const category = await this.galleryCategoryRepository.findOne({
-      where: { id },
+      where: { id, user: { id: userId } },
       relations: ['user', 'group', 'group.admin', 'group.members', 'group.moderators'],
     });
 

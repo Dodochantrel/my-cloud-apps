@@ -1,5 +1,6 @@
+import { Gallery } from 'src/galleries/gallery.entity';
 import { User } from 'src/users/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne } from 'typeorm';
 import type { Relation } from 'typeorm';
 
 @Entity()
@@ -21,6 +22,9 @@ export class FileData {
 
   @ManyToOne(() => User, (user) => user.filesData)
   user!: Relation<User>;
+
+  @OneToOne(() => Gallery, (gallery) => gallery.fileData)
+  gallery!: Relation<Gallery>;
 
   constructor(partial: Partial<FileData>) {
     Object.assign(this, partial);

@@ -33,6 +33,8 @@ import { GalleriesCategoriesService } from './galleries-categories/galleries-cat
 import { Gallery } from './galleries/gallery.entity';
 import { GalleryCategory } from './galleries-categories/gallery-category.entity';
 import { StorageService } from './files/storage.service';
+import { FilesManager } from './files/files.manager';
+import { FileData } from './files/file-data.entity';
 
 @Module({
   imports: [
@@ -60,7 +62,8 @@ import { StorageService } from './files/storage.service';
       Event,
       EventCategory,
       GalleryCategory,
-      Gallery
+      Gallery,
+      FileData,
     ]),
   ],
   controllers: [
@@ -87,6 +90,7 @@ import { StorageService } from './files/storage.service';
     GalleriesService,
     GalleriesCategoriesService,
     StorageService,
+    FilesManager,
   ],
 })
 export class AppModule {}

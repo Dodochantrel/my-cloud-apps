@@ -13,7 +13,7 @@ import { PaginatedResponseDto } from '../../../core/api/paginated-reponse-dto';
 export class GalleryFileListService {
   private readonly galleriesCategoriesRoutes = new GalleriesCategoriesRoutes();
   protected readonly notificationService = inject(NotificationService);
-    private readonly galleryStore = inject(GalleryStore);
+  private readonly galleryStore = inject(GalleryStore);
 
   public selectedCategory: WritableSignal<GalleryCategoryModel | null> = signal(null);
   public search = signal<string>('');
@@ -33,7 +33,7 @@ export class GalleryFileListService {
     
     effect(() => {
       const resource = this.galleriesCategoriesResource.value();
-      const categories = resource ? mapFromGetAllGalleriesCategoriesDtosToGalleriesCategories(resource.data) : [];
+      const categories = resource ? resource.data : [];
       this.galleryStore.setAll(categories);
     });
   }

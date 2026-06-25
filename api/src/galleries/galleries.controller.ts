@@ -43,17 +43,7 @@ export class GalleriesController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      required: ['categoryId', 'file'],
-      properties: {
-        categoryId: { type: 'string', format: 'uuid' },
-        name: { type: 'string' },
-        file: { type: 'string', format: 'binary' },
-      },
-    },
-  })
+  @ApiBody({ type: CreateGalleryDto, description: 'Données de création de la galerie' })
   @ApiResponse({
     status: 201,
     description: 'Élément de galerie créé et envoyé dans SeaweedFS.',
@@ -64,7 +54,7 @@ export class GalleriesController {
     @UploadedFile() file: { buffer: Buffer; mimetype: string; size: number; originalname: string },
     @UserData() user: AccessTokenPayload,
   ): Promise<GalleryResponseDto> {
-    const gallery = await this.galleriesService.create(body, user.id, file);
+    const gallery = await this.galleriesService.create(body.categoryId, body.isPrivate, user.id, file);
     const urls = await this.galleriesService.getUrls(gallery);
     return new GalleryResponseDto(gallery, urls);
   }

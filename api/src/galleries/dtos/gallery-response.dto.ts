@@ -1,18 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Gallery } from '../gallery.entity';
+import { DefaultFileDataResponseDto } from 'src/files/dtos/default-file-data.dto';
 
 export class GalleryResponseDto {
   @ApiProperty({ format: 'uuid' })
   id!: string;
 
-  @ApiProperty()
-  name!: string;
-
-  @ApiProperty()
-  mimetype!: string;
-
-  @ApiProperty()
-  size!: number;
+  @ApiProperty({ type: DefaultFileDataResponseDto })
+  fileData: DefaultFileDataResponseDto;
 
   @ApiProperty({ format: 'uuid' })
   categoryId!: string;
@@ -38,12 +33,10 @@ export class GalleryResponseDto {
 
   constructor(gallery: Gallery, urls: { small: string; medium: string; big: string }) {
     this.id = gallery.id;
-    this.name = gallery.name;
-    this.mimetype = gallery.mimetype;
-    this.size = gallery.size;
     this.categoryId = gallery.category.id;
     this.createdAt = gallery.createdAt;
     this.updatedAt = gallery.updatedAt;
     this.urls = urls;
+    this.fileData = new DefaultFileDataResponseDto(gallery.fileData);
   }
 }
