@@ -5,10 +5,11 @@ import { ButtonModule } from 'primeng/button';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { CommonModule } from '@angular/common';
-import { createAddFilesForm } from '../../../forms/add-files-form';
+import { changePrivacy, createAddFilesForm } from '../../../forms/add-files-form';
 import { GalleryCategoryModel } from '../../../../../core/models/galleries/gallery-category-model';
 import { FormsModule } from '@angular/forms';
 import { InputToggleSwitchComponent } from '../../../../../shared/components/inputs/input-toggle-switch-component/input-toggle-switch-component';
+import { createAddFileForm } from '../../../forms/add-file-form';
 
 @Component({
   selector: 'app-add-gallery-component',
@@ -30,6 +31,9 @@ export class AddGalleryComponent {
     effect(() => {
       this.form.controls.category.setValue(this.selectedCategory());
     });
+    effect(() => {
+      changePrivacy(this.form, this.isAllPrivate());
+    });
   }
 
   choose(event: any, chooseCallback: any) {
@@ -37,12 +41,22 @@ export class AddGalleryComponent {
   }
 
   onSelect(event: any) {
-    this.form.controls.files.setValue(event.currentFiles);
+    const files: File[] = event.currentFiles;
+    this.form.controls.files.clear();
+    files.forEach((file) => {
+      const fileForm = createAddFileForm();
+      fileForm.controls.file.setValue(file);
+      this.form.controls.files.push(fileForm);
+    });
   }
 
   uploadEvent() {
     const category = this.form.controls.category.value;
-    const files = this.form.controls.files.value;
+    const files = this.form.controls.files.controls
+      .map((fg) => ({
+        file: fg.controls.file.value as File,
+        isPrivate: fg.controls.isPrivate.value,
+      }));
 
     if (!category || !files.length) {
       this.notificationService.invalidForm();
@@ -50,9 +64,7 @@ export class AddGalleryComponent {
     }
 
     this.addGalleryService.create(files, category.id).subscribe({
-      next: () => {
-        this.clearCallback();
-      },
+      next: () => this.clearCallback(),
     });
   }
 

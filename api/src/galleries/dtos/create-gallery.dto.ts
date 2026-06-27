@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsBoolean, IsUUID } from 'class-validator';
 
 export class CreateGalleryDto {
@@ -12,6 +13,7 @@ export class CreateGalleryDto {
   @ApiProperty({
     description: 'Indique si la galerie est privée',
   })
+  @Type(() => Boolean)
   @IsBoolean()
   isPrivate!: boolean;
 }

@@ -44,6 +44,7 @@ export class GalleriesService {
     }
 
     const category = await this.findCategoryWithRelationsOrFail(categoryId, userId);
+    this.assertCanAccess(category, userId);
     this.assertIsOwner(category, userId);
 
     const storageFile: StorageFile = {
@@ -81,10 +82,10 @@ export class GalleriesService {
         'fileData',
         'category',
         'category.user',
-        'category.group',
-        'category.group.admin',
-        'category.group.members',
-        'category.group.moderators',
+        'category.groups',
+        'category.groups.admin',
+        'category.groups.members',
+        'category.groups.moderators',
       ],
     });
 
@@ -120,8 +121,8 @@ export class GalleriesService {
     userId: string,
   ): Promise<GalleryCategory> {
     const category = await this.galleryCategoryRepository.findOne({
-      where: { id, user: { id: userId } },
-      relations: ['user', 'group', 'group.admin', 'group.members', 'group.moderators'],
+      where: { id },
+      relations: ['user', 'groups', 'groups.admin', 'groups.members', 'groups.moderators'],
     });
 
     if (!category) {

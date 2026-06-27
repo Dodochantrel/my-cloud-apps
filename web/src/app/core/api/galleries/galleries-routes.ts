@@ -22,9 +22,10 @@ export class GalleriesRoutes {
   private readonly baseUrl = `${environment.apiUrl}galleries`;
   private readonly httpClient = inject(HttpClient);
 
-  create(file: File, categoryId: string): Observable<GalleryResponseDto> {
+  create(file: File, isPrivate: boolean, categoryId: string): Observable<GalleryResponseDto> {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('isPrivate', JSON.stringify(isPrivate));
     formData.append('categoryId', categoryId);
     return this.httpClient.post<GalleryResponseDto>(this.baseUrl, formData);
   }

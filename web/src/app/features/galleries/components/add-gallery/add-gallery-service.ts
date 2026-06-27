@@ -12,12 +12,12 @@ export class AddGalleryService {
   private readonly galleriesRoutes = new GalleriesRoutes();
   readonly notificationService = inject(NotificationService);
 
-  create(files: File[], categoryId: string) {
+  create(files: { file: File, isPrivate: boolean }[], categoryId: string) {
     if (!files.length) {
       return of([] as GalleryResponseDto[]);
     }
 
-    return forkJoin(files.map((file) => this.galleriesRoutes.create(file, categoryId))).pipe(
+    return forkJoin(files.map((file) => this.galleriesRoutes.create(file.file, file.isPrivate, categoryId))).pipe(
       tap((galleries: GalleryResponseDto[]) => {
         galleries.forEach((gallery) => this.galleryStore.addOne(gallery, 20));
         this.notificationService.success(
